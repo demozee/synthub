@@ -1,0 +1,1938 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Synths Lab Graphic Texture V1.1</title>
+    <style>
+      @font-face {
+        font-family: "TE20";
+        src: url("../assets/TE20L.woff2") format("woff2");
+        font-weight: 300;
+      }
+
+      :root {
+        --black: #0b0b0f;
+        --ink: #151519;
+        --panel: #101014;
+        --panel-2: #17171c;
+        --line: #303036;
+        --paper: #f4f3ef;
+        --muted: #9ea2ad;
+        --soft: #c7cad1;
+        --yellow: #ffd25a;
+        --orange: #ff682c;
+        --brown: #5a3b22;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        overflow: hidden;
+        background:
+          radial-gradient(circle, rgba(12, 12, 16, 0.055) 1px, transparent 1.5px) 0 0 / 18px 18px,
+          #efefed;
+        color: var(--black);
+        font-family: "TE20", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      .app {
+        height: 100vh;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 360px 1fr 360px;
+      }
+
+      .side,
+      .right {
+        height: 100vh;
+        min-height: 0;
+        background: #0d0d11;
+        color: var(--paper);
+      }
+
+      .side {
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #27272d;
+      }
+
+      .right {
+        border-left: 1px solid #27272d;
+        overflow: auto;
+        scrollbar-width: none;
+      }
+
+      .right::-webkit-scrollbar,
+      .side-scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      .brand {
+        flex: 0 0 auto;
+        padding: 24px 28px;
+        border-bottom: 1px solid #27272d;
+      }
+
+      .brand img {
+        width: 232px;
+        display: block;
+      }
+
+      .side-scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+        scrollbar-width: none;
+      }
+
+      .panel {
+        padding: 24px 28px;
+        border-bottom: 1px solid #27272d;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 31px;
+        line-height: 1.04;
+        font-weight: 300;
+      }
+
+      h2 {
+        margin-bottom: 16px;
+        color: #b6bac4;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .desc {
+        margin-top: 12px;
+        color: #a8abb4;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .drop {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 100%;
+        height: 152px;
+        border: 1px solid #4a4a50;
+        background: #dcdcdc;
+        color: #111116;
+        cursor: pointer;
+        transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+      }
+
+      .drop:hover,
+      .drop.drag {
+        border-color: var(--yellow);
+        background: #f4f3ef;
+      }
+
+      .drop:active {
+        transform: translateY(1px);
+      }
+
+      .drop input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .drop-title {
+        font-size: 54px;
+        line-height: 1;
+      }
+
+      .drop-sub {
+        margin-top: 10px;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        font-size: 14px;
+      }
+
+      .input-modes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        margin-bottom: 10px;
+        background: #33333a;
+      }
+
+      .mode-button {
+        height: 34px;
+        border: 0;
+        border-radius: 0;
+        background: #1d1d22;
+        color: #c6cad2;
+        cursor: pointer;
+      }
+
+      .mode-button.active {
+        background: var(--yellow);
+        color: #08080a;
+      }
+
+      .preview {
+        width: 100%;
+        margin-top: 16px;
+        aspect-ratio: 4 / 3;
+        object-fit: contain;
+        border: 1px solid #44444a;
+        background: #000;
+      }
+
+      .preset-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .preset,
+      .button,
+      .icon-btn {
+        border: 0;
+        border-radius: 0;
+        cursor: pointer;
+      }
+
+      .preset {
+        min-height: 50px;
+        padding: 8px 10px;
+        background: #222227;
+        color: var(--paper);
+        text-align: left;
+        transition: background 160ms ease, transform 160ms ease;
+      }
+
+      .preset:hover {
+        background: #2e2e34;
+      }
+
+      .preset.active {
+        background: var(--yellow);
+        color: #08080a;
+      }
+
+      .preset small {
+        display: block;
+        margin-top: 4px;
+        color: currentColor;
+        opacity: 0.62;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        font-size: 11px;
+      }
+
+      .actions {
+        flex: 0 0 auto;
+        margin-top: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: #27272d;
+      }
+
+      .button {
+        height: 58px;
+        background: var(--yellow);
+        color: #08080a;
+        font-size: 25px;
+      }
+
+      .button.secondary {
+        background: var(--orange);
+      }
+
+      .main {
+        position: relative;
+        min-width: 0;
+        height: 100vh;
+        min-height: 0;
+        overflow: hidden;
+        padding: 34px;
+      }
+
+      .top {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 22px;
+      }
+
+      .title {
+        font-size: clamp(36px, 5vw, 72px);
+        line-height: 0.96;
+      }
+
+      .note {
+        max-width: 420px;
+        color: #6d7078;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: 1fr 210px;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .stage {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-height: calc(100vh - 160px);
+        border: 1px solid #d2d2d0;
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .result {
+        display: block;
+        width: min(74vh, 100%);
+        max-width: 860px;
+        aspect-ratio: 1 / 1;
+        background: #f6f6f2;
+      }
+
+      .empty {
+        position: absolute;
+        color: #b4b7bf;
+        font-size: clamp(36px, 6vw, 98px);
+        pointer-events: none;
+      }
+
+      .before-after {
+        display: grid;
+        gap: 18px;
+      }
+
+      .small-card {
+        border: 1px solid #d0d0d0;
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .small-card h3 {
+        margin: 0;
+        height: 38px;
+        padding: 9px 10px 0;
+        border-bottom: 1px solid #d0d0d0;
+        font-size: 18px;
+        font-weight: 300;
+      }
+
+      .small-card canvas {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+      }
+
+      .node-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .node {
+        display: grid;
+        grid-template-columns: 38px 1fr 42px;
+        align-items: center;
+        min-height: 62px;
+        border: 1px solid #303036;
+        background: #151519;
+        color: var(--paper);
+        cursor: pointer;
+        transition: border-color 160ms ease, background 160ms ease;
+      }
+
+      .node.active {
+        border-color: var(--yellow);
+        background: #1d1d21;
+      }
+
+      .node.disabled {
+        opacity: 0.38;
+      }
+
+      .node-index {
+        display: grid;
+        place-items: center;
+        height: 100%;
+        border-right: 1px solid #303036;
+        color: var(--yellow);
+        font-size: 20px;
+      }
+
+      .node-body {
+        padding: 10px 12px;
+      }
+
+      .node-name {
+        font-size: 19px;
+      }
+
+      .node-desc {
+        margin-top: 3px;
+        color: #9296a0;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        font-size: 11px;
+      }
+
+      .toggle {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        margin: 0 auto;
+        border: 1px solid #4d4d55;
+        color: var(--muted);
+        user-select: none;
+      }
+
+      .node:not(.disabled) .toggle {
+        border-color: var(--yellow);
+        color: var(--yellow);
+      }
+
+      .param-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 16px;
+      }
+
+      .param-title strong {
+        font-size: 24px;
+        font-weight: 300;
+      }
+
+      .param-title span {
+        color: #969aa4;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        font-size: 12px;
+      }
+
+      .control {
+        position: relative;
+        margin-bottom: 18px;
+      }
+
+      .label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        color: #c5c8d0;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        font-size: 14px;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        height: 18px;
+        appearance: none;
+        background: transparent;
+      }
+
+      input[type="range"]::-webkit-slider-runnable-track {
+        height: 4px;
+        background: linear-gradient(90deg, var(--yellow) var(--pct, 50%), #555 var(--pct, 50%));
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        margin-top: -7px;
+        border: 0;
+        border-radius: 5px;
+        background: #fff;
+      }
+
+      .color-control {
+        position: relative;
+      }
+
+      .color-summary {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 14px;
+        align-items: center;
+        min-height: 64px;
+      }
+
+      .color-swatch {
+        width: 54px;
+        height: 54px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 0;
+        background: rgb(var(--rgb, 255, 255, 255));
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
+        cursor: pointer;
+      }
+
+      .color-swatch:hover {
+        border-color: var(--yellow);
+      }
+
+      .color-meta {
+        min-width: 0;
+      }
+
+      .color-hex-readout {
+        color: #f4f3ef;
+        font-size: 20px;
+        line-height: 1.1;
+      }
+
+      .color-kind {
+        margin-top: 4px;
+        color: #8e929c;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        font-size: 13px;
+      }
+
+      .color-popover {
+        position: relative;
+        z-index: 3;
+        margin-top: 12px;
+        padding: 12px;
+        border: 1px solid #3d3d44;
+        background: #f6f6f4;
+        box-shadow: 0 14px 38px rgba(0, 0, 0, 0.32);
+      }
+
+      .sv-picker {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 0.72;
+        border: 1px solid #d7d7d7;
+        border-radius: 0;
+        overflow: hidden;
+        cursor: crosshair;
+        background:
+          linear-gradient(to top, #000, transparent),
+          linear-gradient(to right, #fff, hsl(var(--hue, 0), 100%, 50%));
+      }
+
+      .sv-handle {
+        position: absolute;
+        left: calc(var(--sat, 1) * 100%);
+        top: calc((1 - var(--val, 1)) * 100%);
+        width: 18px;
+        height: 18px;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        background: transparent;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.35);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+
+      .hue-slider {
+        display: block;
+        width: 100%;
+        height: 38px;
+        margin-top: 14px;
+        appearance: none;
+        background: transparent;
+      }
+
+      .color-popover .hue-slider::-webkit-slider-runnable-track {
+        height: 22px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        background: linear-gradient(90deg, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+      }
+
+      .color-popover .hue-slider::-webkit-slider-thumb {
+        appearance: none;
+        width: 30px;
+        height: 30px;
+        margin-top: -5px;
+        border: 5px solid #fff;
+        border-radius: 50%;
+        background: hsl(var(--hue, 0), 100%, 50%);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.24);
+      }
+
+      .color-fields {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1px;
+        margin-top: 12px;
+        background: #dedede;
+      }
+
+      .color-mode {
+        display: none;
+      }
+
+      .hex,
+      .check {
+        width: 100%;
+        height: 40px;
+        border: 1px solid #4b4b50;
+        border-radius: 0;
+        padding: 0 10px;
+        background: #17171b;
+        color: #fff;
+      }
+
+      .color-popover .hex {
+        border-color: transparent;
+        background: #ffffff;
+        color: #111116;
+      }
+
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #c5c8d0;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        font-size: 13px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 1260px) {
+        .app {
+          grid-template-columns: 330px 1fr;
+        }
+
+        .right {
+          grid-column: 1 / -1;
+          min-height: auto;
+          border-left: 0;
+          border-top: 1px solid #27272d;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <aside class="side">
+        <div class="brand">
+          <img src="../assets/synths-logo.svg" alt="synths lab" />
+        </div>
+        <div class="side-scroll">
+          <section class="panel">
+            <h1>Graphic<br />Texture Chain</h1>
+            <p class="desc">把图片处理拆成一条效果链：图形提取、油墨填充、粗糙边缘、破损颗粒、印刷材质、颜色输出。每个节点都可以开关和单独调参。</p>
+          </section>
+
+          <section class="panel">
+            <h2>输入</h2>
+            <div class="input-modes" id="inputModes">
+              <button class="mode-button active" data-accept="image">图片</button>
+              <button class="mode-button" data-accept="video">视频</button>
+              <button class="mode-button" data-accept="svg">SVG</button>
+            </div>
+            <label class="drop" id="drop">
+              <input id="file" type="file" accept="image/*,video/*,.svg,image/svg+xml" />
+              <div>
+                <div class="drop-title">input</div>
+                <div class="drop-sub">点击上传 or 拖入图片/视频/SVG</div>
+              </div>
+            </label>
+            <img id="imagePreview" class="preview hidden" alt="" />
+            <video id="videoPreview" class="preview hidden" muted playsinline controls></video>
+          </section>
+
+          <section class="panel">
+            <h2>预设链</h2>
+            <div class="preset-grid" id="presetGrid"></div>
+          </section>
+        </div>
+        <div class="actions">
+          <button class="button" id="exportPng">PNG</button>
+          <button class="button secondary" id="randomize">随机</button>
+        </div>
+      </aside>
+
+      <section class="main">
+        <div class="top">
+          <div class="title">print texture<br />node chain</div>
+          <div class="note">先用固定主链路模拟节点式工作流。点右侧节点选择参数，点方框开关节点。目标是接近针管线稿、半调印花、复印、掉墨、粗糙边缘这种组合质感。</div>
+        </div>
+        <div class="workspace">
+          <div class="stage">
+            <canvas id="result" class="result" width="1000" height="1000"></canvas>
+            <div id="empty" class="empty">upload image</div>
+          </div>
+          <div class="before-after">
+            <div class="small-card">
+              <h3>source</h3>
+              <canvas id="sourceMini" width="320" height="320"></canvas>
+            </div>
+            <div class="small-card">
+              <h3>mask</h3>
+              <canvas id="maskMini" width="320" height="320"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right">
+        <section class="panel">
+          <h2>效果链</h2>
+          <div class="node-list" id="nodeList"></div>
+        </section>
+        <section class="panel">
+          <div class="param-title">
+            <strong id="paramName">Shape Extract</strong>
+            <span id="paramHint">图形提取</span>
+          </div>
+          <div id="paramPanel"></div>
+        </section>
+      </aside>
+    </main>
+
+    <canvas id="work" width="1000" height="1000" class="hidden"></canvas>
+
+    <script>
+      const presets = {
+        thermalMap: {
+          label: "Thermal Map",
+          sub: "热成像构成",
+          selected: "decor",
+          nodes: {
+            extract: { enabled: true, threshold: 116, contrast: 50, invert: true },
+            ink: { enabled: true, color: "#050506", strength: 78, holes: 4 },
+            screen: { enabled: false, dot: 7, strength: 0, angle: 0 },
+            edge: { enabled: true, width: 3, rough: 34, color: "#030304" },
+            distress: { enabled: true, amount: 6, size: 5, seed: 12 },
+            texture: { enabled: true, fabric: 18, scan: 10, bleed: 10 },
+            decor: { enabled: true, grid: 18, gridSize: 42, blur: 78, particles: 16 },
+            color: { enabled: true, bg: "#f7f6f2", transparent: false, highlight: "#6fc7ba" },
+            lens: { enabled: true, focus: 52, blur: 34 },
+          },
+        },
+        penTrace: {
+          label: "Pen Trace",
+          sub: "针管线稿",
+          selected: "extract",
+          nodes: {
+            extract: { enabled: true, threshold: 142, contrast: 38, invert: false },
+            ink: { enabled: true, color: "#263b55", strength: 92, holes: 14 },
+            screen: { enabled: false, dot: 9, strength: 0, angle: 0 },
+            edge: { enabled: true, width: 1, rough: 72, color: "#1d2b3e" },
+            distress: { enabled: true, amount: 30, size: 4, seed: 18 },
+            texture: { enabled: true, fabric: 18, scan: 12, bleed: 0 },
+            decor: { enabled: false, grid: 0, gridSize: 48, blur: 0, particles: 0 },
+            color: { enabled: true, bg: "#f2eee5", transparent: false, highlight: "#ffffff" },
+            lens: { enabled: false, focus: 62, blur: 0 },
+          },
+        },
+        dotShirt: {
+          label: "Dot Shirt",
+          sub: "半调印花",
+          selected: "screen",
+          nodes: {
+            extract: { enabled: true, threshold: 154, contrast: 54, invert: false },
+            ink: { enabled: true, color: "#c9d8e8", strength: 92, holes: 10 },
+            screen: { enabled: true, dot: 13, strength: 88, angle: -12 },
+            edge: { enabled: true, width: 1, rough: 22, color: "#7f91a7" },
+            distress: { enabled: true, amount: 10, size: 4, seed: 62 },
+            texture: { enabled: true, fabric: 16, scan: 8, bleed: 6 },
+            decor: { enabled: false, grid: 0, gridSize: 48, blur: 0, particles: 0 },
+            color: { enabled: true, bg: "#0c0d11", transparent: false, highlight: "#ffffff" },
+            lens: { enabled: false, focus: 62, blur: 0 },
+          },
+        },
+        xerox: {
+          label: "Xerox",
+          sub: "复印机",
+          selected: "extract",
+          nodes: {
+            extract: { enabled: true, threshold: 118, contrast: 92, invert: false },
+            ink: { enabled: true, color: "#111111", strength: 94, holes: 26 },
+            screen: { enabled: false, dot: 6, strength: 0, angle: 0 },
+            edge: { enabled: true, width: 2, rough: 78, color: "#000000" },
+            distress: { enabled: true, amount: 36, size: 3, seed: 31 },
+            texture: { enabled: true, fabric: 8, scan: 72, bleed: 10 },
+            decor: { enabled: false, grid: 0, gridSize: 48, blur: 0, particles: 0 },
+            color: { enabled: true, bg: "#f4f1e8", transparent: false, highlight: "#ffffff" },
+            lens: { enabled: false, focus: 62, blur: 0 },
+          },
+        },
+      };
+
+      const nodeMeta = [
+        { id: "extract", name: "Shape Extract", hint: "图形提取", desc: "灰度、对比、阈值生成可印刷块面" },
+        { id: "ink", name: "Ink Fill", hint: "油墨块面", desc: "主色填充、掉墨孔洞和高光" },
+        { id: "screen", name: "Dot Screen", hint: "半调网点", desc: "用网点密度和大小模拟印刷明暗" },
+        { id: "edge", name: "Rough Edge", hint: "粗糙边缘", desc: "边缘描线、腐蚀和毛刺" },
+        { id: "distress", name: "Distress Grain", hint: "破损颗粒", desc: "随机颗粒、旧印刷、脱墨" },
+        { id: "texture", name: "Print Texture", hint: "印刷材质", desc: "布料、扫描线、渗墨" },
+        { id: "decor", name: "Graphic Decor", hint: "装饰构成", desc: "网格、模糊斑点和粒子装饰" },
+        { id: "color", name: "Color Map", hint: "颜色输出", desc: "背景颜色、图形颜色和透明底" },
+        { id: "lens", name: "Lens Blur", hint: "镜头模糊", desc: "焦距和焦外虚化，模拟画面景深" },
+      ];
+
+      const clone = (value) => JSON.parse(JSON.stringify(value));
+
+      const state = {
+        preset: "thermalMap",
+        selected: presets.thermalMap.selected,
+        source: null,
+        sourceType: "empty",
+        sourceAspect: 1,
+        size: 1000,
+        nodes: clone(presets.thermalMap.nodes),
+      };
+
+      const fileInput = document.getElementById("file");
+      const drop = document.getElementById("drop");
+      const inputModes = document.getElementById("inputModes");
+      const imagePreview = document.getElementById("imagePreview");
+      const videoPreview = document.getElementById("videoPreview");
+      const work = document.getElementById("work");
+      const workCtx = work.getContext("2d", { willReadFrequently: true });
+      const result = document.getElementById("result");
+      const resultCtx = result.getContext("2d", { willReadFrequently: true });
+      const sourceMini = document.getElementById("sourceMini");
+      const sourceMiniCtx = sourceMini.getContext("2d", { willReadFrequently: true });
+      const maskMini = document.getElementById("maskMini");
+      const maskMiniCtx = maskMini.getContext("2d", { willReadFrequently: true });
+      const nodeList = document.getElementById("nodeList");
+      const paramPanel = document.getElementById("paramPanel");
+      const paramName = document.getElementById("paramName");
+      const paramHint = document.getElementById("paramHint");
+      const presetGrid = document.getElementById("presetGrid");
+      const empty = document.getElementById("empty");
+      let renderFrameQueued = false;
+      let colorRenderTimer = 0;
+
+      function clamp(value, min = 0, max = 255) {
+        return Math.max(min, Math.min(max, value));
+      }
+
+      function scheduleRenderOutput() {
+        if (renderFrameQueued) return;
+        renderFrameQueued = true;
+        requestAnimationFrame(() => {
+          renderFrameQueued = false;
+          renderOutput();
+        });
+      }
+
+      function scheduleColorRenderOutput() {
+        if (colorRenderTimer) return;
+        colorRenderTimer = window.setTimeout(() => {
+          colorRenderTimer = 0;
+          scheduleRenderOutput();
+        }, 48);
+      }
+
+      function flushColorRenderOutput() {
+        if (colorRenderTimer) {
+          window.clearTimeout(colorRenderTimer);
+          colorRenderTimer = 0;
+        }
+        scheduleRenderOutput();
+      }
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function smoothstep(edge0, edge1, x) {
+        const t = Math.max(0, Math.min(1, (x - edge0) / Math.max(0.0001, edge1 - edge0)));
+        return t * t * (3 - 2 * t);
+      }
+
+      function hash(x, y, seed = 1) {
+        const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+        return n - Math.floor(n);
+      }
+
+      function hexToRgb(hex) {
+        const clean = String(hex || "").trim().replace("#", "");
+        const full = clean.length === 3 ? clean.split("").map((x) => x + x).join("") : clean.padEnd(6, "0").slice(0, 6);
+        const value = Number.parseInt(full, 16);
+        if (!Number.isFinite(value)) return { r: 0, g: 0, b: 0 };
+        return { r: (value >> 16) & 255, g: (value >> 8) & 255, b: value & 255 };
+      }
+
+      function rgbToHex({ r, g, b }) {
+        return `#${[r, g, b].map((v) => Math.round(clamp(v)).toString(16).padStart(2, "0")).join("")}`;
+      }
+
+      function rgbToHsv({ r, g, b }) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const d = max - min;
+        let h = 0;
+        if (d !== 0) {
+          if (max === r) h = ((g - b) / d) % 6;
+          else if (max === g) h = (b - r) / d + 2;
+          else h = (r - g) / d + 4;
+          h *= 60;
+          if (h < 0) h += 360;
+        }
+        return { h, s: max === 0 ? 0 : d / max, v: max };
+      }
+
+      function hsvToRgb({ h, s, v }) {
+        const c = v * s;
+        const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        const m = v - c;
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        if (h < 60) [r, g, b] = [c, x, 0];
+        else if (h < 120) [r, g, b] = [x, c, 0];
+        else if (h < 180) [r, g, b] = [0, c, x];
+        else if (h < 240) [r, g, b] = [0, x, c];
+        else if (h < 300) [r, g, b] = [x, 0, c];
+        else [r, g, b] = [c, 0, x];
+        return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 };
+      }
+
+      function getColorAlpha(node, key) {
+        return Number.isFinite(node[`${key}Alpha`]) ? node[`${key}Alpha`] : 100;
+      }
+
+      function drawContain(ctx, media, aspect, w, h, fill = "#fff") {
+        ctx.fillStyle = fill;
+        ctx.fillRect(0, 0, w, h);
+        let dw = w;
+        let dh = h;
+        if (w / h > aspect) dw = h * aspect;
+        else dh = w / aspect;
+        ctx.drawImage(media, (w - dw) / 2, (h - dh) / 2, dw, dh);
+      }
+
+      function getLuma(data, index) {
+        return data[index] * 0.299 + data[index + 1] * 0.587 + data[index + 2] * 0.114;
+      }
+
+      function updateRangeStyle(input) {
+        const min = Number(input.min);
+        const max = Number(input.max);
+        const value = Number(input.value);
+        input.style.setProperty("--pct", `${((value - min) / (max - min)) * 100}%`);
+      }
+
+      function setPreset(id) {
+        state.preset = id;
+        state.selected = presets[id].selected;
+        state.nodes = clone(presets[id].nodes);
+        renderAll();
+      }
+
+      function randInt(min, max) {
+        return Math.round(min + Math.random() * (max - min));
+      }
+
+      function chance(value = 0.5) {
+        return Math.random() < value;
+      }
+
+      function pick(list) {
+        return list[Math.floor(Math.random() * list.length)];
+      }
+
+      function randomColorValue(role) {
+        const backgrounds = ["#f7f6f2", "#f2eee5", "#d9d9d9", "#c8d8cb", "#111116", "#0c0d11"];
+        const graphics = ["#050506", "#111111", "#263b55", "#6fc7ba", "#5a3b22", "#c9d8e8", "#ff682c"];
+        return pick(role === "bg" ? backgrounds : graphics);
+      }
+
+      function syncGraphicColor(value) {
+        const clean = value.startsWith("#") ? value : `#${value}`;
+        state.nodes.ink.color = clean;
+        state.nodes.edge.color = clean;
+        state.nodes.color.highlight = clean;
+      }
+
+      function randomizeChain() {
+        const ranges = {
+          threshold: [0, 255],
+          contrast: [0, 100],
+          strength: [0, 100],
+          holes: [0, 100],
+          dot: [3, 24],
+          angle: [-45, 45],
+          width: [0, 10],
+          rough: [0, 100],
+          amount: [0, 100],
+          size: [1, 14],
+          seed: [1, 99],
+          fabric: [0, 100],
+          scan: [0, 100],
+          bleed: [0, 100],
+          grid: [0, 100],
+          gridSize: [18, 96],
+          blur: [0, 100],
+          particles: [0, 100],
+          focus: [0, 100],
+        };
+
+        Object.values(state.nodes).forEach((node) => {
+          Object.entries(node).forEach(([key, value]) => {
+            if (typeof value !== "number") return;
+            const [min, max] = ranges[key] || [0, 100];
+            node[key] = randInt(min, max);
+          });
+        });
+        state.nodes.color.bg = randomColorValue("bg");
+        syncGraphicColor(randomColorValue("highlight"));
+        state.nodes.color.bgAlpha = 100;
+        state.nodes.color.highlightAlpha = 100;
+        renderAll();
+      }
+
+      function renderPresets() {
+        presetGrid.innerHTML = "";
+        Object.entries(presets).forEach(([id, preset]) => {
+          const button = document.createElement("button");
+          button.className = `preset${state.preset === id ? " active" : ""}`;
+          button.innerHTML = `${preset.label}<small>${preset.sub}</small>`;
+          button.addEventListener("click", () => setPreset(id));
+          presetGrid.appendChild(button);
+        });
+      }
+
+      function renderNodeList() {
+        nodeList.innerHTML = "";
+        nodeMeta.forEach((meta, index) => {
+          const node = state.nodes[meta.id];
+          const item = document.createElement("div");
+          item.className = `node${state.selected === meta.id ? " active" : ""}${node.enabled ? "" : " disabled"}`;
+          item.innerHTML = `
+            <div class="node-index">${index + 1}</div>
+            <div class="node-body">
+              <div class="node-name">${meta.name}</div>
+              <div class="node-desc">${meta.desc}</div>
+            </div>
+            <div class="toggle">${node.enabled ? "on" : "off"}</div>
+          `;
+          item.addEventListener("click", () => {
+            state.selected = meta.id;
+            renderAll(false);
+          });
+          item.querySelector(".toggle").addEventListener("click", (event) => {
+            event.stopPropagation();
+            node.enabled = !node.enabled;
+            state.selected = meta.id;
+            renderAll();
+          });
+          nodeList.appendChild(item);
+        });
+      }
+
+      function controlRange(label, key, min, max, step = 1) {
+        const node = state.nodes[state.selected];
+        const value = node[key];
+        return `
+          <div class="control">
+            <div class="label"><span>${label}</span><span data-v="${key}">${value}</span></div>
+            <input data-param="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}">
+          </div>
+        `;
+      }
+
+      function controlColor(label, key, nodeId = state.selected) {
+        const node = state.nodes[nodeId];
+        return `
+          <div class="control">
+            <div class="label"><span>${label}</span><span>HEX</span></div>
+            <div class="color-control" data-color-node="${nodeId}" data-color-param="${key}">
+              <div class="color-summary">
+                <button class="color-swatch" type="button" data-color-toggle aria-label="${label}"></button>
+                <div class="color-meta">
+                  <div class="color-hex-readout" data-color-readout>${String(node[key]).replace("#", "").toUpperCase()}</div>
+                  <div class="color-kind">100% · Solid</div>
+                </div>
+              </div>
+              <div class="color-popover hidden" data-color-popover>
+                <div class="sv-picker">
+                  <span class="sv-handle"></span>
+                </div>
+                <input class="hue-slider" data-color-hue type="range" min="0" max="360" value="0">
+                <div class="color-fields">
+                  <div class="color-mode">Hex</div>
+                  <input class="hex color-hex" data-color-hex value="${String(node[key]).replace("#", "").toUpperCase()}">
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function controlCheck(label, key) {
+        const node = state.nodes[state.selected];
+        return `
+          <label class="check">
+            <input data-param="${key}" type="checkbox" ${node[key] ? "checked" : ""}>
+            ${label}
+          </label>
+        `;
+      }
+
+      function renderParams() {
+        const meta = nodeMeta.find((item) => item.id === state.selected);
+        paramName.textContent = meta.name;
+        paramHint.textContent = meta.hint;
+        if (state.selected === "extract") {
+          paramPanel.innerHTML = [
+            controlRange("阈值", "threshold", 0, 255),
+            controlRange("对比", "contrast", 0, 100),
+            controlCheck("反相", "invert"),
+          ].join("");
+        }
+        if (state.selected === "ink") {
+          paramPanel.innerHTML = [
+            controlColor("油墨颜色", "color"),
+            controlRange("填充强度", "strength", 0, 100),
+            controlRange("孔洞保留", "holes", 0, 100),
+          ].join("");
+        }
+        if (state.selected === "screen") {
+          paramPanel.innerHTML = [
+            controlRange("网点大小", "dot", 3, 24),
+            controlRange("网点强度", "strength", 0, 100),
+            controlRange("网点角度", "angle", -45, 45),
+          ].join("");
+        }
+        if (state.selected === "edge") {
+          paramPanel.innerHTML = [
+            controlColor("边缘颜色", "color"),
+            controlRange("边缘宽度", "width", 0, 10),
+            controlRange("边缘毛刺", "rough", 0, 100),
+          ].join("");
+        }
+        if (state.selected === "distress") {
+          paramPanel.innerHTML = [
+            controlRange("破损数量", "amount", 0, 100),
+            controlRange("颗粒大小", "size", 1, 14),
+            controlRange("随机种子", "seed", 1, 99),
+          ].join("");
+        }
+        if (state.selected === "texture") {
+          paramPanel.innerHTML = [
+            controlRange("布料纹理", "fabric", 0, 100),
+            controlRange("扫描线", "scan", 0, 100),
+            controlRange("油墨渗透", "bleed", 0, 100),
+          ].join("");
+        }
+        if (state.selected === "decor") {
+          paramPanel.innerHTML = [
+            controlRange("网格强度", "grid", 0, 100),
+            controlRange("网格大小", "gridSize", 18, 96),
+            controlRange("模糊斑点", "blur", 0, 100),
+            controlRange("粒子装饰", "particles", 0, 100),
+          ].join("");
+        }
+        if (state.selected === "color") {
+          paramPanel.innerHTML = [
+            controlColor("背景颜色", "bg", "color"),
+            controlColor("图形颜色", "color", "ink"),
+            controlCheck("透明背景", "transparent"),
+          ].join("");
+        }
+        if (state.selected === "lens") {
+          paramPanel.innerHTML = [
+            controlRange("焦距", "focus", 0, 100),
+            controlRange("焦外模糊", "blur", 0, 100),
+          ].join("");
+        }
+
+        paramPanel.querySelectorAll("input[data-param]").forEach((input) => {
+          if (input.type === "range") updateRangeStyle(input);
+          input.addEventListener("input", () => {
+            const node = state.nodes[state.selected];
+            const key = input.dataset.param;
+            if (input.type === "checkbox") node[key] = input.checked;
+            else if (input.type === "range") node[key] = Number(input.value);
+            else node[key] = input.value;
+            const valueEl = paramPanel.querySelector(`[data-v="${key}"]`);
+            if (valueEl) valueEl.textContent = input.value;
+            if (input.type === "range") updateRangeStyle(input);
+            renderOutput();
+          });
+        });
+        attachColorPickers();
+      }
+
+      function setPickerVisual(picker) {
+        const key = picker.dataset.colorParam;
+        const node = state.nodes[picker.dataset.colorNode || state.selected];
+        const rgb = hexToRgb(node[key]);
+        const hsv = rgbToHsv(rgb);
+        picker.dataset.h = String(hsv.h);
+        picker.dataset.s = String(hsv.s);
+        picker.dataset.v = String(hsv.v);
+        picker.style.setProperty("--hue", hsv.h);
+        picker.style.setProperty("--sat", hsv.s);
+        picker.style.setProperty("--val", hsv.v);
+        picker.style.setProperty("--rgb", `${Math.round(rgb.r)}, ${Math.round(rgb.g)}, ${Math.round(rgb.b)}`);
+        const hue = picker.querySelector("[data-color-hue]");
+        const hex = picker.querySelector("[data-color-hex]");
+        const readout = picker.querySelector("[data-color-readout]");
+        hue.value = String(Math.round(hsv.h));
+        const cleanHex = rgbToHex(rgb).replace("#", "").toUpperCase();
+        hex.value = cleanHex;
+        readout.textContent = cleanHex;
+      }
+
+      function setColorFromHsv(picker, next) {
+        const key = picker.dataset.colorParam;
+        const nodeId = picker.dataset.colorNode || state.selected;
+        const node = state.nodes[nodeId];
+        const hsv = {
+          h: Number(next.h ?? picker.dataset.h ?? 0),
+          s: Number(next.s ?? picker.dataset.s ?? 1),
+          v: Number(next.v ?? picker.dataset.v ?? 1),
+        };
+        node[key] = rgbToHex(hsvToRgb(hsv));
+        if (nodeId === "ink" && key === "color") syncGraphicColor(node[key]);
+        setPickerVisual(picker);
+        scheduleColorRenderOutput();
+      }
+
+      function attachColorPickers() {
+        paramPanel.querySelectorAll("[data-color-param]").forEach((picker) => {
+          const key = picker.dataset.colorParam;
+          const nodeId = picker.dataset.colorNode || state.selected;
+          setPickerVisual(picker);
+          const toggle = picker.querySelector("[data-color-toggle]");
+          const popover = picker.querySelector("[data-color-popover]");
+          const sv = picker.querySelector(".sv-picker");
+          const hue = picker.querySelector("[data-color-hue]");
+          const hex = picker.querySelector("[data-color-hex]");
+
+          toggle.addEventListener("click", () => {
+            paramPanel.querySelectorAll("[data-color-popover]").forEach((item) => {
+              if (item !== popover) item.classList.add("hidden");
+            });
+            popover.classList.toggle("hidden");
+          });
+
+          const updateSv = (event) => {
+            const rect = sv.getBoundingClientRect();
+            const s = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+            const v = clamp(1 - (event.clientY - rect.top) / rect.height, 0, 1);
+            setColorFromHsv(picker, { s, v });
+          };
+
+          sv.addEventListener("pointerdown", (event) => {
+            sv.setPointerCapture(event.pointerId);
+            updateSv(event);
+          });
+          sv.addEventListener("pointermove", (event) => {
+            if (event.buttons) updateSv(event);
+          });
+          sv.addEventListener("pointerup", flushColorRenderOutput);
+          hue.addEventListener("input", () => setColorFromHsv(picker, { h: Number(hue.value) }));
+          hue.addEventListener("change", flushColorRenderOutput);
+          hex.addEventListener("input", () => {
+            const clean = hex.value.replace(/[^0-9a-fA-F]/g, "").slice(0, 6);
+            hex.value = clean.toUpperCase();
+            if (clean.length === 6 || clean.length === 3) {
+              state.nodes[nodeId][key] = `#${clean}`;
+              if (nodeId === "ink" && key === "color") syncGraphicColor(state.nodes[nodeId][key]);
+              setPickerVisual(picker);
+              scheduleColorRenderOutput();
+            }
+          });
+          hex.addEventListener("change", flushColorRenderOutput);
+        });
+      }
+
+      function buildSourceImage() {
+        const size = state.size;
+        work.width = size;
+        work.height = size;
+        workCtx.clearRect(0, 0, size, size);
+        drawContain(workCtx, state.source, state.sourceAspect, size, size, "#ffffff");
+        sourceMiniCtx.clearRect(0, 0, 320, 320);
+        drawContain(sourceMiniCtx, state.source, state.sourceAspect, 320, 320, "#ffffff");
+        return workCtx.getImageData(0, 0, size, size);
+      }
+
+      function createMask(source) {
+        const { data, width: w, height: h } = source;
+        const extract = state.nodes.extract;
+        const mask = new Float32Array(w * h);
+        const contrast = 1 + (extract.enabled ? extract.contrast : 20) / 32;
+        const threshold = extract.enabled ? extract.threshold : 128;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const i = (y * w + x) * 4;
+            let luma = clamp((getLuma(data, i) - 128) * contrast + 128);
+            if (extract.invert) luma = 255 - luma;
+            const noisy = luma + (hash(Math.floor(x / 3), Math.floor(y / 3), 2) - 0.5) * 22;
+            mask[y * w + x] = noisy < threshold ? 1 : 0;
+          }
+        }
+        return mask;
+      }
+
+      function edgeAt(mask, x, y, w, h, radius) {
+        const c = mask[y * w + x];
+        for (let oy = -radius; oy <= radius; oy++) {
+          for (let ox = -radius; ox <= radius; ox++) {
+            const xx = Math.max(0, Math.min(w - 1, x + ox));
+            const yy = Math.max(0, Math.min(h - 1, y + oy));
+            if (mask[yy * w + xx] !== c) return 1;
+          }
+        }
+        return 0;
+      }
+
+      function analyzeMaskGeometry(mask, w, h) {
+        const bbox = { minX: w, minY: h, maxX: 0, maxY: 0, cx: w * 0.5, cy: h * 0.5 };
+        const points = [];
+        const step = Math.max(6, Math.round(Math.min(w, h) / 130));
+        for (let y = step; y < h - step; y += step) {
+          for (let x = step; x < w - step; x += step) {
+            const p = y * w + x;
+            if (mask[p]) {
+              bbox.minX = Math.min(bbox.minX, x);
+              bbox.minY = Math.min(bbox.minY, y);
+              bbox.maxX = Math.max(bbox.maxX, x);
+              bbox.maxY = Math.max(bbox.maxY, y);
+            }
+            if (edgeAt(mask, x, y, w, h, 2)) {
+              const left = mask[y * w + Math.max(0, x - 4)];
+              const right = mask[y * w + Math.min(w - 1, x + 4)];
+              const up = mask[Math.max(0, y - 4) * w + x];
+              const down = mask[Math.min(h - 1, y + 4) * w + x];
+              let nx = right - left;
+              let ny = down - up;
+              const nl = Math.hypot(nx, ny) || 1;
+              nx /= nl;
+              ny /= nl;
+              points.push({ x, y, nx, ny, tx: -ny, ty: nx });
+            }
+          }
+        }
+        if (bbox.minX >= bbox.maxX || bbox.minY >= bbox.maxY) {
+          bbox.minX = w * 0.24;
+          bbox.maxX = w * 0.76;
+          bbox.minY = h * 0.24;
+          bbox.maxY = h * 0.76;
+        }
+        bbox.cx = (bbox.minX + bbox.maxX) * 0.5;
+        bbox.cy = (bbox.minY + bbox.maxY) * 0.5;
+        bbox.width = bbox.maxX - bbox.minX;
+        bbox.height = bbox.maxY - bbox.minY;
+        return { bbox, points };
+      }
+
+      function renderMaskMini(mask, w, h) {
+        const image = maskMiniCtx.createImageData(320, 320);
+        const d = image.data;
+        for (let y = 0; y < 320; y++) {
+          for (let x = 0; x < 320; x++) {
+            const sx = Math.floor((x / 320) * w);
+            const sy = Math.floor((y / 320) * h);
+            const v = mask[sy * w + sx] ? 18 : 242;
+            const i = (y * 320 + x) * 4;
+            d[i] = v;
+            d[i + 1] = v;
+            d[i + 2] = v;
+            d[i + 3] = 255;
+          }
+        }
+        maskMiniCtx.putImageData(image, 0, 0);
+      }
+
+      function lumaAt(data, w, h, x, y) {
+        const xx = Math.max(0, Math.min(w - 1, x));
+        const yy = Math.max(0, Math.min(h - 1, y));
+        return getLuma(data, (yy * w + xx) * 4);
+      }
+
+      function crossesLumaLevel(data, w, h, x, y, level) {
+        const c = lumaAt(data, w, h, x, y) - level;
+        const r = lumaAt(data, w, h, x + 1, y) - level;
+        const d = lumaAt(data, w, h, x, y + 1) - level;
+        return c * r <= 0 || c * d <= 0;
+      }
+
+      function applyPenTraceDetails(source, mask, w, h) {
+        const { points } = analyzeMaskGeometry(mask, w, h);
+        if (!points.length) return;
+        const ink = state.nodes.ink;
+        const edge = state.nodes.edge;
+        const distress = state.nodes.distress;
+        const texture = state.nodes.texture;
+        const inkAlpha = getColorAlpha(ink, "color") / 100;
+        const count = Math.min(points.length, Math.round(90 + edge.rough * 4.6 + distress.amount * 2.4));
+
+        resultCtx.save();
+        resultCtx.strokeStyle = ink.color;
+        resultCtx.fillStyle = ink.color;
+        resultCtx.lineWidth = 0.65 + Math.max(0, edge.width) * 0.22;
+        resultCtx.globalAlpha = 0.22 + inkAlpha * 0.42;
+        resultCtx.lineCap = "round";
+
+        for (let i = 0; i < count; i++) {
+          const p = points[Math.floor(hash(i, distress.seed, 51) * points.length)];
+          const srcIndex = (Math.round(p.y) * w + Math.round(p.x)) * 4;
+          const tone = clamp((255 - getLuma(source.data, srcIndex)) / 255, 0, 1);
+          if (hash(i, 2, distress.seed) < distress.amount / 260) continue;
+          const len = 4 + hash(i, 3, distress.seed) * (12 + texture.fabric * 0.18);
+          const jitter = (hash(i, 4, distress.seed) - 0.5) * 5;
+          const offset = (hash(i, 5, distress.seed) - 0.5) * (5 + tone * 8);
+          const x = p.x + p.nx * offset;
+          const y = p.y + p.ny * offset;
+          resultCtx.globalAlpha = 0.08 + inkAlpha * (0.16 + tone * 0.42);
+          resultCtx.beginPath();
+          resultCtx.moveTo(x - p.tx * len * 0.5 + p.nx * jitter, y - p.ty * len * 0.5 + p.ny * jitter);
+          resultCtx.lineTo(x + p.tx * len * 0.5 - p.nx * jitter, y + p.ty * len * 0.5 - p.ny * jitter);
+          resultCtx.stroke();
+
+          if (hash(i, 6, distress.seed) > 0.72) {
+            resultCtx.globalAlpha = 0.12 + tone * 0.28;
+            resultCtx.beginPath();
+            resultCtx.arc(x + p.nx * 3, y + p.ny * 3, 0.75 + hash(i, 7, distress.seed) * 1.4, 0, Math.PI * 2);
+            resultCtx.fill();
+          }
+        }
+        resultCtx.restore();
+      }
+
+      function renderPenTrace(source, mask, w, h) {
+        const { data } = source;
+        const out = resultCtx.createImageData(w, h);
+        const d = out.data;
+        const extract = state.nodes.extract;
+        const ink = state.nodes.ink;
+        const edge = state.nodes.edge;
+        const distress = state.nodes.distress;
+        const texture = state.nodes.texture;
+        const color = state.nodes.color;
+        const inkRgb = hexToRgb(ink.color);
+        const edgeRgb = hexToRgb(edge.color);
+        const bgRgb = hexToRgb(color.bg);
+        const inkAlpha = getColorAlpha(ink, "color") / 100;
+        const bgAlpha = getColorAlpha(color, "bg") / 100;
+        const threshold = extract.threshold;
+        const contrast = 1 + extract.contrast / 80;
+        const levels = [threshold - 28, threshold, threshold + 34];
+
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const p = y * w + x;
+            const i = p * 4;
+            const raw = getLuma(data, i);
+            const luma = clamp((raw - 128) * contrast + 128);
+            const paperNoise = (hash(Math.floor(x / 3), Math.floor(y / 3), 81) - 0.5) * (8 + texture.fabric * 0.34);
+            const scan = Math.sin(y * 0.32 + hash(1, Math.floor(y / 4), 82) * 2) * texture.scan * 0.08;
+
+            let r = clamp(lerp(255, bgRgb.r, bgAlpha) + paperNoise + scan);
+            let g = clamp(lerp(255, bgRgb.g, bgAlpha) + paperNoise + scan);
+            let b = clamp(lerp(255, bgRgb.b, bgAlpha) + paperNoise + scan);
+            let line = 0;
+
+            for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
+              const level = levels[levelIndex] + (hash(Math.floor(x / 5), Math.floor(y / 5), levelIndex + 84) - 0.5) * edge.rough * 0.42;
+              if (crossesLumaLevel(data, w, h, x, y, level)) line = Math.max(line, levelIndex === 1 ? 1 : 0.62);
+            }
+
+            if (edge.enabled && edgeAt(mask, x, y, w, h, Math.max(1, Math.round(edge.width)))) {
+              line = Math.max(line, 0.92);
+            }
+
+            const grainCell = Math.max(1, distress.size);
+            const broken = hash(Math.floor(x / grainCell), Math.floor(y / grainCell), distress.seed) < distress.amount / 360;
+            const dot = mask[p] && hash(x, y, distress.seed + 44) > 1 - ink.holes / 900;
+            if (broken) line *= 0.18;
+            if (dot) line = Math.max(line, 0.72);
+
+            if (line > 0.05 && ink.enabled) {
+              const scratch = 0.78 + hash(x, y, 91) * 0.32;
+              const mix = clamp(line * ink.strength / 100 * inkAlpha * scratch, 0, 1);
+              r = lerp(r, lerp(inkRgb.r, edgeRgb.r, line * 0.35), mix);
+              g = lerp(g, lerp(inkRgb.g, edgeRgb.g, line * 0.35), mix);
+              b = lerp(b, lerp(inkRgb.b, edgeRgb.b, line * 0.35), mix);
+            }
+
+            d[i] = clamp(r);
+            d[i + 1] = clamp(g);
+            d[i + 2] = clamp(b);
+            d[i + 3] = 255;
+          }
+        }
+
+        result.width = w;
+        result.height = h;
+        resultCtx.putImageData(out, 0, 0);
+        applyPenTraceDetails(source, mask, w, h);
+        empty.classList.add("hidden");
+      }
+
+      function getBlurredMaskData(mask, w, h, blurPx) {
+        const maskCanvas = document.createElement("canvas");
+        const blurCanvas = document.createElement("canvas");
+        maskCanvas.width = blurCanvas.width = w;
+        maskCanvas.height = blurCanvas.height = h;
+        const maskCtx = maskCanvas.getContext("2d", { willReadFrequently: true });
+        const blurCtx = blurCanvas.getContext("2d", { willReadFrequently: true });
+        const image = maskCtx.createImageData(w, h);
+        const d = image.data;
+        for (let p = 0; p < mask.length; p++) {
+          const i = p * 4;
+          d[i] = 0;
+          d[i + 1] = 0;
+          d[i + 2] = 0;
+          d[i + 3] = mask[p] ? 255 : 0;
+        }
+        maskCtx.putImageData(image, 0, 0);
+        blurCtx.filter = `blur(${Math.max(0, blurPx)}px)`;
+        blurCtx.drawImage(maskCanvas, 0, 0);
+        blurCtx.filter = "none";
+        return blurCtx.getImageData(0, 0, w, h).data;
+      }
+
+      function alphaAt(data, w, h, x, y) {
+        const xx = Math.max(0, Math.min(w - 1, x));
+        const yy = Math.max(0, Math.min(h - 1, y));
+        return data[(yy * w + xx) * 4 + 3] / 255;
+      }
+
+      function renderThermalMap(source, mask, w, h) {
+        const { data } = source;
+        const out = resultCtx.createImageData(w, h);
+        const d = out.data;
+        const ink = state.nodes.ink;
+        const edge = state.nodes.edge;
+        const texture = state.nodes.texture;
+        const decor = state.nodes.decor;
+        const color = state.nodes.color;
+        const inkRgb = hexToRgb(ink.color);
+        const edgeRgb = hexToRgb(edge.color);
+        const bgRgb = hexToRgb(color.bg);
+        const hiRgb = hexToRgb(color.highlight);
+        const inkAlpha = getColorAlpha(ink, "color") / 100;
+        const edgeAlpha = getColorAlpha(edge, "color") / 100;
+        const bgAlpha = getColorAlpha(color, "bg") / 100;
+        const hiAlpha = getColorAlpha(color, "highlight") / 100;
+        const soft = getBlurredMaskData(mask, w, h, 8 + decor.blur * 0.28);
+        const body = getBlurredMaskData(mask, w, h, 2 + edge.width * 1.6);
+        const glow = getBlurredMaskData(mask, w, h, 18 + decor.blur * 0.42);
+
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const p = y * w + x;
+            const i = p * 4;
+            const luma = getLuma(data, i);
+            const tone = clamp((255 - luma) / 255, 0, 1);
+            const softA = alphaAt(soft, w, h, x, y);
+            const bodyA = alphaAt(body, w, h, x, y);
+            const glowA = alphaAt(glow, w, h, x, y);
+            const sx1 = alphaAt(soft, w, h, x + 1, y);
+            const sx0 = alphaAt(soft, w, h, x - 1, y);
+            const sy1 = alphaAt(soft, w, h, x, y + 1);
+            const sy0 = alphaAt(soft, w, h, x, y - 1);
+            const fuzzyEdge = clamp((Math.abs(sx1 - sx0) + Math.abs(sy1 - sy0)) * (4 + edge.rough * 0.045), 0, 1);
+            const paperNoise = (hash(Math.floor(x / 2), Math.floor(y / 2), 121) - 0.5) * (5 + texture.fabric * 0.28);
+            const fineNoise = (hash(x, y, 122) - 0.5) * decor.particles * 0.18;
+
+            let r = clamp(lerp(255, bgRgb.r, bgAlpha) + paperNoise);
+            let g = clamp(lerp(255, bgRgb.g, bgAlpha) + paperNoise);
+            let b = clamp(lerp(255, bgRgb.b, bgAlpha) + paperNoise);
+
+            const haloMix = clamp((glowA - softA * 0.3) * 0.62 * hiAlpha, 0, 0.72);
+            r = lerp(r, hiRgb.r, haloMix);
+            g = lerp(g, hiRgb.g, haloMix);
+            b = lerp(b, hiRgb.b, haloMix);
+
+            const bodyMix = clamp((softA * 0.38 + bodyA * 0.52) * (0.42 + tone * 0.58) * ink.strength / 100 * inkAlpha, 0, 0.96);
+            r = lerp(r, inkRgb.r, bodyMix);
+            g = lerp(g, inkRgb.g, bodyMix);
+            b = lerp(b, inkRgb.b, bodyMix);
+
+            const edgeMix = clamp(fuzzyEdge * (0.26 + edge.width * 0.08) * edgeAlpha, 0, 0.58);
+            r = lerp(r, edgeRgb.r, edgeMix);
+            g = lerp(g, edgeRgb.g, edgeMix);
+            b = lerp(b, edgeRgb.b, edgeMix);
+
+            const scan = Math.sin(y * 0.34 + hash(1, Math.floor(y / 5), 123) * 2) * texture.scan * 0.06;
+            d[i] = clamp(r + fineNoise + scan);
+            d[i + 1] = clamp(g + fineNoise + scan);
+            d[i + 2] = clamp(b + fineNoise + scan);
+            d[i + 3] = 255;
+          }
+        }
+
+        result.width = w;
+        result.height = h;
+        resultCtx.putImageData(out, 0, 0);
+        if (decor.enabled && decor.grid > 0) {
+          resultCtx.save();
+          resultCtx.globalAlpha = decor.grid / 100 * 0.12;
+          resultCtx.strokeStyle = "#111111";
+          resultCtx.lineWidth = 1;
+          const step = Math.max(12, Number(decor.gridSize) || 48);
+          for (let gx = step; gx < w; gx += step) {
+            resultCtx.beginPath();
+            resultCtx.moveTo(gx, 0);
+            resultCtx.lineTo(gx, h);
+            resultCtx.stroke();
+          }
+          for (let gy = step; gy < h; gy += step) {
+            resultCtx.beginPath();
+            resultCtx.moveTo(0, gy);
+            resultCtx.lineTo(w, gy);
+            resultCtx.stroke();
+          }
+          resultCtx.restore();
+        }
+        applyLensBlur(w, h);
+        empty.classList.add("hidden");
+      }
+
+      function applyGraphicDecor(source, mask, w, h) {
+        const decor = state.nodes.decor;
+        if (!decor.enabled) return;
+
+        resultCtx.save();
+        if (decor.blur > 0) {
+          const blurImage = workCtx.createImageData(w, h);
+          const bd = blurImage.data;
+          for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+              const p = y * w + x;
+              const i = p * 4;
+              const src = p * 4;
+              const luma = getLuma(source.data, src);
+              const alpha = mask[p] ? (0.12 + (255 - luma) / 255 * 0.34) * decor.blur * 2.1 : 0;
+              bd[i] = 10;
+              bd[i + 1] = 10;
+              bd[i + 2] = 10;
+              bd[i + 3] = clamp(alpha);
+            }
+          }
+          workCtx.putImageData(blurImage, 0, 0);
+          resultCtx.globalAlpha = 0.8;
+          resultCtx.filter = `blur(${Math.max(2, decor.blur * 0.32)}px)`;
+          resultCtx.drawImage(work, 0, 0);
+          resultCtx.filter = "none";
+        }
+
+        if (decor.grid > 0) {
+          const gridAlpha = decor.grid / 100;
+          resultCtx.globalAlpha = gridAlpha * 0.42;
+          resultCtx.strokeStyle = "#111111";
+          resultCtx.lineWidth = 1;
+          const step = Math.max(12, Number(decor.gridSize) || 48);
+          for (let x = step; x < w; x += step) {
+            resultCtx.beginPath();
+            resultCtx.moveTo(x, 0);
+            resultCtx.lineTo(x, h);
+            resultCtx.stroke();
+          }
+          for (let y = step; y < h; y += step) {
+            resultCtx.beginPath();
+            resultCtx.moveTo(0, y);
+            resultCtx.lineTo(w, y);
+            resultCtx.stroke();
+          }
+        }
+
+        if (decor.particles > 0) {
+          resultCtx.globalAlpha = 0.55;
+          resultCtx.fillStyle = "#111111";
+          const count = Math.floor(decor.particles * 8);
+          for (let i = 0; i < count; i++) {
+            const x = Math.floor(hash(i, 1, 91) * w);
+            const y = Math.floor(hash(i, 2, 91) * h);
+            const p = y * w + x;
+            const nearMask = mask[p] || hash(Math.floor(x / 28), Math.floor(y / 28), 93) > 0.72;
+            if (!nearMask) continue;
+            const s = 1 + hash(i, 3, 91) * 2.8;
+            resultCtx.beginPath();
+            resultCtx.arc(x, y, s, 0, Math.PI * 2);
+            resultCtx.fill();
+          }
+        }
+        resultCtx.restore();
+      }
+
+      function applyLensBlur(w, h) {
+        const lens = state.nodes.lens;
+        if (!lens || !lens.enabled || lens.blur <= 0) return;
+
+        const sharpCanvas = document.createElement("canvas");
+        const blurCanvas = document.createElement("canvas");
+        sharpCanvas.width = blurCanvas.width = w;
+        sharpCanvas.height = blurCanvas.height = h;
+        const sharpCtx = sharpCanvas.getContext("2d", { willReadFrequently: true });
+        const blurCtx = blurCanvas.getContext("2d", { willReadFrequently: true });
+        sharpCtx.drawImage(result, 0, 0);
+        blurCtx.filter = `blur(${Math.max(1, lens.blur * 0.22)}px)`;
+        blurCtx.drawImage(result, 0, 0);
+        blurCtx.filter = "none";
+
+        const sharp = sharpCtx.getImageData(0, 0, w, h);
+        const blurred = blurCtx.getImageData(0, 0, w, h);
+        const sd = sharp.data;
+        const bd = blurred.data;
+        const cx = w * 0.5;
+        const cy = h * 0.52;
+        const maxR = Math.hypot(w * 0.5, h * 0.5);
+        const focusRadius = lerp(maxR * 0.08, maxR * 0.78, lens.focus / 100);
+        const feather = lerp(maxR * 0.08, maxR * 0.26, lens.blur / 100);
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const p = (y * w + x) * 4;
+            const dist = Math.hypot(x - cx, y - cy);
+            const mix = smoothstep(focusRadius, focusRadius + feather, dist);
+            sd[p] = lerp(sd[p], bd[p], mix);
+            sd[p + 1] = lerp(sd[p + 1], bd[p + 1], mix);
+            sd[p + 2] = lerp(sd[p + 2], bd[p + 2], mix);
+            sd[p + 3] = lerp(sd[p + 3], bd[p + 3], mix);
+          }
+        }
+        resultCtx.putImageData(sharp, 0, 0);
+      }
+
+      function renderOutput() {
+        if (!state.source) return;
+        const source = buildSourceImage();
+        const { data, width: w, height: h } = source;
+        const mask = createMask(source);
+        renderMaskMini(mask, w, h);
+        if (state.preset === "penTrace") {
+          renderPenTrace(source, mask, w, h);
+          return;
+        }
+        if (state.preset === "thermalMap") {
+          renderThermalMap(source, mask, w, h);
+          return;
+        }
+        const out = resultCtx.createImageData(w, h);
+        const d = out.data;
+
+        const extract = state.nodes.extract;
+        const ink = state.nodes.ink;
+        const screen = state.nodes.screen;
+        const edge = state.nodes.edge;
+        const distress = state.nodes.distress;
+        const texture = state.nodes.texture;
+        const decor = state.nodes.decor;
+        const color = state.nodes.color;
+        const inkRgb = hexToRgb(ink.color);
+        const edgeRgb = hexToRgb(edge.color);
+        const bgRgb = hexToRgb(color.bg);
+        const hiRgb = hexToRgb(color.highlight);
+        const inkAlpha = getColorAlpha(ink, "color") / 100;
+        const edgeAlpha = getColorAlpha(edge, "color") / 100;
+        const bgAlpha = getColorAlpha(color, "bg") / 100;
+        const hiAlpha = getColorAlpha(color, "highlight") / 100;
+        const transparent = color.enabled && color.transparent;
+
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const p = y * w + x;
+            const i = p * 4;
+            const luma = getLuma(data, i);
+            let m = mask[p];
+            let e = 0;
+
+            if (edge.enabled && edge.width > 0) {
+              e = edgeAt(mask, x, y, w, h, Math.max(1, Math.round(edge.width)));
+              const erodeNoise = hash(Math.floor(x / 4), Math.floor(y / 4), 7);
+              if (e && erodeNoise < edge.rough / 260) m = 1;
+            }
+
+            if (screen.enabled && m && screen.strength > 0) {
+              const angle = screen.angle * Math.PI / 180;
+              const cos = Math.cos(angle);
+              const sin = Math.sin(angle);
+              const cx = x - w * 0.5;
+              const cy = y - h * 0.5;
+              const rx = cx * cos - cy * sin;
+              const ry = cx * sin + cy * cos;
+              const cell = Math.max(3, screen.dot);
+              const lx = ((rx % cell) + cell) % cell - cell * 0.5;
+              const ly = ((ry % cell) + cell) % cell - cell * 0.5;
+              const tone = clamp((255 - luma) / 255, 0, 1);
+              const radius = cell * (0.12 + tone * 0.52) * (screen.strength / 100);
+              if (Math.hypot(lx, ly) > radius) m = 0;
+            }
+
+            if (distress.enabled && m) {
+              const cell = Math.max(1, distress.size);
+              const speckle = hash(Math.floor(x / cell), Math.floor(y / cell), distress.seed);
+              const fine = hash(x, y, distress.seed + 9);
+              const holePower = distress.amount / 100;
+              const sourceHole = ink.enabled ? ink.holes / 100 : 0;
+              if (speckle < holePower * 0.18 || fine < sourceHole * 0.08) m = 0;
+            }
+
+            let r = transparent ? 0 : bgRgb.r;
+            let g = transparent ? 0 : bgRgb.g;
+            let b = transparent ? 0 : bgRgb.b;
+            let a = transparent ? 0 : 255;
+
+            if (color.enabled && !transparent) {
+              const fabric = texture.enabled ? texture.fabric / 100 : 0;
+              const fabricNoise = (hash(Math.floor(x / 7), Math.floor(y / 3), 21) - 0.5) * fabric * 44;
+              r = clamp(lerp(255, bgRgb.r, bgAlpha) + fabricNoise);
+              g = clamp(lerp(255, bgRgb.g, bgAlpha) + fabricNoise);
+              b = clamp(lerp(255, bgRgb.b, bgAlpha) + fabricNoise);
+            }
+
+            if (m && ink.enabled) {
+              const strength = ink.strength / 100 * inkAlpha;
+              const shade = clamp((255 - luma) / 255, 0, 1);
+              const printNoise = (hash(x, y, 4) - 0.5) * 48 * (texture.enabled ? texture.fabric / 100 : 0.25);
+              r = lerp(r, lerp(inkRgb.r, hiRgb.r, shade * 0.18 * hiAlpha), strength) + printNoise;
+              g = lerp(g, lerp(inkRgb.g, hiRgb.g, shade * 0.18 * hiAlpha), strength) + printNoise;
+              b = lerp(b, lerp(inkRgb.b, hiRgb.b, shade * 0.18 * hiAlpha), strength) + printNoise;
+              a = 255;
+            }
+
+            if (e && edge.enabled) {
+              const jag = hash(Math.floor(x / 3), Math.floor(y / 3), 13);
+              const mix = (0.62 + jag * edge.rough / 180) * edgeAlpha;
+              r = lerp(r, edgeRgb.r, mix);
+              g = lerp(g, edgeRgb.g, mix);
+              b = lerp(b, edgeRgb.b, mix);
+              a = 255;
+            }
+
+            if (texture.enabled) {
+              const scan = Math.sin(y * 0.42 + hash(1, Math.floor(y / 3), 5) * 2) * texture.scan * 0.12;
+              const bleed = texture.bleed / 100;
+              if (m && bleed > 0) {
+                r = lerp(r, inkRgb.r, bleed * hash(x, y, 33) * 0.16);
+                g = lerp(g, inkRgb.g, bleed * hash(x, y, 34) * 0.16);
+                b = lerp(b, inkRgb.b, bleed * hash(x, y, 35) * 0.16);
+              }
+              r = clamp(r + scan);
+              g = clamp(g + scan);
+              b = clamp(b + scan);
+            }
+
+            d[i] = clamp(r);
+            d[i + 1] = clamp(g);
+            d[i + 2] = clamp(b);
+            d[i + 3] = a;
+          }
+        }
+
+        result.width = w;
+        result.height = h;
+        resultCtx.putImageData(out, 0, 0);
+        if (decor.enabled) applyGraphicDecor(source, mask, w, h);
+        applyLensBlur(w, h);
+        empty.classList.add("hidden");
+      }
+
+      function renderAll(shouldRenderOutput = true) {
+        renderPresets();
+        renderNodeList();
+        renderParams();
+        if (shouldRenderOutput) renderOutput();
+      }
+
+      function loadFile(file) {
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        imagePreview.classList.add("hidden");
+        videoPreview.classList.add("hidden");
+        if (file.type.startsWith("video/")) {
+          videoPreview.src = url;
+          videoPreview.classList.remove("hidden");
+          videoPreview.addEventListener("loadedmetadata", () => {
+            state.source = videoPreview;
+            state.sourceType = "video";
+            state.sourceAspect = (videoPreview.videoWidth || 1) / (videoPreview.videoHeight || 1);
+            renderAll();
+          }, { once: true });
+          videoPreview.addEventListener("seeked", renderOutput);
+          videoPreview.addEventListener("pause", renderOutput);
+        } else {
+          imagePreview.src = url;
+          imagePreview.classList.remove("hidden");
+          const img = new Image();
+          img.onload = () => {
+            state.source = img;
+            state.sourceType = "image";
+            state.sourceAspect = img.naturalWidth / img.naturalHeight;
+            renderAll();
+          };
+          img.src = url;
+        }
+      }
+
+      inputModes.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-accept]");
+        if (!button) return;
+        inputModes.querySelectorAll(".mode-button").forEach((item) => item.classList.toggle("active", item === button));
+        const mode = button.dataset.accept;
+        if (mode === "image") fileInput.accept = "image/*,.svg,image/svg+xml";
+        if (mode === "video") fileInput.accept = "video/*";
+        if (mode === "svg") fileInput.accept = ".svg,image/svg+xml";
+      });
+      fileInput.addEventListener("change", (event) => loadFile(event.target.files[0]));
+      drop.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        drop.classList.add("drag");
+      });
+      drop.addEventListener("dragleave", () => drop.classList.remove("drag"));
+      drop.addEventListener("drop", (event) => {
+        event.preventDefault();
+        drop.classList.remove("drag");
+        loadFile(event.dataTransfer.files[0]);
+      });
+      document.getElementById("exportPng").addEventListener("click", () => {
+        if (!state.source) return;
+        const a = document.createElement("a");
+        a.href = result.toDataURL("image/png");
+        a.download = `graphic-texture-chain-${state.preset}.png`;
+        a.click();
+      });
+      document.getElementById("randomize").addEventListener("click", () => {
+        randomizeChain();
+      });
+
+      renderAll(false);
+    </script>
+  </body>
+</html>
