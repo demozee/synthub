@@ -1,8 +1,8 @@
 {
   "name": "synths-lab-graphic-texture",
-  "version": "1.3.0",
+  "version": "1.5.0",
   "private": true,
-  "description": "Synths Lab Graphic Texture V1.3 - a browser-based graphic texture generator for print-style image effects.",
+  "description": "Synths Lab Graphic Texture V1.5 - UI 2.0 fixes for the browser-based graphic texture generator.",
   "scripts": {
     "start": "python3 -m http.server 4178",
     "serve": "python3 -m http.server 4178"

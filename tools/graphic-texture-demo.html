@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Synths Lab Graphic Texture V1.3</title>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
       @font-face {
         font-family: "TE20";
@@ -61,8 +61,7 @@
       .param-title strong,
       .color-hex-readout,
       .color-popover .hex,
-      .small-card h3,
-      .empty {
+      .small-card h3 {
         font-family: var(--font-mono);
         font-weight: 300;
         letter-spacing: -0.05em;
@@ -76,8 +75,7 @@
       .param-title span,
       .label,
       .color-kind,
-      .check,
-      #randomize {
+      .check {
         font-family: var(--font-cn);
         font-weight: 300;
         letter-spacing: 0;
@@ -200,8 +198,12 @@
       .drop input {
         position: absolute;
         inset: 0;
+        width: 100%;
+        height: 100%;
         opacity: 0;
         cursor: pointer;
+        z-index: 5;
+        appearance: none;
       }
 
       .drop-content {
@@ -228,13 +230,37 @@
         text-align: center;
       }
 
-      .preview {
-        width: 100%;
-        margin-top: 16px;
-        aspect-ratio: 4 / 3;
-        object-fit: contain;
+      .side-previews {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .side-preview {
+        display: grid;
+        grid-template-rows: 28px 112px;
+        min-width: 0;
         border: 1px solid #44444a;
-        background: #000;
+        background: #111115;
+        overflow: hidden;
+      }
+
+      .side-preview h3 {
+        margin: 0;
+        padding: 6px 8px 0;
+        border-bottom: 1px solid #44444a;
+        color: #b6bac4;
+        font-size: 14px;
+        font-weight: 300;
+      }
+
+      .side-preview canvas {
+        display: block;
+        width: 100%;
+        height: 112px;
+        object-fit: contain;
+        background: #f4f3ef;
       }
 
       .preset-grid {
@@ -368,8 +394,14 @@
       }
 
       .title {
-        font-size: clamp(36px, 5vw, 72px);
-        line-height: 0.96;
+        width: clamp(142px, 14vw, 188px);
+        flex: 0 0 auto;
+      }
+
+      .title img {
+        display: block;
+        width: 100%;
+        height: auto;
       }
 
       .note {
@@ -381,12 +413,10 @@
       }
 
       .workspace {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 250px;
-        gap: 18px;
-        align-items: stretch;
+        display: block;
         min-height: 0;
         height: 100%;
+        overflow: hidden;
       }
 
       .stage {
@@ -395,60 +425,21 @@
         place-items: center;
         min-height: 0;
         height: 100%;
-        padding: 22px;
-        border: 1px solid #d2d2d0;
-        background: rgba(255, 255, 255, 0.72);
+        padding: 0;
+        border: 0;
+        background: transparent;
+        overflow: hidden;
+        z-index: 1;
       }
 
       .result {
         display: block;
-        width: auto;
-        height: auto;
-        max-width: min(calc(100% - 12px), 860px);
-        max-height: calc(100% - 44px);
+        width: var(--fit-width, auto);
+        height: var(--fit-height, auto);
+        max-width: 100%;
+        max-height: 100%;
         object-fit: contain;
-        background: #f6f6f2;
-      }
-
-      .empty {
-        position: absolute;
-        color: #b4b7bf;
-        font-size: clamp(36px, 6vw, 98px);
-        pointer-events: none;
-      }
-
-      .before-after {
-        display: grid;
-        grid-template-rows: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-        min-height: 0;
-        height: 100%;
-      }
-
-      .small-card {
-        display: grid;
-        grid-template-rows: 38px minmax(0, 1fr);
-        min-height: 0;
-        border: 1px solid #d0d0d0;
-        background: rgba(255, 255, 255, 0.72);
-        overflow: hidden;
-      }
-
-      .small-card h3 {
-        margin: 0;
-        height: 38px;
-        padding: 9px 10px 0;
-        border-bottom: 1px solid #d0d0d0;
-        font-size: 18px;
-        font-weight: 300;
-      }
-
-      .small-card canvas {
-        display: block;
-        width: 100%;
-        height: 100%;
-        min-height: 0;
-        object-fit: contain;
+        background: transparent;
       }
 
       .node-list {
@@ -749,17 +740,824 @@
         display: none !important;
       }
 
+      /* Figma 1797:55 desktop composition */
+      .app {
+        grid-template-columns: 360px minmax(0, 1fr) 360px;
+      }
+
+      .side,
+      .right {
+        background: #27272a;
+      }
+
+      .side {
+        border-right: 0;
+      }
+
+      .right {
+        position: relative;
+        border-left: 1px solid #27272d;
+      }
+
+      .brand {
+        min-height: 140px;
+        padding: 30px;
+        border-bottom: 0;
+        background: #252528;
+      }
+
+      .brand img {
+        width: 300px;
+      }
+
+      .panel {
+        padding: 25px 28px 24px;
+        border-bottom: 0;
+      }
+
+      h2 {
+        margin-bottom: 19px;
+        color: #9c9ca2;
+        font-size: 20px;
+        line-height: 22px;
+        font-weight: 300;
+      }
+
+      .drop {
+        position: relative;
+        width: 300px;
+        height: 88px;
+        border: 0;
+        background: #0095dd;
+        color: #e5e5e5;
+        box-shadow: none;
+        overflow: visible;
+        flex: 0 0 auto;
+      }
+
+      .drop::after {
+        content: none;
+      }
+
+      .drop::before {
+        content: none;
+      }
+
+      .drop:hover,
+      .drop.drag {
+        background: #08a2ea;
+      }
+
+      .drop-content {
+        position: relative;
+        padding: 0;
+        height: 100%;
+        transform: none;
+        pointer-events: none;
+      }
+
+      .drop-title {
+        position: absolute;
+        left: 76px;
+        top: 17px;
+        width: 148px;
+        height: 54px;
+        padding-left: 0;
+        font-size: 40px;
+        line-height: 54px;
+        font-weight: 200;
+        letter-spacing: -2px;
+        text-align: center;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 25px;
+        top: 29px;
+        transform: none;
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+      }
+
+      .input-arrow {
+        position: absolute;
+        left: 263px;
+        top: 34px;
+        right: auto;
+        transform: none;
+        width: 16px;
+        height: 20px;
+        object-fit: contain;
+      }
+
+      .drop-sub {
+        display: flex;
+        align-items: baseline;
+        width: 300px;
+        margin-top: 23px;
+        padding-left: 17px;
+        color: #e5e5e5;
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 300;
+        line-height: 19px;
+        letter-spacing: -0.75px;
+        text-align: left;
+        white-space: nowrap;
+      }
+
+      #inputStatus.drop-sub {
+        overflow: visible;
+      }
+
+      .drop-sub span {
+        display: inline-block;
+        flex: 0 0 12px;
+        width: 12px;
+        margin-right: 13px;
+        color: var(--yellow);
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 19px;
+        vertical-align: -3px;
+      }
+
+      .side-previews {
+        grid-template-columns: 146px 146px;
+        gap: 11px;
+        margin-top: 45px;
+      }
+
+      .side-preview {
+        grid-template-rows: 35px 101px;
+        border: 0;
+        background: #202024;
+      }
+
+      .side-preview h3 {
+        padding: 10px 10px 0;
+        border-bottom: 0;
+        color: #a7a7ad;
+        font-size: 19px;
+      }
+
+      .side-preview canvas {
+        height: 101px;
+        background: #202024;
+      }
+
+      .preset-grid {
+        gap: 8px 7px;
+      }
+
+      .preset {
+        min-height: 59px;
+        padding: 8px 12px;
+        background: #202024;
+        color: #c7c7ca;
+        font-size: 16px;
+      }
+
+      .preset:hover {
+        background: #29292d;
+      }
+
+      .preset.active {
+        outline: 1px solid #079bda;
+        outline-offset: -1px;
+        background: #202024;
+        color: #d7d7da;
+      }
+
+      .preset small {
+        margin-top: 5px;
+        font-size: 13px;
+        line-height: 17.55px;
+      }
+
+      .randomize-button {
+        width: 304px;
+        height: 60px;
+        margin-top: 10px;
+        border: 1px solid #000;
+        background: #222227;
+        color: #f4f3ef;
+        font-family: var(--font-mono);
+        font-size: 30px;
+        line-height: 39px;
+        font-weight: 300;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+      }
+
+      .powered-by {
+        min-height: 152px;
+        margin-top: 320px;
+        padding: 36px 30px 28px;
+        background: #565659;
+        color: #252528;
+      }
+
+      .powered-by span,
+      .powered-by strong {
+        display: block;
+        font-family: var(--font-cn);
+      }
+
+      .powered-by span {
+        font-size: 26px;
+        line-height: 30px;
+        font-weight: 400;
+        letter-spacing: -0.04em;
+      }
+
+      .powered-by strong {
+        margin-top: 2px;
+        font-size: 55px;
+        line-height: 56px;
+        font-weight: 800;
+        letter-spacing: -0.055em;
+      }
+
+      .main {
+        padding: 30px 38px 24px;
+      }
+
+      .top {
+        align-items: flex-start;
+      }
+
+      .title {
+        width: 364px;
+        flex: 0 0 364px;
+      }
+
+      .title img {
+        width: 364px;
+        height: 110px;
+        object-fit: contain;
+        object-position: left top;
+      }
+
+      .note {
+        width: 416px;
+        max-width: 416px;
+        margin-top: 45px;
+        color: #8e8e93;
+        font-size: 15px;
+        line-height: 1.52;
+      }
+
+      .right-scroll {
+        padding-bottom: 4px;
+      }
+
+      .node-list {
+        gap: 10px;
+      }
+
+      .node {
+        grid-template-columns: 39px 1fr 36px;
+        min-height: 68px;
+        border: 1px solid transparent;
+        background: #202024;
+      }
+
+      .node.active {
+        outline: 1px solid var(--yellow);
+        outline-offset: -1px;
+        background: #202024;
+      }
+
+      .node.disabled {
+        opacity: 0.38;
+      }
+
+      .node-index {
+        border-right: 1px solid #303036;
+        color: #b6b6bc;
+        font-size: 20px;
+      }
+
+      .node-body {
+        padding: 10px 12px;
+      }
+
+      .node-name {
+        font-size: 19px;
+        line-height: 24px;
+      }
+
+      .node-desc {
+        margin-top: 4px;
+        font-size: 13px;
+        line-height: 18.2px;
+      }
+
+      .toggle {
+        width: 28px;
+        height: 28px;
+        border: 0;
+        color: #66666c;
+        font-size: 14px;
+      }
+
+      .node:not(.disabled) .toggle {
+        border: 0;
+        color: var(--yellow);
+      }
+
+      .param-flyout {
+        position: fixed;
+        left: var(--flyout-left, 20px);
+        top: var(--flyout-top, 120px);
+        z-index: 60;
+        width: 240px;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        padding: 20px;
+        border: 0;
+        background: #202024;
+        color: var(--paper);
+        box-shadow: 0 12px 34px rgba(0, 0, 0, 0.22);
+      }
+
+      .param-flyout.closed {
+        display: none;
+      }
+
+      .param-title {
+        align-items: flex-start;
+        min-height: 80px;
+        margin: -20px -20px 16px;
+        padding: 20px;
+        background: #19191d;
+      }
+
+      .param-title strong,
+      .param-title span {
+        display: block;
+      }
+
+      .param-title strong {
+        font-size: 19px;
+        line-height: 24px;
+      }
+
+      .param-title span {
+        margin-top: 4px;
+        font-size: 13px;
+        line-height: 18.2px;
+      }
+
+      .control {
+        margin-bottom: 26px;
+      }
+
+      .label {
+        margin-bottom: 12px;
+        font-size: 16px;
+        line-height: 17px;
+      }
+
+      input[type="range"] {
+        height: 18px;
+      }
+
+      input[type="range"]::-webkit-slider-runnable-track {
+        height: 4px;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        width: 14px;
+        height: 14px;
+        margin-top: -5px;
+        border-radius: 50%;
+      }
+
+      .color-section {
+        padding-top: 4px;
+      }
+
+      .standalone-color {
+        margin-bottom: 24px;
+      }
+
+      .standalone-color .control > .label {
+        color: #b9b9be;
+        font-size: 20px;
+        line-height: 28px;
+      }
+
+      .standalone-color .control {
+        margin-bottom: 0;
+      }
+
+      .standalone-color .color-summary {
+        grid-template-columns: 50px 12px 1fr 20px;
+        gap: 10px;
+        min-height: 51px;
+      }
+
+      .standalone-color .color-swatch {
+        width: 50px;
+        height: 50px;
+        border: 0;
+        outline: 0;
+        box-shadow: none;
+      }
+
+      .standalone-color .color-swatch:hover {
+        border-color: transparent;
+        box-shadow: none;
+      }
+
+      .standalone-color .color-hex-readout {
+        font-size: 20px;
+        line-height: 24px;
+      }
+
+      .standalone-color .color-hash {
+        color: #595960;
+        font-size: 20px;
+        line-height: 24px;
+      }
+
+      .standalone-color .alpha-mini-toggle {
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #5d5d62;
+        cursor: pointer;
+      }
+
+      .standalone-color .alpha-mini-toggle svg {
+        display: block;
+        width: 20px;
+        height: 20px;
+        overflow: visible;
+      }
+
+      .standalone-color .alpha-mini-toggle img {
+        display: block;
+        width: 20px;
+        height: 20px;
+        opacity: 0.78;
+      }
+
+      .standalone-color .alpha-mini-toggle.active img {
+        opacity: 1;
+        filter: brightness(0) saturate(100%) invert(78%) sepia(91%) saturate(356%) hue-rotate(349deg) brightness(104%) contrast(101%);
+      }
+
+      .standalone-color .alpha-mini-toggle.active {
+        color: var(--yellow);
+      }
+
+      .standalone-color .color-summary.transparent .color-swatch {
+        background:
+          repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.22) 0 4px, transparent 4px 8px),
+          #202024;
+      }
+
+      .standalone-color .color-summary.transparent .color-hex-readout,
+      .standalone-color .color-summary.transparent .color-hash {
+        color: #595960;
+        text-decoration: line-through;
+      }
+
+      .standalone-color .color-kind {
+        display: none;
+      }
+
+      .color-popover {
+        width: min(310px, calc(100vw - 24px));
+      }
+
+      .export-dock {
+        display: grid;
+        grid-template-columns: 267px 60px;
+        gap: 4px;
+        width: 359px;
+        height: 88px;
+        padding: 14px;
+        border-top: 0;
+        background: #0d0d11;
+      }
+
+      .export-button {
+        position: relative;
+        display: block;
+        width: 267px;
+        height: 60px;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        border-radius: 0;
+        background: var(--yellow);
+        color: #050506;
+      }
+
+      .export-button .export-icon {
+        position: absolute;
+        left: 16px;
+        top: 16px;
+        width: 20px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+      }
+
+      .export-button .export-icon img {
+        width: 16px;
+        height: 21px;
+      }
+
+      .export-button .export-label {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 10px;
+        display: block;
+        width: auto;
+        height: 39px;
+        padding: 0;
+        font-family: var(--font-mono);
+        font-size: 30px;
+        line-height: 39px;
+        font-weight: 300;
+        letter-spacing: -0.05em;
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+    .reverse-toggle {
+      position: relative;
+      display: block;
+      width: 60px;
+      height: 60px;
+      border: 0;
+      border-radius: 0;
+      background: #202024;
+      box-shadow: none;
+      color: #77777f;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 20px;
+      line-height: 25px;
+        font-weight: 400;
+        letter-spacing: -0.05em;
+      }
+
+    .reverse-toggle.active {
+      box-shadow: inset 0 0 0 1px var(--yellow);
+      color: var(--yellow);
+    }
+
+    .reverse-toggle:focus,
+    .reverse-toggle:focus-visible {
+      outline: 0;
+    }
+
+      .reverse-icon {
+        position: absolute;
+        left: 8px;
+        top: 8px;
+        display: block;
+        width: 20px;
+        height: 20px;
+        color: currentColor;
+      }
+
+    .reverse-icon svg {
+      display: block;
+      width: 20px;
+      height: 20px;
+    }
+
+    .reverse-icon .re-left {
+      fill: #77777f;
+    }
+
+    .reverse-icon .re-right {
+      fill: #202024;
+    }
+
+    .reverse-icon .re-ring {
+      fill: none;
+      stroke: #77777f;
+      stroke-width: 1;
+    }
+
+    .reverse-toggle.active .reverse-icon .re-left {
+      fill: #f4f3ef;
+    }
+
+    .reverse-toggle.active .reverse-icon .re-right {
+      fill: #202024;
+    }
+
+    .reverse-toggle.active .reverse-icon .re-ring {
+      stroke: #f4f3ef;
+    }
+
+      .reverse-toggle > span:last-child {
+        position: absolute;
+        left: 32px;
+        top: 31px;
+        display: block;
+        width: 22px;
+        height: 25px;
+        line-height: 25px;
+        text-align: left;
+      }
+
+      /* Hard component locks for the Figma 1797:55 controls.
+         These sit after desktop/mobile rules so older shared rules cannot steal the typography. */
+      #randomize.randomize-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 304px;
+        height: 60px;
+        margin-top: 10px;
+        padding: 0;
+        border: 1px solid #000;
+        border-radius: 0;
+        background: #222227;
+        color: #f4f3ef;
+        font-family: var(--font-mono);
+        font-size: 30px;
+        line-height: 39px;
+        font-weight: 300;
+        letter-spacing: -1.5px;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      #inputStatus.drop-sub {
+        display: flex;
+        align-items: baseline;
+        width: 300px;
+        margin-top: 23px;
+        padding-left: 17px;
+        color: #e5e5e5;
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 300;
+        line-height: 19px;
+        letter-spacing: -0.75px;
+        text-align: left;
+        white-space: nowrap;
+      }
+
+      .drop-title {
+        font-family: var(--font-mono);
+        font-size: 40px;
+        line-height: 54px;
+        font-weight: 200;
+        letter-spacing: -2px;
+      }
+
+      .export-button .export-label {
+        font-family: var(--font-mono);
+        font-size: 30px;
+        line-height: 39px;
+        font-weight: 300;
+        letter-spacing: -1.5px;
+      }
+
+      #drop.drop {
+        box-sizing: border-box;
+        width: 300px;
+        height: 88px;
+        overflow: visible;
+        font-family: var(--font-mono);
+      }
+
+      #drop .drop-content {
+        width: 100%;
+        height: 100%;
+      }
+
+      #drop .input-icon {
+        left: 25px;
+        top: 29px;
+        width: 30px;
+        height: 30px;
+      }
+
+      #drop .input-arrow {
+        left: 263px;
+        top: 34px;
+        width: 16px;
+        height: 20px;
+      }
+
+      #drop .drop-title {
+        left: 76px;
+        top: 17px;
+        width: 148px;
+        height: 54px;
+        font-family: var(--font-mono);
+        font-size: 40px;
+        line-height: 54px;
+        font-weight: 200;
+        letter-spacing: -2px;
+        text-align: center;
+      }
+
+      #inputStatus.drop-sub span {
+        flex: 0 0 12px;
+        width: 12px;
+        margin-right: 13px;
+        color: var(--yellow);
+        font-family: var(--font-mono);
+        font-size: 20px;
+        line-height: 19px;
+        font-weight: 500;
+      }
+
+  #reverseToggle.reverse-toggle {
+    box-sizing: border-box;
+    width: 60px;
+    height: 60px;
+    border: 0;
+    box-shadow: none;
+    font-family: var(--font-mono);
+    font-size: 20px;
+    line-height: 25px;
+    font-weight: 400;
+    letter-spacing: -1px;
+  }
+
+  #reverseToggle.reverse-toggle.active {
+    box-shadow: inset 0 0 0 1px var(--yellow);
+    color: var(--yellow);
+  }
+
+      #reverseToggle .reverse-icon {
+        left: 8px;
+        top: 8px;
+        width: 22px;
+        height: 22px;
+      }
+
+      #reverseToggle .reverse-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      #reverseToggle > span:last-child {
+        left: 32px;
+        top: 31px;
+        width: 24px;
+        height: 25px;
+        line-height: 25px;
+      }
+
+      .export-dock {
+        grid-template-columns: 267px 60px;
+        gap: 4px;
+        width: 359px;
+        height: 88px;
+        padding: 14px;
+      }
+
+      .export-button {
+        width: 267px;
+        height: 60px;
+      }
+
+      .export-button .export-icon {
+        left: 16px;
+        top: 16px;
+        width: 20px;
+        height: 28px;
+      }
+
+      .export-button .export-icon img {
+        width: 16px;
+        height: 21px;
+      }
+
       @media (max-width: 1260px) {
         .app {
-          grid-template-columns: 330px 1fr;
+          grid-template-columns: 360px minmax(0, 1fr) 360px;
         }
 
         .right {
-          min-width: 300px;
+          min-width: 360px;
         }
       }
 
-      @media (max-width: 860px) {
+      @media (max-width: 640px) {
         html,
         body {
           height: auto;
@@ -809,19 +1607,20 @@
         }
 
         .drop {
-          height: 138px;
+          height: 88px;
         }
 
         .drop-title {
-          font-size: 48px;
+          font-size: 40px;
+          line-height: 54px;
         }
 
         .drop-sub {
-          margin-top: 13px;
-          font-size: 13px;
+          margin-top: 23px;
+          font-size: 15px;
         }
 
-        .preview {
+        .side-previews {
           display: none;
         }
 
@@ -839,10 +1638,13 @@
           font-size: 12px;
         }
 
-        .randomize-button {
-          height: 54px;
-          margin-top: 8px;
-          font-size: 18px;
+        #randomize.randomize-button {
+          width: 304px;
+          height: 60px;
+          margin-top: 10px;
+          font-size: 30px;
+          line-height: 39px;
+          letter-spacing: -1.5px;
         }
 
         .mobile-export {
@@ -867,6 +1669,22 @@
           font-size: 28px;
         }
 
+        .powered-by {
+          min-height: 128px;
+          margin-top: 40px;
+          padding: 28px 20px 24px;
+        }
+
+        .powered-by span {
+          font-size: 22px;
+          line-height: 26px;
+        }
+
+        .powered-by strong {
+          font-size: 46px;
+          line-height: 48px;
+        }
+
         .main {
           display: block;
           width: 100%;
@@ -881,8 +1699,7 @@
         }
 
         .title {
-          font-size: 44px;
-          line-height: 0.95;
+          width: 138px;
         }
 
         .note {
@@ -902,7 +1719,7 @@
           width: 100%;
           height: auto;
           min-height: 0;
-          padding: 14px;
+          padding: 0;
           aspect-ratio: 1 / 1;
         }
 
@@ -913,14 +1730,6 @@
           max-height: 100%;
         }
 
-        .empty {
-          max-width: 82%;
-          font-size: clamp(34px, 14vw, 62px);
-          line-height: 0.92;
-          text-align: center;
-        }
-
-        .before-after,
         .right {
           display: none;
         }
@@ -939,44 +1748,47 @@
             <label class="drop" id="drop">
               <input id="file" type="file" accept="image/*,.svg,image/svg+xml,.pdf,application/pdf" />
               <div class="drop-content">
-                <div class="drop-title">input</div>
-                <div class="drop-sub" id="inputStatus">PNG / JPG / WebP / SVG / PDF</div>
+                <img class="input-icon" src="../assets/input-logo-figma.svg" alt="" />
+                <div class="drop-title">
+                  <span>input</span>
+                </div>
+                <img class="input-arrow" src="../assets/input-arrow-figma.svg" alt="" />
               </div>
             </label>
-            <img id="imagePreview" class="preview hidden" alt="" />
+            <div class="drop-sub" id="inputStatus"><span>*</span> PNG / JPG / WebP / SVG / PDF</div>
+            <div id="sidePreviews" class="side-previews hidden">
+              <div class="side-preview">
+                <h3>source</h3>
+                <canvas id="sourceMini" width="320" height="320"></canvas>
+              </div>
+              <div class="side-preview">
+                <h3>mask</h3>
+                <canvas id="maskMini" width="320" height="320"></canvas>
+              </div>
+            </div>
           </section>
 
           <section class="panel">
-            <h2>预设链</h2>
+            <h2>预设</h2>
             <div class="preset-grid" id="presetGrid"></div>
-            <button class="randomize-button" id="randomize">随机</button>
+            <button class="randomize-button" id="randomize">NICE TRY</button>
             <button class="mobile-export" data-export-png>
-              <span class="export-icon"><img src="../assets/download-icon.svg" alt="" /></span>
-              <span class="export-label">PNG</span>
+              <span class="export-icon"><img src="../assets/download-icon-figma.svg" alt="" /></span>
+              <span class="export-label">OUTPUT</span>
             </button>
           </section>
+          <div class="powered-by"><span>Powered by</span><strong>Expression</strong></div>
         </div>
       </aside>
 
       <section class="main">
         <div class="top">
-          <div class="title">Graphic<br />Texture</div>
+          <div class="title"><img src="../assets/graphic-texture-title.svg" alt="Graphic Texture 印花" /></div>
           <div class="note">把普通图像转成适合印花、海报和品牌视觉的纹理图形。上传素材，选择风格，生成带有印刷感、颗粒感和手工痕迹的视觉结果。</div>
         </div>
         <div class="workspace">
           <div class="stage">
             <canvas id="result" class="result" width="1000" height="1000"></canvas>
-            <div id="empty" class="empty">upload file</div>
-          </div>
-          <div class="before-after">
-            <div class="small-card">
-              <h3>source</h3>
-              <canvas id="sourceMini" width="320" height="320"></canvas>
-            </div>
-            <div class="small-card">
-              <h3>mask</h3>
-              <canvas id="maskMini" width="320" height="320"></canvas>
-            </div>
           </div>
         </div>
       </section>
@@ -984,21 +1796,36 @@
       <aside class="right">
         <div class="right-scroll">
           <section class="panel">
-            <h2>效果链</h2>
+            <h2>效果器</h2>
             <div class="node-list" id="nodeList"></div>
           </section>
-          <section class="panel">
-            <div class="param-title">
+          <section class="panel color-section">
+            <div id="colorPanel"></div>
+          </section>
+        </div>
+        <section class="param-flyout closed" id="paramFlyout">
+          <div class="param-title">
+            <div>
               <strong id="paramName">Shape Extract</strong>
               <span id="paramHint">图形提取</span>
             </div>
-            <div id="paramPanel"></div>
-          </section>
-        </div>
+          </div>
+          <div id="paramPanel"></div>
+        </section>
         <div class="export-dock">
           <button class="export-button" id="exportPng" data-export-png>
-            <span class="export-icon"><img src="../assets/download-icon.svg" alt="" /></span>
-            <span class="export-label">PNG</span>
+            <span class="export-icon"><img src="../assets/download-icon-figma.svg" alt="" /></span>
+            <span class="export-label">OUTPUT</span>
+          </button>
+          <button class="reverse-toggle" id="reverseToggle" type="button" aria-label="反向" aria-pressed="false">
+            <span class="reverse-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none">
+                <path class="re-left" d="M10 1A9 9 0 0 0 10 19Z" />
+                <path class="re-right" d="M10 1A9 9 0 0 1 10 19Z" />
+                <circle class="re-ring" cx="10" cy="10" r="8.5" />
+              </svg>
+            </span>
+            <span>RE</span>
           </button>
         </div>
       </aside>
@@ -1018,11 +1845,10 @@
             ink: { enabled: true, color: "#050506", strength: 78, holes: 4 },
             screen: { enabled: false, dot: 7, strength: 0, angle: 0 },
             edge: { enabled: true, width: 3, rough: 34, color: "#030304" },
-            distress: { enabled: true, amount: 6, size: 5, seed: 12 },
-            texture: { enabled: true, fabric: 18, scan: 10, bleed: 10 },
+            distress: { enabled: true, amount: 16, size: 5, seed: 12 },
+            texture: { enabled: true, fabric: 24, scan: 18, bleed: 12 },
             decor: { enabled: true, grid: 18, gridSize: 42, blur: 78, particles: 16 },
             color: { enabled: true, bg: "#f7f6f2", transparent: false, highlight: "#6fc7ba" },
-            lens: { enabled: true, focus: 52, blur: 34 },
           },
         },
         penTrace: {
@@ -1038,7 +1864,6 @@
             texture: { enabled: true, fabric: 18, scan: 12, bleed: 0 },
             decor: { enabled: false, grid: 0, gridSize: 48, blur: 0, particles: 0 },
             color: { enabled: true, bg: "#f2eee5", transparent: false, highlight: "#ffffff" },
-            lens: { enabled: false, focus: 62, blur: 0 },
           },
         },
         dotShirt: {
@@ -1054,7 +1879,6 @@
             texture: { enabled: true, fabric: 16, scan: 8, bleed: 6 },
             decor: { enabled: false, grid: 0, gridSize: 48, blur: 0, particles: 0 },
             color: { enabled: true, bg: "#0c0d11", transparent: false, highlight: "#ffffff" },
-            lens: { enabled: false, focus: 62, blur: 0 },
           },
         },
         xerox: {
@@ -1070,7 +1894,6 @@
             texture: { enabled: true, fabric: 8, scan: 72, bleed: 10 },
             decor: { enabled: false, grid: 0, gridSize: 48, blur: 0, particles: 0 },
             color: { enabled: true, bg: "#f4f1e8", transparent: false, highlight: "#ffffff" },
-            lens: { enabled: false, focus: 62, blur: 0 },
           },
         },
       };
@@ -1083,8 +1906,6 @@
         { id: "distress", name: "Distress Grain", hint: "破损颗粒", desc: "随机颗粒、旧印刷、脱墨" },
         { id: "texture", name: "Print Texture", hint: "印刷材质", desc: "布料、扫描线、渗墨" },
         { id: "decor", name: "Graphic Decor", hint: "装饰构成", desc: "网格、模糊斑点和粒子装饰" },
-        { id: "color", name: "Color Map", hint: "颜色输出", desc: "背景颜色、图形颜色和透明底" },
-        { id: "lens", name: "Lens Blur", hint: "镜头模糊", desc: "焦距和焦外虚化，模拟画面景深" },
       ];
 
       const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -1098,12 +1919,13 @@
         sourceHasTransparency: false,
         size: 1000,
         nodes: clone(presets.thermalMap.nodes),
+        outputReverse: false,
+        flyoutOpen: false,
       };
 
       const fileInput = document.getElementById("file");
       const drop = document.getElementById("drop");
       const inputStatus = document.getElementById("inputStatus");
-      const imagePreview = document.getElementById("imagePreview");
       const work = document.getElementById("work");
       const workCtx = work.getContext("2d", { willReadFrequently: true });
       const result = document.getElementById("result");
@@ -1112,12 +1934,15 @@
       const sourceMiniCtx = sourceMini.getContext("2d", { willReadFrequently: true });
       const maskMini = document.getElementById("maskMini");
       const maskMiniCtx = maskMini.getContext("2d", { willReadFrequently: true });
+      const sidePreviews = document.getElementById("sidePreviews");
       const nodeList = document.getElementById("nodeList");
       const paramPanel = document.getElementById("paramPanel");
+      const paramFlyout = document.getElementById("paramFlyout");
       const paramName = document.getElementById("paramName");
       const paramHint = document.getElementById("paramHint");
+      const colorPanel = document.getElementById("colorPanel");
+      const reverseToggle = document.getElementById("reverseToggle");
       const presetGrid = document.getElementById("presetGrid");
-      const empty = document.getElementById("empty");
       let renderFrameQueued = false;
       let colorRenderTimer = 0;
       let colorOutsideHandlerBound = false;
@@ -1136,6 +1961,7 @@
         requestAnimationFrame(() => {
           renderFrameQueued = false;
           renderOutput();
+          syncResultFit();
         });
       }
 
@@ -1153,6 +1979,35 @@
           colorRenderTimer = 0;
         }
         scheduleRenderOutput();
+      }
+
+      function isTransparentOutput() {
+        const color = state.nodes.color;
+        return Boolean(color.transparent) || getColorAlpha(color, "bg") <= 0;
+      }
+
+      function shouldClipDecorToMask() {
+        return isTransparentOutput() || state.outputReverse;
+      }
+
+      function getTextureMask(outputMask) {
+        return outputMask;
+      }
+
+      function syncResultFit() {
+        const stage = result.parentElement;
+        if (!stage) return;
+        const stageW = stage.clientWidth;
+        const stageH = stage.clientHeight;
+        const canvasW = result.width || 1;
+        const canvasH = result.height || 1;
+        if (!stageW || !stageH || !canvasW || !canvasH) return;
+
+        const scale = Math.min(stageW / canvasW, stageH / canvasH);
+        const width = Math.max(1, Math.floor(canvasW * scale));
+        const height = Math.max(1, Math.floor(canvasH * scale));
+        result.style.setProperty("--fit-width", `${width}px`);
+        result.style.setProperty("--fit-height", `${height}px`);
       }
 
       function lerp(a, b, t) {
@@ -1278,6 +2133,7 @@
         state.preset = id;
         state.selected = presets[id].selected;
         state.nodes = clone(presets[id].nodes);
+        state.flyoutOpen = false;
         renderAll();
       }
 
@@ -1299,6 +2155,55 @@
         return pick(role === "bg" ? backgrounds : graphics);
       }
 
+      const presetRandomProfiles = {
+        thermalMap: {
+          ranges: {
+            extract: { threshold: [92, 144], contrast: [28, 68], grayKeep: [0, 22] },
+            ink: { strength: [62, 90], holes: [0, 12] },
+            edge: { width: [1, 5], rough: [18, 56] },
+            distress: { amount: [10, 30], size: [3, 7], seed: [1, 99] },
+            texture: { fabric: [12, 42], scan: [8, 34], bleed: [6, 24] },
+            decor: { grid: [6, 34], gridSize: [30, 72], blur: [48, 86], particles: [4, 30] },
+          },
+          backgrounds: ["#f7f6f2", "#f2eee5", "#dfe6df", "#d9d9d9", "#111116"],
+          graphics: ["#050506", "#263b55", "#5a3b22", "#6fc7ba", "#ff682c"],
+        },
+        penTrace: {
+          ranges: {
+            extract: { threshold: [108, 174], contrast: [24, 64], grayKeep: [0, 18] },
+            ink: { strength: [78, 100], holes: [6, 26] },
+            edge: { width: [1, 3], rough: [48, 90] },
+            distress: { amount: [16, 44], size: [2, 6], seed: [1, 99] },
+            texture: { fabric: [8, 30], scan: [4, 28], bleed: [0, 10] },
+          },
+          backgrounds: ["#f7f6f2", "#f2eee5", "#e6eadf", "#d9d9d9"],
+          graphics: ["#111111", "#263b55", "#293771", "#5a3b22"],
+        },
+        dotShirt: {
+          ranges: {
+            extract: { threshold: [122, 182], contrast: [38, 76], grayKeep: [0, 16] },
+            ink: { strength: [80, 100], holes: [2, 18] },
+            screen: { dot: [7, 18], strength: [68, 100], angle: [-28, 28] },
+            edge: { width: [0, 3], rough: [10, 44] },
+            distress: { amount: [8, 28], size: [2, 6], seed: [1, 99] },
+            texture: { fabric: [10, 34], scan: [6, 24], bleed: [2, 14] },
+          },
+          backgrounds: ["#0c0d11", "#111116", "#293771", "#f2eee5"],
+          graphics: ["#c9d8e8", "#ffffff", "#6fc7ba", "#ff682c"],
+        },
+        xerox: {
+          ranges: {
+            extract: { threshold: [92, 148], contrast: [68, 100], grayKeep: [0, 10] },
+            ink: { strength: [86, 100], holes: [16, 44] },
+            edge: { width: [1, 4], rough: [62, 100] },
+            distress: { amount: [26, 58], size: [2, 5], seed: [1, 99] },
+            texture: { fabric: [2, 20], scan: [48, 92], bleed: [4, 20] },
+          },
+          backgrounds: ["#f7f6f2", "#f4f1e8", "#d9d9d9"],
+          graphics: ["#000000", "#111111", "#263b55"],
+        },
+      };
+
       function syncGraphicColor(value) {
         const clean = value.startsWith("#") ? value : `#${value}`;
         state.nodes.ink.color = clean;
@@ -1306,41 +2211,51 @@
         state.nodes.color.highlight = clean;
       }
 
-      function randomizeChain() {
-        const ranges = {
-          threshold: [0, 255],
-          contrast: [0, 100],
-          grayKeep: [0, 100],
-          strength: [0, 100],
-          holes: [0, 100],
-          dot: [3, 24],
-          angle: [-45, 45],
-          width: [0, 10],
-          rough: [0, 100],
-          amount: [0, 100],
-          size: [1, 14],
-          seed: [1, 99],
-          fabric: [0, 100],
-          scan: [0, 100],
-          bleed: [0, 100],
-          grid: [0, 100],
-          gridSize: [18, 96],
-          blur: [0, 100],
-          particles: [0, 100],
-          focus: [0, 100],
-        };
+      function getUiColorAlpha(nodeId, key) {
+        if (nodeId === "ink" && key === "color") return getColorAlpha(state.nodes.ink, "color");
+        return getColorAlpha(state.nodes[nodeId], key);
+      }
 
-        Object.values(state.nodes).forEach((node) => {
-          Object.entries(node).forEach(([key, value]) => {
-            if (typeof value !== "number") return;
-            const [min, max] = ranges[key] || [0, 100];
-            node[key] = randInt(min, max);
+      function setUiColorAlpha(nodeId, key, alpha) {
+        const value = clamp(alpha, 0, 100);
+        if (nodeId === "ink" && key === "color") {
+          state.nodes.ink.colorAlpha = value;
+          state.nodes.edge.colorAlpha = value;
+          state.nodes.color.highlightAlpha = value;
+          return;
+        }
+        state.nodes[nodeId][`${key}Alpha`] = value;
+        if (nodeId === "color" && key === "bg") state.nodes.color.transparent = value <= 0;
+      }
+
+      function toggleUiColorAlpha(nodeId, key) {
+        const alpha = getUiColorAlpha(nodeId, key);
+        setUiColorAlpha(nodeId, key, alpha > 0 ? 0 : 100);
+        renderAll();
+      }
+
+      function randomizeChain() {
+        const preset = presets[state.preset];
+        const profile = presetRandomProfiles[state.preset];
+        state.nodes = clone(preset.nodes);
+        state.outputReverse = chance(0.5);
+
+        Object.entries(profile.ranges).forEach(([nodeId, ranges]) => {
+          const node = state.nodes[nodeId];
+          if (!node || !node.enabled) return;
+          Object.entries(ranges).forEach(([key, range]) => {
+            node[key] = randInt(range[0], range[1]);
           });
         });
-        state.nodes.color.bg = randomColorValue("bg");
-        syncGraphicColor(randomColorValue("highlight"));
+
+        state.nodes.color.bg = pick(profile.backgrounds);
+        syncGraphicColor(pick(profile.graphics));
         state.nodes.color.bgAlpha = 100;
         state.nodes.color.highlightAlpha = 100;
+        state.nodes.ink.colorAlpha = 100;
+        state.nodes.edge.colorAlpha = 100;
+        state.nodes.color.transparent = false;
+        state.selected = preset.selected;
         renderAll();
       }
 
@@ -1360,7 +2275,7 @@
         nodeMeta.forEach((meta, index) => {
           const node = state.nodes[meta.id];
           const item = document.createElement("div");
-          item.className = `node${state.selected === meta.id ? " active" : ""}${node.enabled ? "" : " disabled"}`;
+          item.className = `node${state.flyoutOpen && state.selected === meta.id ? " active" : ""}${node.enabled ? "" : " disabled"}`;
           item.innerHTML = `
             <div class="node-index">${index + 1}</div>
             <div class="node-body">
@@ -1370,17 +2285,35 @@
             <div class="toggle">${node.enabled ? "on" : "off"}</div>
           `;
           item.addEventListener("click", () => {
+            const isCurrentOpen = state.flyoutOpen && state.selected === meta.id;
             state.selected = meta.id;
+            state.flyoutOpen = !isCurrentOpen;
             renderAll(false);
           });
           item.querySelector(".toggle").addEventListener("click", (event) => {
             event.stopPropagation();
             node.enabled = !node.enabled;
-            state.selected = meta.id;
             renderAll();
           });
           nodeList.appendChild(item);
         });
+        requestAnimationFrame(positionParamFlyout);
+      }
+
+      function positionParamFlyout() {
+        const active = nodeList.querySelector(".node.active");
+        if (!active || !state.flyoutOpen || window.innerWidth <= 860) {
+          paramFlyout.classList.toggle("closed", !state.flyoutOpen || window.innerWidth <= 860);
+          return;
+        }
+        paramFlyout.classList.remove("closed");
+        const itemRect = active.getBoundingClientRect();
+        const flyoutRect = paramFlyout.getBoundingClientRect();
+        const gap = 35;
+        const left = Math.max(12, itemRect.left - flyoutRect.width - gap);
+        const top = clamp(itemRect.top, 12, window.innerHeight - flyoutRect.height - 12);
+        paramFlyout.style.setProperty("--flyout-left", `${left}px`);
+        paramFlyout.style.setProperty("--flyout-top", `${top}px`);
       }
 
       function controlRange(label, key, min, max, step = 1) {
@@ -1396,16 +2329,19 @@
 
       function controlColor(label, key, nodeId = state.selected) {
         const node = state.nodes[nodeId];
+        const alpha = getUiColorAlpha(nodeId, key);
+        const isTransparent = alpha <= 0 || (nodeId === "color" && key === "bg" && state.nodes.color.transparent);
         return `
           <div class="control">
-            <div class="label"><span>${label}</span><span>HEX</span></div>
+            <div class="label"><span>${label}</span></div>
             <div class="color-control" data-color-node="${nodeId}" data-color-param="${key}">
-              <div class="color-summary">
+              <div class="color-summary${isTransparent ? " transparent" : ""}">
                 <button class="color-swatch" type="button" data-color-toggle aria-label="${label}"></button>
-                <div class="color-meta">
-                  <div class="color-hex-readout" data-color-readout>${String(node[key]).replace("#", "").toUpperCase()}</div>
-                  <div class="color-kind">100% · Solid</div>
-                </div>
+                <div class="color-hash">#</div>
+                <div class="color-hex-readout" data-color-readout>${String(node[key]).replace("#", "").toUpperCase()}</div>
+                <button class="alpha-mini-toggle${isTransparent ? " active" : ""}" type="button" data-alpha-toggle aria-label="${label}透明">
+                  <img src="../assets/png-alpha-icon-figma.svg" alt="" />
+                </button>
               </div>
               <div class="color-popover hidden" data-color-popover>
                 <div class="sv-picker">
@@ -1446,7 +2382,6 @@
         }
         if (state.selected === "ink") {
           paramPanel.innerHTML = [
-            controlColor("油墨颜色", "color"),
             controlRange("填充强度", "strength", 0, 100),
             controlRange("孔洞保留", "holes", 0, 100),
           ].join("");
@@ -1460,7 +2395,6 @@
         }
         if (state.selected === "edge") {
           paramPanel.innerHTML = [
-            controlColor("边缘颜色", "color"),
             controlRange("边缘宽度", "width", 0, 10),
             controlRange("边缘毛刺", "rough", 0, 100),
           ].join("");
@@ -1487,20 +2421,6 @@
             controlRange("粒子装饰", "particles", 0, 100),
           ].join("");
         }
-        if (state.selected === "color") {
-          paramPanel.innerHTML = [
-            controlColor("背景颜色", "bg", "color"),
-            controlColor("图形颜色", "color", "ink"),
-            controlCheck("透明背景", "transparent"),
-          ].join("");
-        }
-        if (state.selected === "lens") {
-          paramPanel.innerHTML = [
-            controlRange("焦距", "focus", 0, 100),
-            controlRange("焦外模糊", "blur", 0, 100),
-          ].join("");
-        }
-
         paramPanel.querySelectorAll("input[data-param]").forEach((input) => {
           if (input.type === "range") updateRangeStyle(input);
           input.addEventListener("input", () => {
@@ -1512,10 +2432,24 @@
             const valueEl = paramPanel.querySelector(`[data-v="${key}"]`);
             if (valueEl) valueEl.textContent = input.value;
             if (input.type === "range") updateRangeStyle(input);
-            renderOutput();
+            scheduleRenderOutput();
           });
         });
         attachColorPickers();
+        requestAnimationFrame(positionParamFlyout);
+      }
+
+      function renderColorPanel() {
+        colorPanel.innerHTML = [
+          `<div class="standalone-color">${controlColor("前景", "color", "ink")}</div>`,
+          `<div class="standalone-color">${controlColor("背景", "bg", "color")}</div>`,
+        ].join("");
+        syncReverseToggle();
+      }
+
+      function syncReverseToggle() {
+        reverseToggle.classList.toggle("active", state.outputReverse);
+        reverseToggle.setAttribute("aria-pressed", String(state.outputReverse));
       }
 
       function setPickerVisual(picker) {
@@ -1593,7 +2527,7 @@
           colorOutsideHandlerBound = true;
         }
 
-        paramPanel.querySelectorAll("[data-color-param]").forEach((picker) => {
+        document.querySelectorAll("[data-color-param]").forEach((picker) => {
           const key = picker.dataset.colorParam;
           const nodeId = picker.dataset.colorNode || state.selected;
           setPickerVisual(picker);
@@ -1602,6 +2536,7 @@
           const sv = picker.querySelector(".sv-picker");
           const hue = picker.querySelector("[data-color-hue]");
           const hex = picker.querySelector("[data-color-hex]");
+          const alpha = picker.querySelector("[data-alpha-toggle]");
 
           popover.addEventListener("click", (event) => event.stopPropagation());
 
@@ -1615,6 +2550,12 @@
             } else {
               popover.classList.add("hidden");
             }
+          });
+
+          alpha.addEventListener("click", (event) => {
+            event.stopPropagation();
+            closeColorPopovers();
+            toggleUiColorAlpha(nodeId, key);
           });
 
           const updateSv = (event) => {
@@ -1834,7 +2775,9 @@
         const distress = state.nodes.distress;
         const texture = state.nodes.texture;
         const inkAlpha = getColorAlpha(ink, "color") / 100;
-        const count = Math.min(points.length, Math.round(90 + edge.rough * 4.6 + distress.amount * 2.4));
+        const distressAmount = distress.enabled ? distress.amount : 0;
+        const textureFabric = texture.enabled ? texture.fabric : 0;
+        const count = Math.min(points.length, Math.round(90 + edge.rough * 4.6 + distressAmount * 2.4));
 
         resultCtx.save();
         resultCtx.strokeStyle = ink.color;
@@ -1847,8 +2790,8 @@
           const p = points[Math.floor(hash(i, distress.seed, 51) * points.length)];
           const srcIndex = (Math.round(p.y) * w + Math.round(p.x)) * 4;
           const tone = clamp((255 - getLuma(source.data, srcIndex)) / 255, 0, 1);
-          if (hash(i, 2, distress.seed) < distress.amount / 260) continue;
-          const len = 4 + hash(i, 3, distress.seed) * (12 + texture.fabric * 0.18);
+          if (distress.enabled && hash(i, 2, distress.seed) < distressAmount / 260) continue;
+          const len = 4 + hash(i, 3, distress.seed) * (12 + textureFabric * 0.18);
           const jitter = (hash(i, 4, distress.seed) - 0.5) * 5;
           const offset = (hash(i, 5, distress.seed) - 0.5) * (5 + tone * 8);
           const x = p.x + p.nx * offset;
@@ -1859,7 +2802,7 @@
           resultCtx.lineTo(x + p.tx * len * 0.5 - p.nx * jitter, y + p.ty * len * 0.5 - p.ny * jitter);
           resultCtx.stroke();
 
-          if (hash(i, 6, distress.seed) > 0.72) {
+          if (distress.enabled && hash(i, 6, distress.seed) > 0.72) {
             resultCtx.globalAlpha = 0.12 + tone * 0.28;
             resultCtx.beginPath();
             resultCtx.arc(x + p.nx * 3, y + p.ny * 3, 0.75 + hash(i, 7, distress.seed) * 1.4, 0, Math.PI * 2);
@@ -1869,7 +2812,7 @@
         resultCtx.restore();
       }
 
-      function renderPenTrace(source, mask, w, h) {
+      function renderPenTrace(source, mask, w, h, textureMask = mask) {
         const { data } = source;
         const out = resultCtx.createImageData(w, h);
         const d = out.data;
@@ -1884,9 +2827,13 @@
         const bgRgb = hexToRgb(color.bg);
         const inkAlpha = getColorAlpha(ink, "color") / 100;
         const bgAlpha = getColorAlpha(color, "bg") / 100;
+        const transparent = isTransparentOutput();
+        const clipDecor = shouldClipDecorToMask();
         const threshold = extract.threshold;
         const contrast = 1 + extract.contrast / 80;
         const levels = [threshold - 28, threshold, threshold + 34];
+        const textureActive = texture.enabled;
+        const distressActive = distress.enabled;
 
         for (let y = 0; y < h; y++) {
           for (let x = 0; x < w; x++) {
@@ -1894,12 +2841,15 @@
             const i = p * 4;
             const raw = getLuma(data, i);
             const luma = clamp((raw - 128) * contrast + 128);
-            const paperNoise = (hash(Math.floor(x / 3), Math.floor(y / 3), 81) - 0.5) * (8 + texture.fabric * 0.34);
-            const scan = Math.sin(y * 0.32 + hash(1, Math.floor(y / 4), 82) * 2) * texture.scan * 0.08;
+            const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
+            const textureStrength = textureActive ? textureClip : 0;
+            const paperNoise = transparent ? 0 : textureStrength * (hash(Math.floor(x / 3), Math.floor(y / 3), 81) - 0.5) * (8 + texture.fabric * 0.34);
+            const scan = transparent ? 0 : textureStrength * Math.sin(y * 0.32 + hash(1, Math.floor(y / 4), 82) * 2) * texture.scan * 0.08;
 
-            let r = clamp(lerp(255, bgRgb.r, bgAlpha) + paperNoise + scan);
-            let g = clamp(lerp(255, bgRgb.g, bgAlpha) + paperNoise + scan);
-            let b = clamp(lerp(255, bgRgb.b, bgAlpha) + paperNoise + scan);
+            let r = transparent ? 0 : clamp(lerp(255, bgRgb.r, bgAlpha) + paperNoise + scan);
+            let g = transparent ? 0 : clamp(lerp(255, bgRgb.g, bgAlpha) + paperNoise + scan);
+            let b = transparent ? 0 : clamp(lerp(255, bgRgb.b, bgAlpha) + paperNoise + scan);
+            let a = transparent ? 0 : 255;
             let line = 0;
 
             for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
@@ -1912,31 +2862,36 @@
             }
 
             const grainCell = Math.max(1, distress.size);
-            const broken = hash(Math.floor(x / grainCell), Math.floor(y / grainCell), distress.seed) < distress.amount / 360;
-            const dot = mask[p] && hash(x, y, distress.seed + 44) > 1 - ink.holes / 900;
+            const broken = distressActive && hash(Math.floor(x / grainCell), Math.floor(y / grainCell), distress.seed) < distress.amount / 360;
+            const dot = distressActive && textureMask[p] && hash(x, y, distress.seed + 44) > 1 - ink.holes / 900;
             if (broken) line *= 0.18;
             if (dot) line = Math.max(line, 0.72);
 
             if (line > 0.05 && ink.enabled) {
               const scratch = 0.78 + hash(x, y, 91) * 0.32;
               const mix = clamp(line * ink.strength / 100 * inkAlpha * scratch, 0, 1);
-              r = lerp(r, lerp(inkRgb.r, edgeRgb.r, line * 0.35), mix);
-              g = lerp(g, lerp(inkRgb.g, edgeRgb.g, line * 0.35), mix);
-              b = lerp(b, lerp(inkRgb.b, edgeRgb.b, line * 0.35), mix);
+              const lineR = lerp(inkRgb.r, edgeRgb.r, line * 0.35);
+              const lineG = lerp(inkRgb.g, edgeRgb.g, line * 0.35);
+              const lineB = lerp(inkRgb.b, edgeRgb.b, line * 0.35);
+              r = transparent ? lineR : lerp(r, lineR, mix);
+              g = transparent ? lineG : lerp(g, lineG, mix);
+              b = transparent ? lineB : lerp(b, lineB, mix);
+              a = transparent ? clamp(mix * 255) : 255;
             }
 
             d[i] = clamp(r);
             d[i + 1] = clamp(g);
             d[i + 2] = clamp(b);
-            d[i + 3] = 255;
+            d[i + 3] = a;
           }
         }
 
         result.width = w;
         result.height = h;
         resultCtx.putImageData(out, 0, 0);
-        applyPenTraceDetails(source, mask, w, h);
-        empty.classList.add("hidden");
+        applyPenTraceDetails(source, textureMask, w, h);
+        if (transparent) clipResultAlphaToMask(textureMask, w, h);
+        syncResultFit();
       }
 
       function getBlurredMaskData(mask, w, h, blurPx) {
@@ -1968,7 +2923,7 @@
         return data[(yy * w + xx) * 4 + 3] / 255;
       }
 
-      function renderThermalMap(source, mask, w, h) {
+      function renderThermalMap(source, mask, w, h, textureMask = mask) {
         const { data } = source;
         const out = resultCtx.createImageData(w, h);
         const d = out.data;
@@ -1985,9 +2940,20 @@
         const edgeAlpha = getColorAlpha(edge, "color") / 100;
         const bgAlpha = getColorAlpha(color, "bg") / 100;
         const hiAlpha = getColorAlpha(color, "highlight") / 100;
-        const soft = getBlurredMaskData(mask, w, h, 8 + decor.blur * 0.28);
+        const transparent = isTransparentOutput();
+        const clipDecor = shouldClipDecorToMask();
+        const textureActive = texture.enabled;
+        const textureFabric = textureActive ? texture.fabric : 0;
+        const textureScan = textureActive ? texture.scan : 0;
+        const textureBleed = textureActive ? texture.bleed : 0;
+        const decorActive = decor.enabled;
+        const decorBlur = decorActive ? decor.blur : 0;
+        const decorParticles = decorActive ? decor.particles : 0;
+        const distress = state.nodes.distress;
+        const distressActive = distress.enabled;
+        const soft = getBlurredMaskData(mask, w, h, 8 + decorBlur * 0.28 + textureBleed * 0.08);
         const body = getBlurredMaskData(mask, w, h, 2 + edge.width * 1.6);
-        const glow = getBlurredMaskData(mask, w, h, 18 + decor.blur * 0.42);
+        const glow = getBlurredMaskData(mask, w, h, 18 + decorBlur * 0.42 + textureBleed * 0.16);
 
         for (let y = 0; y < h; y++) {
           for (let x = 0; x < w; x++) {
@@ -2003,33 +2969,52 @@
             const sy1 = alphaAt(soft, w, h, x, y + 1);
             const sy0 = alphaAt(soft, w, h, x, y - 1);
             const fuzzyEdge = clamp((Math.abs(sx1 - sx0) + Math.abs(sy1 - sy0)) * (4 + edge.rough * 0.045), 0, 1);
-            const paperNoise = (hash(Math.floor(x / 2), Math.floor(y / 2), 121) - 0.5) * (5 + texture.fabric * 0.28);
-            const fineNoise = (hash(x, y, 122) - 0.5) * decor.particles * 0.18;
+            const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
+            const textureStrength = textureActive ? textureClip : 0;
+            const alphaGate = transparent ? clamp(textureMask[p], 0, 1) : 1;
+            const paperNoise = transparent ? 0 : textureStrength * (hash(Math.floor(x / 2), Math.floor(y / 2), 121) - 0.5) * (4 + textureFabric * 0.75);
+            const paperWeave = transparent ? 0 : textureStrength * (
+              Math.sin(x * 0.11 + hash(Math.floor(y / 12), 12, 124) * 2) +
+              Math.sin(y * 0.18 + hash(Math.floor(x / 12), 13, 125) * 2)
+            ) * textureFabric * 0.14;
+            const materialArea = Math.max(softA, bodyA, fuzzyEdge);
+            const materialNoise = textureStrength * materialArea * (hash(x, y, 122) - 0.5) * (textureFabric * 0.82 + decorParticles * 0.12);
+            const distressCell = Math.max(1, distress.size || 1);
+            const distressAmount = distressActive ? distress.amount / 100 : 0;
+            const grain = distressActive ? hash(Math.floor(x / distressCell), Math.floor(y / distressCell), distress.seed) : 1;
+            const fineGrain = distressActive ? hash(x, y, distress.seed + 127) : 1;
+            const coarseDrop = distressActive && grain < distressAmount * 0.52;
+            const pixelDrop = distressActive && fineGrain < distressAmount * 0.085;
+            const distressDrop = coarseDrop ? 0.18 : pixelDrop ? 0.56 : 1;
+            const distressNoise = distressActive
+              ? (hash(Math.floor(x / 2), Math.floor(y / 2), distress.seed + 151) - 0.5) * (10 + distress.amount * 1.25) * Math.max(softA, bodyA)
+              : 0;
 
-            let r = clamp(lerp(255, bgRgb.r, bgAlpha) + paperNoise);
-            let g = clamp(lerp(255, bgRgb.g, bgAlpha) + paperNoise);
-            let b = clamp(lerp(255, bgRgb.b, bgAlpha) + paperNoise);
+            let r = transparent ? 0 : clamp(lerp(255, bgRgb.r, bgAlpha) + paperNoise + paperWeave);
+            let g = transparent ? 0 : clamp(lerp(255, bgRgb.g, bgAlpha) + paperNoise + paperWeave);
+            let b = transparent ? 0 : clamp(lerp(255, bgRgb.b, bgAlpha) + paperNoise + paperWeave);
 
-            const haloMix = clamp((glowA - softA * 0.3) * 0.62 * hiAlpha, 0, 0.72);
-            r = lerp(r, hiRgb.r, haloMix);
-            g = lerp(g, hiRgb.g, haloMix);
-            b = lerp(b, hiRgb.b, haloMix);
+            const haloMix = clamp((glowA - softA * 0.3) * 0.62 * hiAlpha * (0.88 + distressDrop * 0.12), 0, 0.72);
+            r = transparent && haloMix > 0 ? hiRgb.r : lerp(r, hiRgb.r, haloMix);
+            g = transparent && haloMix > 0 ? hiRgb.g : lerp(g, hiRgb.g, haloMix);
+            b = transparent && haloMix > 0 ? hiRgb.b : lerp(b, hiRgb.b, haloMix);
 
-            const bodyMix = clamp((softA * 0.38 + bodyA * 0.52) * (0.42 + tone * 0.58) * ink.strength / 100 * inkAlpha, 0, 0.96);
-            r = lerp(r, inkRgb.r, bodyMix);
-            g = lerp(g, inkRgb.g, bodyMix);
-            b = lerp(b, inkRgb.b, bodyMix);
+            const bodyMix = clamp((softA * 0.38 + bodyA * 0.52) * (0.42 + tone * 0.58) * ink.strength / 100 * inkAlpha * distressDrop, 0, 0.96);
+            r = transparent && bodyMix > 0 ? inkRgb.r : lerp(r, inkRgb.r, bodyMix);
+            g = transparent && bodyMix > 0 ? inkRgb.g : lerp(g, inkRgb.g, bodyMix);
+            b = transparent && bodyMix > 0 ? inkRgb.b : lerp(b, inkRgb.b, bodyMix);
 
             const edgeMix = clamp(fuzzyEdge * (0.26 + edge.width * 0.08) * edgeAlpha, 0, 0.58);
             r = lerp(r, edgeRgb.r, edgeMix);
             g = lerp(g, edgeRgb.g, edgeMix);
             b = lerp(b, edgeRgb.b, edgeMix);
 
-            const scan = Math.sin(y * 0.34 + hash(1, Math.floor(y / 5), 123) * 2) * texture.scan * 0.06;
-            d[i] = clamp(r + fineNoise + scan);
-            d[i + 1] = clamp(g + fineNoise + scan);
-            d[i + 2] = clamp(b + fineNoise + scan);
-            d[i + 3] = 255;
+            const paintedArea = Math.max(haloMix, bodyMix, edgeMix);
+            const scan = textureStrength * (transparent ? paintedArea : 1) * Math.sin(y * 0.34 + hash(1, Math.floor(y / 5), 123) * 2) * textureScan * 0.12;
+            d[i] = clamp(r + materialNoise + scan + distressNoise);
+            d[i + 1] = clamp(g + materialNoise + scan + distressNoise);
+            d[i + 2] = clamp(b + materialNoise + scan + distressNoise);
+            d[i + 3] = transparent ? clamp(Math.max(haloMix, bodyMix, edgeMix) * alphaGate * 255) : 255;
           }
         }
 
@@ -2042,25 +3027,69 @@
           resultCtx.strokeStyle = "#111111";
           resultCtx.lineWidth = 1;
           const step = Math.max(12, Number(decor.gridSize) || 48);
-          for (let gx = step; gx < w; gx += step) {
-            resultCtx.beginPath();
-            resultCtx.moveTo(gx, 0);
-            resultCtx.lineTo(gx, h);
-            resultCtx.stroke();
-          }
-          for (let gy = step; gy < h; gy += step) {
-            resultCtx.beginPath();
-            resultCtx.moveTo(0, gy);
-            resultCtx.lineTo(w, gy);
-            resultCtx.stroke();
-          }
+          drawGrid(resultCtx, textureMask, w, h, step, clipDecor);
           resultCtx.restore();
         }
-        applyLensBlur(w, h);
-        empty.classList.add("hidden");
+        if (transparent) clipResultAlphaToMask(textureMask, w, h);
+        syncResultFit();
       }
 
-      function applyGraphicDecor(source, mask, w, h) {
+      function drawGrid(ctx, mask, w, h, step, clipToMask) {
+        if (!clipToMask) {
+          for (let gx = step; gx < w; gx += step) {
+            ctx.beginPath();
+            ctx.moveTo(gx, 0);
+            ctx.lineTo(gx, h);
+            ctx.stroke();
+          }
+          for (let gy = step; gy < h; gy += step) {
+            ctx.beginPath();
+            ctx.moveTo(0, gy);
+            ctx.lineTo(w, gy);
+            ctx.stroke();
+          }
+          return;
+        }
+
+        const threshold = 0.05;
+        const segment = 4;
+        for (let gx = step; gx < w; gx += step) {
+          let start = null;
+          for (let y = 0; y < h; y += segment) {
+            const inside = mask[Math.min(h - 1, y) * w + gx] > threshold;
+            if (inside && start === null) start = y;
+            if ((!inside || y >= h - segment) && start !== null) {
+              const end = inside ? y : y - segment;
+              if (end > start) {
+                ctx.beginPath();
+                ctx.moveTo(gx, start);
+                ctx.lineTo(gx, end);
+                ctx.stroke();
+              }
+              start = null;
+            }
+          }
+        }
+        for (let gy = step; gy < h; gy += step) {
+          let start = null;
+          for (let x = 0; x < w; x += segment) {
+            const inside = mask[gy * w + Math.min(w - 1, x)] > threshold;
+            if (inside && start === null) start = x;
+            if ((!inside || x >= w - segment) && start !== null) {
+              const end = inside ? x : x - segment;
+              if (end > start) {
+                ctx.beginPath();
+                ctx.moveTo(start, gy);
+                ctx.lineTo(end, gy);
+                ctx.stroke();
+              }
+              start = null;
+            }
+          }
+        }
+      }
+
+      function applyGraphicDecor(source, mask, w, h, clipToMask = false) {
         const decor = state.nodes.decor;
         if (!decor.enabled) return;
 
@@ -2095,18 +3124,7 @@
           resultCtx.strokeStyle = "#111111";
           resultCtx.lineWidth = 1;
           const step = Math.max(12, Number(decor.gridSize) || 48);
-          for (let x = step; x < w; x += step) {
-            resultCtx.beginPath();
-            resultCtx.moveTo(x, 0);
-            resultCtx.lineTo(x, h);
-            resultCtx.stroke();
-          }
-          for (let y = step; y < h; y += step) {
-            resultCtx.beginPath();
-            resultCtx.moveTo(0, y);
-            resultCtx.lineTo(w, y);
-            resultCtx.stroke();
-          }
+          drawGrid(resultCtx, mask, w, h, step, clipToMask);
         }
 
         if (decor.particles > 0) {
@@ -2117,7 +3135,9 @@
             const x = Math.floor(hash(i, 1, 91) * w);
             const y = Math.floor(hash(i, 2, 91) * h);
             const p = y * w + x;
-            const nearMask = mask[p] > 0.08 || hash(Math.floor(x / 28), Math.floor(y / 28), 93) > 0.72;
+            const nearMask = clipToMask
+              ? mask[p] > 0.08
+              : mask[p] > 0.08 || hash(Math.floor(x / 28), Math.floor(y / 28), 93) > 0.72;
             if (!nearMask) continue;
             const s = 1 + hash(i, 3, 91) * 2.8;
             resultCtx.beginPath();
@@ -2128,42 +3148,23 @@
         resultCtx.restore();
       }
 
-      function applyLensBlur(w, h) {
-        const lens = state.nodes.lens;
-        if (!lens || !lens.enabled || lens.blur <= 0) return;
-
-        const sharpCanvas = document.createElement("canvas");
-        const blurCanvas = document.createElement("canvas");
-        sharpCanvas.width = blurCanvas.width = w;
-        sharpCanvas.height = blurCanvas.height = h;
-        const sharpCtx = sharpCanvas.getContext("2d", { willReadFrequently: true });
-        const blurCtx = blurCanvas.getContext("2d", { willReadFrequently: true });
-        sharpCtx.drawImage(result, 0, 0);
-        blurCtx.filter = `blur(${Math.max(1, lens.blur * 0.22)}px)`;
-        blurCtx.drawImage(result, 0, 0);
-        blurCtx.filter = "none";
-
-        const sharp = sharpCtx.getImageData(0, 0, w, h);
-        const blurred = blurCtx.getImageData(0, 0, w, h);
-        const sd = sharp.data;
-        const bd = blurred.data;
-        const cx = w * 0.5;
-        const cy = h * 0.52;
-        const maxR = Math.hypot(w * 0.5, h * 0.5);
-        const focusRadius = lerp(maxR * 0.08, maxR * 0.78, lens.focus / 100);
-        const feather = lerp(maxR * 0.08, maxR * 0.26, lens.blur / 100);
-        for (let y = 0; y < h; y++) {
-          for (let x = 0; x < w; x++) {
-            const p = (y * w + x) * 4;
-            const dist = Math.hypot(x - cx, y - cy);
-            const mix = smoothstep(focusRadius, focusRadius + feather, dist);
-            sd[p] = lerp(sd[p], bd[p], mix);
-            sd[p + 1] = lerp(sd[p + 1], bd[p + 1], mix);
-            sd[p + 2] = lerp(sd[p + 2], bd[p + 2], mix);
-            sd[p + 3] = lerp(sd[p + 3], bd[p + 3], mix);
-          }
+      function clipResultAlphaToMask(mask, w, h) {
+        const image = resultCtx.getImageData(0, 0, w, h);
+        const d = image.data;
+        for (let p = 0; p < mask.length; p++) {
+          const i = p * 4;
+          d[i + 3] = Math.min(d[i + 3], clamp(mask[p], 0, 1) * 255);
         }
-        resultCtx.putImageData(sharp, 0, 0);
+        resultCtx.putImageData(image, 0, 0);
+      }
+
+      function applyOutputReverseMask(mask) {
+        if (!state.outputReverse) return mask;
+        const reversed = new Float32Array(mask.length);
+        for (let i = 0; i < mask.length; i++) {
+          reversed[i] = 1 - clamp(mask[i], 0, 1);
+        }
+        return reversed;
       }
 
       function renderOutput() {
@@ -2171,14 +3172,16 @@
         const source = buildSourceImage();
         const { data, width: w, height: h } = source;
         const baseMask = createMask(source);
-        const mask = createRoughEdgeMask(baseMask, w, h, state.nodes.edge);
-        renderMaskMini(mask, w, h);
+        const roughMask = createRoughEdgeMask(baseMask, w, h, state.nodes.edge);
+        const outputMask = applyOutputReverseMask(roughMask);
+        const textureMask = getTextureMask(outputMask);
+        renderMaskMini(outputMask, w, h);
         if (state.preset === "penTrace") {
-          renderPenTrace(source, mask, w, h);
+          renderPenTrace(source, outputMask, w, h, textureMask);
           return;
         }
         if (state.preset === "thermalMap") {
-          renderThermalMap(source, mask, w, h);
+          renderThermalMap(source, outputMask, w, h, textureMask);
           return;
         }
         const out = resultCtx.createImageData(w, h);
@@ -2200,19 +3203,21 @@
         const edgeAlpha = getColorAlpha(edge, "color") / 100;
         const bgAlpha = getColorAlpha(color, "bg") / 100;
         const hiAlpha = getColorAlpha(color, "highlight") / 100;
-        const transparent = color.enabled && color.transparent;
+        const transparent = isTransparentOutput();
+        const clipDecor = shouldClipDecorToMask();
 
         for (let y = 0; y < h; y++) {
           for (let x = 0; x < w; x++) {
             const p = y * w + x;
             const i = p * 4;
             const luma = getLuma(data, i);
-            let m = mask[p];
+            let m = outputMask[p];
             let maskStrength = clamp(m, 0, 1);
+            const textureStrength = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
             let e = 0;
 
             if (edge.enabled && edge.width > 0) {
-              e = edgeAt(mask, x, y, w, h, Math.max(1, Math.round(edge.width)));
+              e = edgeAt(outputMask, x, y, w, h, Math.max(1, Math.round(edge.width)));
             }
 
             if (screen.enabled && maskStrength > 0.03 && screen.strength > 0) {
@@ -2234,7 +3239,7 @@
               }
             }
 
-            if (distress.enabled && maskStrength > 0.03) {
+            if (distress.enabled && maskStrength > 0.03 && textureStrength > 0.03) {
               const cell = Math.max(1, distress.size);
               const speckle = hash(Math.floor(x / cell), Math.floor(y / cell), distress.seed);
               const fine = hash(x, y, distress.seed + 9);
@@ -2253,7 +3258,7 @@
 
             if (color.enabled && !transparent) {
               const fabric = texture.enabled ? texture.fabric / 100 : 0;
-              const fabricNoise = (hash(Math.floor(x / 7), Math.floor(y / 3), 21) - 0.5) * fabric * 44;
+              const fabricNoise = textureStrength * (hash(Math.floor(x / 7), Math.floor(y / 3), 21) - 0.5) * fabric * 44;
               r = clamp(lerp(255, bgRgb.r, bgAlpha) + fabricNoise);
               g = clamp(lerp(255, bgRgb.g, bgAlpha) + fabricNoise);
               b = clamp(lerp(255, bgRgb.b, bgAlpha) + fabricNoise);
@@ -2262,7 +3267,7 @@
             if (maskStrength > 0.03 && ink.enabled) {
               const strength = ink.strength / 100 * inkAlpha * maskStrength;
               const shade = clamp((255 - luma) / 255, 0, 1);
-              const printNoise = (hash(x, y, 4) - 0.5) * 48 * (texture.enabled ? texture.fabric / 100 : 0.25);
+              const printNoise = textureStrength * (hash(x, y, 4) - 0.5) * 48 * (texture.enabled ? texture.fabric / 100 : 0);
               r = lerp(r, lerp(inkRgb.r, hiRgb.r, shade * 0.18 * hiAlpha), strength) + printNoise;
               g = lerp(g, lerp(inkRgb.g, hiRgb.g, shade * 0.18 * hiAlpha), strength) + printNoise;
               b = lerp(b, lerp(inkRgb.b, hiRgb.b, shade * 0.18 * hiAlpha), strength) + printNoise;
@@ -2279,12 +3284,12 @@
             }
 
             if (texture.enabled) {
-              const scan = Math.sin(y * 0.42 + hash(1, Math.floor(y / 3), 5) * 2) * texture.scan * 0.12;
+              const scan = transparent && maskStrength <= 0.03 ? 0 : textureStrength * Math.sin(y * 0.42 + hash(1, Math.floor(y / 3), 5) * 2) * texture.scan * 0.12;
               const bleed = texture.bleed / 100;
-              if (maskStrength > 0.03 && bleed > 0) {
-                r = lerp(r, inkRgb.r, bleed * hash(x, y, 33) * 0.16 * maskStrength);
-                g = lerp(g, inkRgb.g, bleed * hash(x, y, 34) * 0.16 * maskStrength);
-                b = lerp(b, inkRgb.b, bleed * hash(x, y, 35) * 0.16 * maskStrength);
+              if (maskStrength > 0.03 && textureStrength > 0.03 && bleed > 0) {
+                r = lerp(r, inkRgb.r, bleed * hash(x, y, 33) * 0.16 * maskStrength * textureStrength);
+                g = lerp(g, inkRgb.g, bleed * hash(x, y, 34) * 0.16 * maskStrength * textureStrength);
+                b = lerp(b, inkRgb.b, bleed * hash(x, y, 35) * 0.16 * maskStrength * textureStrength);
               }
               r = clamp(r + scan);
               g = clamp(g + scan);
@@ -2301,20 +3306,25 @@
         result.width = w;
         result.height = h;
         resultCtx.putImageData(out, 0, 0);
-        if (decor.enabled) applyGraphicDecor(source, mask, w, h);
-        applyLensBlur(w, h);
-        empty.classList.add("hidden");
+        if (decor.enabled) applyGraphicDecor(source, textureMask, w, h, clipDecor);
+        if (transparent) clipResultAlphaToMask(textureMask, w, h);
+        syncResultFit();
       }
 
       function renderAll(shouldRenderOutput = true) {
         renderPresets();
         renderNodeList();
+        renderColorPanel();
         renderParams();
         if (shouldRenderOutput) renderOutput();
+        syncResultFit();
       }
 
       function setInputStatus(text) {
-        inputStatus.textContent = text;
+        inputStatus.replaceChildren();
+        const mark = document.createElement("span");
+        mark.textContent = "*";
+        inputStatus.append(mark, document.createTextNode(` ${text}`));
       }
 
       function isSvgFile(file) {
@@ -2344,29 +3354,25 @@
         return canvas;
       }
 
-      function applyLoadedSource(source, aspect, type, previewSrc, status) {
+      function applyLoadedSource(source, aspect, type, status) {
         state.source = source;
         state.sourceType = type;
         state.sourceAspect = aspect || 1;
         state.sourceHasTransparency = type !== "pdf" && sourceHasTransparency(source, state.sourceAspect);
-        if (previewSrc) {
-          imagePreview.src = previewSrc;
-          imagePreview.classList.remove("hidden");
-        }
+        sidePreviews.classList.remove("hidden");
         setInputStatus(state.sourceHasTransparency ? `${status} · 已识别透明轮廓` : status);
         renderAll();
       }
 
       async function loadFile(file) {
         if (!file) return;
-        imagePreview.classList.add("hidden");
         setInputStatus("正在读取文件...");
 
         try {
           if (isPdfFile(file)) {
             setInputStatus("正在读取 PDF 首页...");
             const pdfCanvas = await renderPdfFirstPage(file);
-            applyLoadedSource(pdfCanvas, pdfCanvas.width / pdfCanvas.height, "pdf", pdfCanvas.toDataURL("image/png"), "PDF 已载入：已使用第一页生成图形");
+            applyLoadedSource(pdfCanvas, pdfCanvas.width / pdfCanvas.height, "pdf", "PDF 已载入：已使用第一页生成图形");
             return;
           }
 
@@ -2380,7 +3386,7 @@
           img.onload = () => {
             const type = isSvgFile(file) ? "svg" : "image";
             const label = type === "svg" ? "SVG 已载入" : "图片已载入";
-            applyLoadedSource(img, img.naturalWidth / img.naturalHeight, type, url, `${label}：可继续拖入文件替换`);
+            applyLoadedSource(img, img.naturalWidth / img.naturalHeight, type, `${label}：可继续拖入文件替换`);
           };
           img.onerror = () => {
             URL.revokeObjectURL(url);
@@ -2393,6 +3399,11 @@
       }
 
       fileInput.addEventListener("change", (event) => loadFile(event.target.files[0]));
+      drop.addEventListener("click", (event) => {
+        if (event.target === fileInput) return;
+        event.preventDefault();
+        fileInput.click();
+      });
       drop.addEventListener("dragover", (event) => {
         event.preventDefault();
         drop.classList.add("drag");
@@ -2416,6 +3427,15 @@
       });
       document.getElementById("randomize").addEventListener("click", () => {
         randomizeChain();
+      });
+  reverseToggle.addEventListener("click", () => {
+    state.outputReverse = !state.outputReverse;
+    syncReverseToggle();
+    renderAll();
+  });
+      window.addEventListener("resize", () => {
+        positionParamFlyout();
+        syncResultFit();
       });
 
       renderAll(false);
