@@ -1,8 +1,8 @@
 {
   "name": "synths-lab-graphic-texture",
-  "version": "1.5.0",
+  "version": "1.7.0",
   "private": true,
-  "description": "Synths Lab Graphic Texture V1.5 - UI 2.0 fixes for the browser-based graphic texture generator.",
+  "description": "Synthub Graphic Texture V1.7 - refined transparent-background rendering, responsive UI, and favicon branding.",
   "scripts": {
     "start": "python3 -m http.server 4178",
     "serve": "python3 -m http.server 4178"

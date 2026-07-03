@@ -1,6 +1,6 @@
 # Synths Lab Graphic Texture
 
-Version: `V1.6`
+Version: `V1.7`
 
 A browser-based graphic texture generator for turning images, video frames, and SVG assets into print-inspired visual styles such as thermal-map compositions, halftone graphics, pen-trace outlines, rough ink, distressed grain, and fabric-like texture.
 
@@ -24,6 +24,7 @@ http://localhost:4178/tools/graphic-texture-demo.html
 ├── package.json
 ├── assets/
 │   ├── TE20L.woff2
+│   ├── browser-icon.svg
 │   ├── download-icon.svg
 │   └── logo-svg.svg
 └── tools/
@@ -31,6 +32,14 @@ http://localhost:4178/tools/graphic-texture-demo.html
 ```
 
 ## Version Notes
+
+### V1.7 - Synthub UI and Transparent Output
+
+- Restores the Figma-aligned Synthub interface with updated branding, title spacing, effect labels, controls, and output dock behavior.
+- Adds the Synthub browser favicon and updates the page titles for the V1.7 release.
+- Reworks transparent-background output per preset so halftone, pen trace, Xerox, and thermal-map styles keep the intended foreground treatment while removing only the background.
+- Adds the mobile camera input, mobile effect carousel, mobile parameter panel, and fixed mobile output dock.
+- Keeps Xerox texture, scanline, grain, and distress details inside the graphic area when the background is transparent.
 
 ### V1.6 - Paper Texture Rendering
 

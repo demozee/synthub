@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Synths Lab Graphic Texture V1.3</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/browser-icon.svg" />
+    <title>Synthub Graphic Texture V1.7</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
@@ -375,6 +376,20 @@
         display: none;
       }
 
+      .camera-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .camera-button,
+      .mobile-effects,
+      .mobile-param-panel {
+        display: none;
+      }
+
       .main {
         position: relative;
         display: grid;
@@ -549,14 +564,14 @@
       }
 
       input[type="range"]::-webkit-slider-runnable-track {
-        height: 4px;
+        height: 6px;
         background: linear-gradient(90deg, var(--yellow) var(--pct, 50%), #555 var(--pct, 50%));
       }
 
       input[type="range"]::-webkit-slider-thumb {
         appearance: none;
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         margin-top: -7px;
         border: 0;
         border-radius: 5px;
@@ -679,7 +694,7 @@
         appearance: none;
         width: 30px;
         height: 30px;
-        margin-top: -5px;
+        margin-top: -4px;
         border: 5px solid #fff;
         border-radius: 50%;
         background: hsl(var(--hue, 0), 100%, 50%);
@@ -1114,6 +1129,17 @@
         line-height: 18.2px;
       }
 
+      .param-title small {
+        display: block;
+        margin-top: 4px;
+        color: #9296a0;
+        font-family: var(--font-cn);
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 18.2px;
+        letter-spacing: 0.04em;
+      }
+
       .control {
         margin-bottom: 26px;
       }
@@ -1124,18 +1150,27 @@
         line-height: 17px;
       }
 
+      .label .label-cn {
+        color: #9296a0;
+        font-family: var(--font-cn);
+        font-size: 13px;
+        line-height: 18px;
+        font-weight: 300;
+        letter-spacing: 0.04em;
+      }
+
       input[type="range"] {
         height: 18px;
       }
 
       input[type="range"]::-webkit-slider-runnable-track {
-        height: 4px;
+        height: 6px;
       }
 
       input[type="range"]::-webkit-slider-thumb {
-        width: 14px;
-        height: 14px;
-        margin-top: -5px;
+        width: 20px;
+        height: 20px;
+        margin-top: -7px;
         border-radius: 50%;
       }
 
@@ -1547,6 +1582,425 @@
         height: 21px;
       }
 
+      /* Figma 2896:179 / 默认-英文 refresh */
+      body {
+        background: #f5f5f5;
+      }
+
+      .side,
+      .right {
+        background: #27272a;
+      }
+
+      .brand {
+        min-height: 140px;
+        padding: 36px 35px 36px 36px;
+        background: #27272a;
+      }
+
+      .brand img {
+        width: 289px;
+        height: 68px;
+        object-fit: contain;
+      }
+
+      .panel {
+        padding: 23px 28px 24px;
+      }
+
+      .right .panel {
+        padding-top: 26px;
+      }
+
+      h2 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        color: #f4f3ef;
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 26px;
+        letter-spacing: -0.05em;
+      }
+
+      h2::after {
+        content: attr(data-cn);
+        color: #9296a0;
+        font-family: var(--font-cn);
+        font-size: 12px;
+        font-weight: 300;
+        line-height: 18px;
+        letter-spacing: 0.04em;
+      }
+
+      #drop.drop {
+        width: 304px;
+        height: 88px;
+        background: #0095dd;
+      }
+
+      #drop .drop-title {
+        left: 96px;
+        top: 17px;
+        width: 112px;
+        height: 54px;
+        font-size: 40px;
+        line-height: 54px;
+        font-weight: 200;
+        letter-spacing: -2px;
+      }
+
+      #drop .input-icon {
+        left: 25px;
+        top: 29px;
+        width: 30px;
+        height: 30px;
+      }
+
+      #drop .input-arrow {
+        left: 263px;
+        top: 34px;
+        width: 16px;
+        height: 20px;
+      }
+
+      #inputStatus.drop-sub {
+        width: 304px;
+        margin-top: 23px;
+        padding-left: 17px;
+        color: #e5e5e5;
+        font-size: 15px;
+        font-weight: 300;
+        line-height: 19px;
+        letter-spacing: -0.75px;
+      }
+
+      #inputStatus.drop-sub span {
+        color: #e5e5e5;
+      }
+
+      .side-previews {
+        grid-template-columns: 148px 148px;
+        gap: 8px;
+        margin-top: 34px;
+      }
+
+      .side-preview {
+        grid-template-rows: 40px;
+        background: #222227;
+      }
+
+      .side-preview h3 {
+        padding: 9px 10px 0;
+        color: #f4f3ef;
+        font-size: 16px;
+        line-height: 21px;
+        letter-spacing: -0.8px;
+      }
+
+      .side-preview canvas {
+        display: none;
+        height: 128px;
+        background: #222227;
+      }
+
+      .side-previews.has-preview .side-preview {
+        grid-template-rows: 40px 128px;
+      }
+
+      .side-previews.has-preview .side-preview canvas {
+        display: block;
+      }
+
+      .preset-grid {
+        gap: 8px;
+      }
+
+      .preset {
+        min-height: 60px;
+        padding: 10px 12px 8px;
+        background: #222227;
+        color: #f4f3ef;
+        font-size: 16px;
+        line-height: 20px;
+      }
+
+      .preset.active {
+        outline: 1px solid var(--yellow);
+        outline-offset: -1px;
+        background: #1a1a1d;
+        color: #f4f3ef;
+      }
+
+      .preset small {
+        margin-top: 4px;
+        color: #9296a0;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.04em;
+        opacity: 0.62;
+      }
+
+      .preset.active small {
+        color: #f4f3ef;
+        letter-spacing: 0;
+        opacity: 1;
+      }
+
+      #randomize.randomize-button {
+        background: #222227;
+      }
+
+      .powered-by {
+        min-height: 150px;
+        margin-top: 330px;
+        padding: 31px 30px;
+        background: #1b1b1f;
+        color: #555;
+      }
+
+      .powered-by img {
+        display: block;
+        width: 300px;
+        height: 88px;
+      }
+
+      .main {
+        padding: 30px 40px 24px;
+        background: #f5f5f5;
+      }
+
+      .note {
+        width: 611px;
+        max-width: 611px;
+        margin-top: 24px;
+        margin-right: -10px;
+        color: #9296a0;
+        font-family: var(--font-cn);
+        font-size: 18px;
+        font-weight: 300;
+        line-height: 25.6px;
+      }
+
+      .note span {
+        display: block;
+      }
+
+      .note .note-cn {
+        width: 594px;
+        margin-top: 12px;
+        font-size: 16px;
+        line-height: 22px;
+        letter-spacing: 0.04em;
+      }
+
+      .top {
+        display: grid;
+        grid-template-columns: 331px minmax(0, 500px);
+        column-gap: clamp(40px, calc((100vw - 1518px) * 0.37 + 40px), 188px);
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+
+      .title {
+        width: 331px;
+        flex: 0 0 331px;
+      }
+
+      .title img {
+        width: 331px;
+        height: 100px;
+        aspect-ratio: 364.26 / 110;
+        object-fit: contain;
+        object-position: left top;
+      }
+
+      .note {
+        width: 100%;
+        max-width: 500px;
+        margin-top: 8px;
+        font-family: var(--font-mono);
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 25px;
+        letter-spacing: -0.05em;
+      }
+
+      .note .note-cn {
+        width: 100%;
+        margin-top: 12px;
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 300;
+        line-height: 23px;
+        letter-spacing: -0.05em;
+      }
+
+      .node-list {
+        gap: 8px;
+      }
+
+      .node {
+        grid-template-columns: 39px minmax(0, 1fr) 50px;
+        min-height: 68px;
+        background: #222227;
+        border-color: transparent;
+      }
+
+      .node:first-child {
+        min-height: 88px;
+      }
+
+      .node.active {
+        outline: 1px solid var(--yellow);
+        outline-offset: -1px;
+        background: #222227;
+      }
+
+      .node.disabled {
+        opacity: 0.38;
+      }
+
+      .node-index {
+        color: #f4f3ef;
+        border-right: 1px solid #303036;
+      }
+
+      .node-name {
+        color: #f4f3ef;
+        font-size: 19px;
+        line-height: 24px;
+      }
+
+      .node-desc {
+        margin-top: 3px;
+        color: #9296a0;
+        font-size: 12px;
+        line-height: 18px;
+        letter-spacing: 0.04em;
+      }
+
+      .toggle {
+        justify-self: stretch;
+        border: 0;
+        color: #9296a0;
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .node:not(.disabled) .toggle {
+        color: var(--yellow);
+      }
+
+      .param-flyout {
+        background: #27272a;
+      }
+
+      .param-title {
+        background: #1a1a1d;
+      }
+
+      .standalone-color {
+        margin-bottom: 36px;
+      }
+
+      .standalone-color .control > .label {
+        color: #f4f3ef;
+        font-family: var(--font-mono);
+        font-size: 20px;
+        line-height: 26px;
+        font-weight: 400;
+        letter-spacing: -0.05em;
+      }
+
+      .standalone-color .control > .label span:last-child {
+        color: #9296a0;
+        font-family: var(--font-cn);
+        font-size: 12px;
+        line-height: 18px;
+        font-weight: 300;
+        letter-spacing: 0.04em;
+      }
+
+      .standalone-color .color-summary {
+        grid-template-columns: 50px 12px 1fr 20px;
+        gap: 10px;
+      }
+
+      .standalone-color .color-hex-readout,
+      .standalone-color .color-hash {
+        color: #f4f3ef;
+      }
+
+      .export-dock {
+        background: #0d0d11;
+      }
+
+      .export-button {
+        background: #222227;
+        color: #f4f3ef;
+      }
+
+      .export-button .export-icon img {
+        opacity: 0.58;
+        filter: brightness(0) saturate(100%) invert(34%) sepia(7%) saturate(263%) hue-rotate(202deg) brightness(91%) contrast(83%);
+      }
+
+      #reverseToggle.reverse-toggle {
+        background: #222227;
+        color: #f4f3ef;
+      }
+
+      #reverseToggle .reverse-icon .re-left {
+        fill: #77777f;
+      }
+
+      #reverseToggle .reverse-icon .re-right {
+        fill: #222227;
+      }
+
+      #reverseToggle .reverse-icon .re-ring {
+        stroke: #77777f;
+      }
+
+      .check .label-cn {
+        margin-left: auto;
+        color: #9296a0;
+        font-size: 13px;
+        letter-spacing: 0.04em;
+      }
+
+      @media (max-width: 1500px) and (min-width: 641px) {
+        .title {
+          width: min(300px, 100%);
+          flex: 0 1 auto;
+        }
+
+        .title img {
+          width: 100%;
+          height: auto;
+        }
+
+        .note {
+          max-width: 380px;
+          margin-top: 6px;
+          font-family: var(--font-mono);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 22px;
+          letter-spacing: -0.05em;
+        }
+
+        .note .note-cn {
+          width: 100%;
+          font-size: 13px;
+          line-height: 21px;
+          letter-spacing: -0.05em;
+        }
+      }
+
       @media (max-width: 1260px) {
         .app {
           grid-template-columns: 360px minmax(0, 1fr) 360px;
@@ -1731,8 +2185,361 @@
         }
 
         .right {
+          display: block;
+          width: 100%;
+          height: 0;
+          min-height: 0;
+          border-left: 0;
+          overflow: visible;
+          background: transparent;
+        }
+
+        .right-scroll,
+        .param-flyout {
+          display: none !important;
+        }
+
+        body {
+          padding-bottom: calc(92px + env(safe-area-inset-bottom));
+          background: #f5f5f5;
+        }
+
+        .side {
+          background: #27272a;
+        }
+
+        .brand {
+          min-height: 88px;
+          padding: 18px 20px 14px;
+        }
+
+        .brand img {
+          width: min(220px, 68vw);
+          height: auto;
+        }
+
+        .side .panel {
+          padding: 18px 20px 22px;
+        }
+
+        .side .panel:nth-of-type(2),
+        .powered-by {
           display: none;
         }
+
+        h2 {
+          margin-bottom: 12px;
+          font-size: 18px;
+          line-height: 24px;
+        }
+
+        #drop.drop {
+          width: 100%;
+          height: 82px;
+        }
+
+        #drop .input-icon {
+          left: 22px;
+          top: 26px;
+        }
+
+        #drop .drop-title {
+          left: 82px;
+          right: 60px;
+          top: 14px;
+          width: auto;
+          font-size: 36px;
+          line-height: 54px;
+          text-align: left;
+        }
+
+        #drop .input-arrow {
+          left: auto;
+          right: 24px;
+          top: 31px;
+        }
+
+        .camera-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 44px;
+          margin-top: 8px;
+          border: 1px solid #303036;
+          border-radius: 0;
+          background: #222227;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 16px;
+          font-weight: 300;
+          line-height: 20px;
+          letter-spacing: -0.8px;
+          text-transform: uppercase;
+          cursor: pointer;
+        }
+
+        #inputStatus.drop-sub {
+          width: 100%;
+          margin-top: 12px;
+          padding-left: 0;
+          white-space: normal;
+        }
+
+        .side-previews {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          width: 100%;
+          margin-top: 16px;
+        }
+
+        .side-preview {
+          grid-template-rows: 34px;
+        }
+
+        .side-previews.has-preview .side-preview {
+          grid-template-rows: 34px minmax(72px, 20vw);
+        }
+
+        .side-preview h3 {
+          padding: 7px 10px 0;
+          font-size: 14px;
+          line-height: 18px;
+        }
+
+        .side-preview canvas {
+          height: min(96px, 20vw);
+        }
+
+        .main {
+          padding: 16px 20px 28px;
+        }
+
+        .top {
+          display: none;
+        }
+
+        .title {
+          width: min(300px, 78vw);
+        }
+
+        .title img {
+          width: 100%;
+          height: auto;
+        }
+
+        .note {
+          width: 100%;
+          max-width: none;
+          margin-top: 12px;
+          color: #9296a0;
+          font-size: 14px;
+          line-height: 20px;
+        }
+
+        .note .note-cn {
+          width: 100%;
+          margin-top: 8px;
+          font-size: 13px;
+          line-height: 19px;
+        }
+
+        .stage {
+          height: min(226px, 58vw);
+          aspect-ratio: auto;
+          background: #f5f5f5;
+        }
+
+        .mobile-effects {
+          display: grid;
+          grid-auto-flow: column;
+          grid-auto-columns: calc((100vw - 64px) / 4);
+          gap: 8px;
+          margin: 12px -20px 0;
+          padding: 0 20px 6px;
+          overflow-x: auto;
+          overscroll-behavior-x: contain;
+          scroll-snap-type: x mandatory;
+          scrollbar-width: none;
+        }
+
+        .mobile-effects::-webkit-scrollbar {
+          display: none;
+        }
+
+        .mobile-effect-card {
+          min-height: 70px;
+          padding: 9px 8px;
+          border: 1px solid transparent;
+          border-radius: 0;
+          background: #222227;
+          color: #f4f3ef;
+          text-align: left;
+          scroll-snap-align: start;
+          cursor: pointer;
+        }
+
+        .mobile-effect-card.active {
+          border-color: var(--yellow);
+          background: #1a1a1d;
+        }
+
+        .mobile-effect-card.disabled {
+          opacity: 0.38;
+        }
+
+        .mobile-effect-top {
+          display: grid;
+          grid-template-rows: auto auto;
+          gap: 4px;
+          font-family: var(--font-mono);
+          font-size: 12px;
+          font-weight: 300;
+          line-height: 15px;
+          letter-spacing: 0;
+        }
+
+        .mobile-effect-top span:first-child {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .mobile-effect-toggle {
+          color: var(--yellow);
+          font-size: 11px;
+          line-height: 14px;
+          text-transform: uppercase;
+        }
+
+        .mobile-effect-card.disabled .mobile-effect-toggle {
+          color: #9296a0;
+        }
+
+        .mobile-effect-desc {
+          margin-top: 7px;
+          color: #9296a0;
+          font-family: var(--font-cn);
+          font-size: 12px;
+          font-weight: 300;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+          display: none;
+        }
+
+        .mobile-param-panel {
+          display: block;
+          margin-top: 10px;
+          padding: 16px;
+          background: #27272a;
+          color: #f4f3ef;
+        }
+
+        .mobile-param-panel .param-title {
+          min-height: 0;
+          margin: -16px -16px 16px;
+          padding: 16px;
+        }
+
+        .mobile-param-panel .param-title strong {
+          font-size: 19px;
+          line-height: 24px;
+        }
+
+        .mobile-param-panel .control {
+          margin-bottom: 24px;
+        }
+
+        .mobile-param-panel .control:last-child {
+          margin-bottom: 0;
+        }
+
+        .mobile-param-panel .label {
+          font-size: 17px;
+          line-height: 22px;
+        }
+
+        .mobile-param-panel input[type="range"] {
+          height: 24px;
+        }
+
+        .mobile-param-panel input[type="range"]::-webkit-slider-runnable-track {
+          height: 6px;
+        }
+
+        .mobile-param-panel input[type="range"]::-webkit-slider-thumb {
+          width: 20px;
+          height: 20px;
+          margin-top: -7px;
+        }
+
+        .mobile-param-panel .standalone-color {
+          margin-bottom: 26px;
+        }
+
+        .mobile-param-panel .color-popover {
+          left: 12px !important;
+          right: 12px;
+          width: auto;
+        }
+
+        .right .export-dock {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 90;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 64px;
+          gap: 4px;
+          width: 100%;
+          height: calc(78px + env(safe-area-inset-bottom));
+          padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+          background: #0d0d11;
+        }
+
+        .right .export-button {
+          width: 100%;
+          height: 58px;
+          background: #222227;
+          color: #f4f3ef;
+        }
+
+        .right .export-button .export-label {
+          top: 9px;
+          font-size: 30px;
+          line-height: 39px;
+          letter-spacing: 0;
+        }
+
+        .right .export-button .export-icon {
+          left: 16px;
+          top: 15px;
+          opacity: 0.58;
+          filter: brightness(0) saturate(100%) invert(34%) sepia(7%) saturate(263%) hue-rotate(202deg) brightness(91%) contrast(83%);
+        }
+
+        #reverseToggle.reverse-toggle {
+          width: 64px;
+          height: 58px;
+        }
+      }
+
+      .app.has-source .export-button,
+      .app.has-source .mobile-export {
+        background: var(--yellow);
+        color: #08080a;
+      }
+
+      .app.has-source .export-button .export-icon,
+      .app.has-source .right .export-button .export-icon {
+        opacity: 1;
+        filter: none;
+      }
+
+      .app.has-source .export-button .export-icon img,
+      .app.has-source .mobile-export .export-icon img {
+        filter: brightness(0) saturate(100%) invert(5%) sepia(10%) saturate(516%) hue-rotate(201deg) brightness(93%) contrast(99%);
       }
     </style>
   </head>
@@ -1740,11 +2547,11 @@
     <main class="app">
       <aside class="side">
         <div class="brand">
-          <img src="../assets/logo-svg.svg" alt="synths lab" />
+          <img src="../assets/synthub-logo.svg" alt="synthub" />
         </div>
         <div class="side-scroll">
           <section class="panel">
-            <h2>输入</h2>
+            <h2 data-cn="输入">Input</h2>
             <label class="drop" id="drop">
               <input id="file" type="file" accept="image/*,.svg,image/svg+xml,.pdf,application/pdf" />
               <div class="drop-content">
@@ -1755,8 +2562,10 @@
                 <img class="input-arrow" src="../assets/input-arrow-figma.svg" alt="" />
               </div>
             </label>
+            <input id="cameraFile" class="camera-input" type="file" accept="image/*" capture="environment" />
+            <button class="camera-button" id="cameraButton" type="button">Camera</button>
             <div class="drop-sub" id="inputStatus"><span>*</span> PNG / JPG / WebP / SVG / PDF</div>
-            <div id="sidePreviews" class="side-previews hidden">
+            <div id="sidePreviews" class="side-previews">
               <div class="side-preview">
                 <h3>source</h3>
                 <canvas id="sourceMini" width="320" height="320"></canvas>
@@ -1769,7 +2578,7 @@
           </section>
 
           <section class="panel">
-            <h2>预设</h2>
+            <h2 data-cn="预设">Presets</h2>
             <div class="preset-grid" id="presetGrid"></div>
             <button class="randomize-button" id="randomize">NICE TRY</button>
             <button class="mobile-export" data-export-png>
@@ -1777,26 +2586,31 @@
               <span class="export-label">OUTPUT</span>
             </button>
           </section>
-          <div class="powered-by"><span>Powered by</span><strong>Expression</strong></div>
+          <div class="powered-by"><img src="../assets/powered-by-expression.svg" alt="Powered by Expression" /></div>
         </div>
       </aside>
 
       <section class="main">
         <div class="top">
           <div class="title"><img src="../assets/graphic-texture-title.svg" alt="Graphic Texture 印花" /></div>
-          <div class="note">把普通图像转成适合印花、海报和品牌视觉的纹理图形。上传素材，选择风格，生成带有印刷感、颗粒感和手工痕迹的视觉结果。</div>
+          <div class="note">
+            <span>Upload an image, choose a style, and turn it into a graphic texture with print grain, tactile noise, and handmade imperfections.</span>
+            <span class="note-cn">上传素材，选择风格，生成带有印刷感、颗粒感和手工痕迹的图形纹理。</span>
+          </div>
         </div>
         <div class="workspace">
           <div class="stage">
             <canvas id="result" class="result" width="1000" height="1000"></canvas>
           </div>
         </div>
+        <div class="mobile-effects" id="mobileEffects" aria-label="Effects"></div>
+        <section class="mobile-param-panel" id="mobileParamPanel" aria-label="Effect controls"></section>
       </section>
 
       <aside class="right">
         <div class="right-scroll">
           <section class="panel">
-            <h2>效果器</h2>
+            <h2 data-cn="效果器">Effects</h2>
             <div class="node-list" id="nodeList"></div>
           </section>
           <section class="panel color-section">
@@ -1853,7 +2667,7 @@
         },
         penTrace: {
           label: "Pen Trace",
-          sub: "针管线稿",
+          sub: "针管笔线稿",
           selected: "extract",
           nodes: {
             extract: { enabled: true, threshold: 142, contrast: 38, grayKeep: 0, invert: false },
@@ -1924,6 +2738,9 @@
       };
 
       const fileInput = document.getElementById("file");
+      const app = document.querySelector(".app");
+      const cameraFile = document.getElementById("cameraFile");
+      const cameraButton = document.getElementById("cameraButton");
       const drop = document.getElementById("drop");
       const inputStatus = document.getElementById("inputStatus");
       const work = document.getElementById("work");
@@ -1943,6 +2760,8 @@
       const colorPanel = document.getElementById("colorPanel");
       const reverseToggle = document.getElementById("reverseToggle");
       const presetGrid = document.getElementById("presetGrid");
+      const mobileEffects = document.getElementById("mobileEffects");
+      const mobileParamPanel = document.getElementById("mobileParamPanel");
       let renderFrameQueued = false;
       let colorRenderTimer = 0;
       let colorOutsideHandlerBound = false;
@@ -2361,12 +3180,12 @@
         paramFlyout.style.setProperty("--flyout-top", `${top}px`);
       }
 
-      function controlRange(label, key, min, max, step = 1) {
+      function controlRange(label, key, min, max, step = 1, cnLabel = "") {
         const node = state.nodes[state.selected];
         const value = node[key];
         return `
           <div class="control">
-            <div class="label"><span>${label}</span><span data-v="${key}">${value}</span></div>
+            <div class="label"><span>${label}</span><span class="label-cn">${cnLabel}</span></div>
             <input data-param="${key}" type="range" min="${min}" max="${max}" step="${step}" value="${value}">
           </div>
         `;
@@ -2376,9 +3195,10 @@
         const node = state.nodes[nodeId];
         const alpha = getUiColorAlpha(nodeId, key);
         const isTransparent = alpha <= 0 || (nodeId === "color" && key === "bg" && state.nodes.color.transparent);
+        const secondaryLabel = label === "Graphic" ? "图形颜色" : label === "Base" ? "背景颜色" : "";
         return `
           <div class="control">
-            <div class="label"><span>${label}</span></div>
+            <div class="label"><span>${label}</span>${secondaryLabel ? `<span>${secondaryLabel}</span>` : ""}</div>
             <div class="color-control" data-color-node="${nodeId}" data-color-param="${key}">
               <div class="color-summary${isTransparent ? " transparent" : ""}">
                 <button class="color-swatch" type="button" data-color-toggle aria-label="${label}"></button>
@@ -2403,70 +3223,70 @@
         `;
       }
 
-      function controlCheck(label, key) {
+      function controlCheck(label, key, cnLabel = "") {
         const node = state.nodes[state.selected];
         return `
           <label class="check">
             <input data-param="${key}" type="checkbox" ${node[key] ? "checked" : ""}>
-            ${label}
+            <span>${label}</span><span class="label-cn">${cnLabel}</span>
           </label>
         `;
       }
 
-      function renderParams() {
-        const meta = nodeMeta.find((item) => item.id === state.selected);
-        paramName.textContent = meta.name;
-        paramHint.textContent = meta.hint;
+      function getParamControls() {
         if (state.selected === "extract") {
-          paramPanel.innerHTML = [
-            controlRange("阈值", "threshold", 0, 255),
-            controlRange("对比", "contrast", 0, 100),
-            controlRange("灰部保留", "grayKeep", 0, 100),
-            controlCheck("反相", "invert"),
+          return [
+            controlRange("Threshold", "threshold", 0, 255, 1, "阈值"),
+            controlRange("Contrast", "contrast", 0, 100, 1, "对比"),
+            controlRange("Gray hold", "grayKeep", 0, 100, 1, "灰部保留"),
           ].join("");
         }
         if (state.selected === "ink") {
-          paramPanel.innerHTML = [
-            controlRange("填充强度", "strength", 0, 100),
-            controlRange("孔洞保留", "holes", 0, 100),
+          return [
+            controlRange("Fill", "strength", 0, 100, 1, "填充强度"),
+            controlRange("Dropouts", "holes", 0, 100, 1, "孔洞保留"),
           ].join("");
         }
         if (state.selected === "screen") {
-          paramPanel.innerHTML = [
-            controlRange("网点大小", "dot", 3, 24),
-            controlRange("网点强度", "strength", 0, 100),
-            controlRange("网点角度", "angle", -45, 45),
+          return [
+            controlRange("Dot size", "dot", 3, 24, 1, "网点大小"),
+            controlRange("Density", "strength", 0, 100, 1, "网点强度"),
+            controlRange("Angle", "angle", -45, 45, 1, "网点角度"),
           ].join("");
         }
         if (state.selected === "edge") {
-          paramPanel.innerHTML = [
-            controlRange("边缘宽度", "width", 0, 10),
-            controlRange("边缘毛刺", "rough", 0, 100),
+          return [
+            controlRange("Edge width", "width", 0, 10, 1, "边缘宽度"),
+            controlRange("Roughness", "rough", 0, 100, 1, "边缘毛刺"),
           ].join("");
         }
         if (state.selected === "distress") {
-          paramPanel.innerHTML = [
-            controlRange("破损数量", "amount", 0, 100),
-            controlRange("颗粒大小", "size", 1, 14),
-            controlRange("随机种子", "seed", 1, 99),
+          return [
+            controlRange("Amount", "amount", 0, 100, 1, "破损数量"),
+            controlRange("Grain size", "size", 1, 14, 1, "颗粒大小"),
+            controlRange("Seed", "seed", 1, 99, 1, "随机种子"),
           ].join("");
         }
         if (state.selected === "texture") {
-          paramPanel.innerHTML = [
-            controlRange("布料纹理", "fabric", 0, 100),
-            controlRange("扫描线", "scan", 0, 100),
-            controlRange("油墨渗透", "bleed", 0, 100),
+          return [
+            controlRange("Fabric", "fabric", 0, 100, 1, "布料纹理"),
+            controlRange("Scan lines", "scan", 0, 100, 1, "扫描线"),
+            controlRange("Ink bleed", "bleed", 0, 100, 1, "油墨渗透"),
           ].join("");
         }
         if (state.selected === "decor") {
-          paramPanel.innerHTML = [
-            controlRange("网格强度", "grid", 0, 100),
-            controlRange("网格大小", "gridSize", 18, 96),
-            controlRange("模糊斑点", "blur", 0, 100),
-            controlRange("粒子装饰", "particles", 0, 100),
+          return [
+            controlRange("Grid strength", "grid", 0, 100, 1, "网格强度"),
+            controlRange("Grid size", "gridSize", 18, 96, 1, "网格大小"),
+            controlRange("Spots", "blur", 0, 100, 1, "模糊斑点"),
+            controlRange("Particle", "particles", 0, 100, 1, "粒子装饰"),
           ].join("");
         }
-        paramPanel.querySelectorAll("input[data-param]").forEach((input) => {
+        return "";
+      }
+
+      function bindParamControls(container) {
+        container.querySelectorAll("input[data-param]").forEach((input) => {
           if (input.type === "range") updateRangeStyle(input);
           input.addEventListener("input", () => {
             const node = state.nodes[state.selected];
@@ -2474,22 +3294,78 @@
             if (input.type === "checkbox") node[key] = input.checked;
             else if (input.type === "range") node[key] = Number(input.value);
             else node[key] = input.value;
-            const valueEl = paramPanel.querySelector(`[data-v="${key}"]`);
-            if (valueEl) valueEl.textContent = input.value;
             if (input.type === "range") updateRangeStyle(input);
             scheduleRenderOutput();
           });
         });
-        attachColorPickers();
+      }
+
+      function renderParams() {
+        let meta = nodeMeta.find((item) => item.id === state.selected);
+        if (!meta) {
+          state.selected = nodeMeta[0].id;
+          meta = nodeMeta[0];
+        }
+        paramName.textContent = meta.name;
+        paramHint.textContent = meta.hint;
+        paramPanel.innerHTML = getParamControls();
+        bindParamControls(paramPanel);
         requestAnimationFrame(positionParamFlyout);
       }
 
       function renderColorPanel() {
         colorPanel.innerHTML = [
-          `<div class="standalone-color">${controlColor("前景", "color", "ink")}</div>`,
-          `<div class="standalone-color">${controlColor("背景", "bg", "color")}</div>`,
+          `<div class="standalone-color">${controlColor("Graphic", "color", "ink")}</div>`,
+          `<div class="standalone-color">${controlColor("Base", "bg", "color")}</div>`,
         ].join("");
+        attachColorPickers(colorPanel);
         syncReverseToggle();
+      }
+
+      function renderMobileEffects() {
+        mobileEffects.innerHTML = "";
+        nodeMeta.forEach((meta, index) => {
+          const node = state.nodes[meta.id];
+          const item = document.createElement("button");
+          item.type = "button";
+          item.className = `mobile-effect-card${state.selected === meta.id ? " active" : ""}${node.enabled ? "" : " disabled"}`;
+          item.innerHTML = `
+            <div class="mobile-effect-top">
+              <span>${index + 1}. ${meta.name}</span>
+              <span class="mobile-effect-toggle">${node.enabled ? "on" : "off"}</span>
+            </div>
+            <div class="mobile-effect-desc">${meta.desc}</div>
+          `;
+          item.addEventListener("click", () => {
+            state.selected = meta.id;
+            state.flyoutOpen = false;
+            renderAll(false);
+          });
+          item.querySelector(".mobile-effect-toggle").addEventListener("click", (event) => {
+            event.stopPropagation();
+            node.enabled = !node.enabled;
+            state.selected = meta.id;
+            renderAll();
+          });
+          mobileEffects.appendChild(item);
+        });
+      }
+
+      function renderMobileParams() {
+        const meta = nodeMeta.find((item) => item.id === state.selected);
+        if (!meta) return;
+        const body = getParamControls();
+        mobileParamPanel.innerHTML = `
+          <div class="param-title">
+            <div>
+              <strong>${meta.name}</strong>
+              <small>${meta.hint}</small>
+            </div>
+          </div>
+          ${body}
+        `;
+        bindParamControls(mobileParamPanel);
+        attachColorPickers(mobileParamPanel);
       }
 
       function syncReverseToggle() {
@@ -2565,17 +3441,19 @@
         if (previousHidden) popover.classList.add("hidden");
       }
 
-      function attachColorPickers() {
+      function attachColorPickers(root = document) {
         if (!colorOutsideHandlerBound) {
           document.addEventListener("click", () => closeColorPopovers());
           window.addEventListener("resize", () => closeColorPopovers());
           colorOutsideHandlerBound = true;
         }
 
-        document.querySelectorAll("[data-color-param]").forEach((picker) => {
+        root.querySelectorAll("[data-color-param]").forEach((picker) => {
           const key = picker.dataset.colorParam;
           const nodeId = picker.dataset.colorNode || state.selected;
           setPickerVisual(picker);
+          if (picker.dataset.colorBound === "true") return;
+          picker.dataset.colorBound = "true";
           const toggle = picker.querySelector("[data-color-toggle]");
           const popover = picker.querySelector("[data-color-popover]");
           const sv = picker.querySelector(".sv-picker");
@@ -2858,10 +3736,8 @@
       }
 
       function renderPenTrace(source, mask, w, h, textureMask = mask) {
-        const { data } = source;
         const out = resultCtx.createImageData(w, h);
         const d = out.data;
-        const extract = state.nodes.extract;
         const ink = state.nodes.ink;
         const edge = state.nodes.edge;
         const distress = state.nodes.distress;
@@ -2873,10 +3749,8 @@
         const inkAlpha = getColorAlpha(ink, "color") / 100;
         const bgAlpha = getColorAlpha(color, "bg") / 100;
         const transparent = isTransparentOutput();
+        const bgCompositeAlpha = transparent ? 1 : bgAlpha;
         const clipDecor = shouldClipDecorToMask();
-        const threshold = extract.threshold;
-        const contrast = 1 + extract.contrast / 80;
-        const levels = [threshold - 28, threshold, threshold + 34];
         const textureActive = texture.enabled;
         const distressActive = distress.enabled;
 
@@ -2884,22 +3758,15 @@
           for (let x = 0; x < w; x++) {
             const p = y * w + x;
             const i = p * 4;
-            const raw = getLuma(data, i);
-            const luma = clamp((raw - 128) * contrast + 128);
             const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
             const textureStrength = textureActive ? textureClip : 0;
-            const paperTone = transparent ? 0 : paperTextureTone(x, y, texture, textureStrength, 81);
+            const paperTone = paperTextureTone(x, y, texture, textureStrength, 81);
 
-            let r = transparent ? 0 : clamp(lerp(255, bgRgb.r, bgAlpha) + paperTone);
-            let g = transparent ? 0 : clamp(lerp(255, bgRgb.g, bgAlpha) + paperTone);
-            let b = transparent ? 0 : clamp(lerp(255, bgRgb.b, bgAlpha) + paperTone);
+            let r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + paperTone);
+            let g = clamp(lerp(255, bgRgb.g, bgCompositeAlpha) + paperTone);
+            let b = clamp(lerp(255, bgRgb.b, bgCompositeAlpha) + paperTone);
             let a = transparent ? 0 : 255;
             let line = 0;
-
-            for (let levelIndex = 0; levelIndex < levels.length; levelIndex++) {
-              const level = levels[levelIndex] + (hash(Math.floor(x / 5), Math.floor(y / 5), levelIndex + 84) - 0.5) * edge.rough * 0.42;
-              if (crossesLumaLevel(data, w, h, x, y, level)) line = Math.max(line, levelIndex === 1 ? 1 : 0.62);
-            }
 
             if (edge.enabled && edgeAt(mask, x, y, w, h, Math.max(1, Math.round(edge.width)))) {
               line = Math.max(line, 0.92);
@@ -2907,9 +3774,7 @@
 
             const grainCell = Math.max(1, distress.size);
             const broken = distressActive && hash(Math.floor(x / grainCell), Math.floor(y / grainCell), distress.seed) < distress.amount / 360;
-            const dot = distressActive && textureMask[p] && hash(x, y, distress.seed + 44) > 1 - ink.holes / 900;
             if (broken) line *= 0.18;
-            if (dot) line = Math.max(line, 0.72);
 
             if (line > 0.05 && ink.enabled) {
               const scratch = 0.78 + hash(x, y, 91) * 0.32;
@@ -2917,10 +3782,10 @@
               const lineR = lerp(inkRgb.r, edgeRgb.r, line * 0.35);
               const lineG = lerp(inkRgb.g, edgeRgb.g, line * 0.35);
               const lineB = lerp(inkRgb.b, edgeRgb.b, line * 0.35);
-              r = transparent ? lineR : lerp(r, lineR, mix);
-              g = transparent ? lineG : lerp(g, lineG, mix);
-              b = transparent ? lineB : lerp(b, lineB, mix);
-              a = transparent ? clamp(mix * 255) : 255;
+              r = lerp(r, lineR, mix);
+              g = lerp(g, lineG, mix);
+              b = lerp(b, lineB, mix);
+              a = 255;
             }
 
             d[i] = clamp(r);
@@ -2933,8 +3798,6 @@
         result.width = w;
         result.height = h;
         resultCtx.putImageData(out, 0, 0);
-        applyPenTraceDetails(source, textureMask, w, h);
-        if (transparent) clipResultAlphaToMask(textureMask, w, h);
         syncResultFit();
       }
 
@@ -2985,6 +3848,7 @@
         const bgAlpha = getColorAlpha(color, "bg") / 100;
         const hiAlpha = getColorAlpha(color, "highlight") / 100;
         const transparent = isTransparentOutput();
+        const bgCompositeAlpha = transparent ? 1 : bgAlpha;
         const clipDecor = shouldClipDecorToMask();
         const textureActive = texture.enabled;
         const textureFabric = textureActive ? texture.fabric : 0;
@@ -3015,8 +3879,7 @@
             const fuzzyEdge = clamp((Math.abs(sx1 - sx0) + Math.abs(sy1 - sy0)) * (4 + edge.rough * 0.045), 0, 1);
             const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
             const textureStrength = textureActive ? textureClip : 0;
-            const alphaGate = transparent ? clamp(textureMask[p], 0, 1) : 1;
-            const paperTone = transparent ? 0 : paperTextureTone(x, y, texture, textureStrength, 121);
+            const paperTone = paperTextureTone(x, y, texture, textureStrength, 121);
             const materialArea = Math.max(softA, bodyA, fuzzyEdge);
             const materialNoise = textureStrength * materialArea * (hash(x, y, 122) - 0.5) * (textureFabric * 0.82 + decorParticles * 0.12);
             const distressCell = Math.max(1, distress.size || 1);
@@ -3030,19 +3893,19 @@
               ? (hash(Math.floor(x / 2), Math.floor(y / 2), distress.seed + 151) - 0.5) * (10 + distress.amount * 1.25) * Math.max(softA, bodyA)
               : 0;
 
-            let r = transparent ? 0 : clamp(lerp(255, bgRgb.r, bgAlpha) + paperTone);
-            let g = transparent ? 0 : clamp(lerp(255, bgRgb.g, bgAlpha) + paperTone);
-            let b = transparent ? 0 : clamp(lerp(255, bgRgb.b, bgAlpha) + paperTone);
+            let r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + paperTone);
+            let g = clamp(lerp(255, bgRgb.g, bgCompositeAlpha) + paperTone);
+            let b = clamp(lerp(255, bgRgb.b, bgCompositeAlpha) + paperTone);
 
             const haloMix = clamp((glowA - softA * 0.3) * 0.62 * hiAlpha * (0.88 + distressDrop * 0.12), 0, 0.72);
-            r = transparent && haloMix > 0 ? hiRgb.r : lerp(r, hiRgb.r, haloMix);
-            g = transparent && haloMix > 0 ? hiRgb.g : lerp(g, hiRgb.g, haloMix);
-            b = transparent && haloMix > 0 ? hiRgb.b : lerp(b, hiRgb.b, haloMix);
+            r = lerp(r, hiRgb.r, haloMix);
+            g = lerp(g, hiRgb.g, haloMix);
+            b = lerp(b, hiRgb.b, haloMix);
 
             const bodyMix = clamp((softA * 0.38 + bodyA * 0.52) * (0.42 + tone * 0.58) * ink.strength / 100 * inkAlpha * distressDrop, 0, 0.96);
-            r = transparent && bodyMix > 0 ? inkRgb.r : lerp(r, inkRgb.r, bodyMix);
-            g = transparent && bodyMix > 0 ? inkRgb.g : lerp(g, inkRgb.g, bodyMix);
-            b = transparent && bodyMix > 0 ? inkRgb.b : lerp(b, inkRgb.b, bodyMix);
+            r = lerp(r, inkRgb.r, bodyMix);
+            g = lerp(g, inkRgb.g, bodyMix);
+            b = lerp(b, inkRgb.b, bodyMix);
 
             const edgeMix = clamp(fuzzyEdge * (0.26 + edge.width * 0.08) * edgeAlpha, 0, 0.58);
             r = lerp(r, edgeRgb.r, edgeMix);
@@ -3050,11 +3913,11 @@
             b = lerp(b, edgeRgb.b, edgeMix);
 
             const paintedArea = Math.max(haloMix, bodyMix, edgeMix);
-            const scanTone = transparent ? 0 : paperTextureTone(x + 173, y, texture, textureStrength * 0.34, 123) * (textureScan / 100);
+            const scanTone = paperTextureTone(x + 173, y, texture, textureStrength * 0.34, 123) * (textureScan / 100);
             d[i] = clamp(r + materialNoise + scanTone + distressNoise);
             d[i + 1] = clamp(g + materialNoise + scanTone + distressNoise);
             d[i + 2] = clamp(b + materialNoise + scanTone + distressNoise);
-            d[i + 3] = transparent ? clamp(Math.max(haloMix, bodyMix, edgeMix) * alphaGate * 255) : 255;
+            d[i + 3] = 255;
           }
         }
 
@@ -3244,6 +4107,8 @@
         const bgAlpha = getColorAlpha(color, "bg") / 100;
         const hiAlpha = getColorAlpha(color, "highlight") / 100;
         const transparent = isTransparentOutput();
+        const bgCompositeAlpha = transparent ? 1 : bgAlpha;
+        const directTransparentForeground = transparent && state.preset === "dotShirt";
         const clipDecor = shouldClipDecorToMask();
 
         for (let y = 0; y < h; y++) {
@@ -3296,34 +4161,49 @@
             let b = transparent ? 0 : bgRgb.b;
             let a = transparent ? 0 : 255;
 
-            if (color.enabled && !transparent) {
+            if (color.enabled && (!transparent || !directTransparentForeground)) {
               const fabricTone = texture.enabled ? paperTextureTone(x, y, texture, textureStrength, 21) : 0;
-              r = clamp(lerp(255, bgRgb.r, bgAlpha) + fabricTone);
-              g = clamp(lerp(255, bgRgb.g, bgAlpha) + fabricTone);
-              b = clamp(lerp(255, bgRgb.b, bgAlpha) + fabricTone);
+              r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + fabricTone);
+              g = clamp(lerp(255, bgRgb.g, bgCompositeAlpha) + fabricTone);
+              b = clamp(lerp(255, bgRgb.b, bgCompositeAlpha) + fabricTone);
             }
 
             if (maskStrength > 0.03 && ink.enabled) {
               const strength = ink.strength / 100 * inkAlpha * maskStrength;
               const shade = clamp((255 - luma) / 255, 0, 1);
               const printNoise = textureStrength * (hash(x, y, 4) - 0.5) * 48 * (texture.enabled ? texture.fabric / 100 : 0);
-              r = lerp(r, lerp(inkRgb.r, hiRgb.r, shade * 0.18 * hiAlpha), strength) + printNoise;
-              g = lerp(g, lerp(inkRgb.g, hiRgb.g, shade * 0.18 * hiAlpha), strength) + printNoise;
-              b = lerp(b, lerp(inkRgb.b, hiRgb.b, shade * 0.18 * hiAlpha), strength) + printNoise;
+              const inkR = lerp(inkRgb.r, hiRgb.r, shade * 0.18 * hiAlpha);
+              const inkG = lerp(inkRgb.g, hiRgb.g, shade * 0.18 * hiAlpha);
+              const inkB = lerp(inkRgb.b, hiRgb.b, shade * 0.18 * hiAlpha);
+              if (directTransparentForeground) {
+                r = inkR + printNoise;
+                g = inkG + printNoise;
+                b = inkB + printNoise;
+              } else {
+                r = lerp(r, inkR, strength) + printNoise;
+                g = lerp(g, inkG, strength) + printNoise;
+                b = lerp(b, inkB, strength) + printNoise;
+              }
               a = 255;
             }
 
             if (e && edge.enabled) {
               const jag = hash(Math.floor(x / 3), Math.floor(y / 3), 13);
               const mix = (0.62 + jag * edge.rough / 180) * edgeAlpha;
-              r = lerp(r, edgeRgb.r, mix);
-              g = lerp(g, edgeRgb.g, mix);
-              b = lerp(b, edgeRgb.b, mix);
+              if (directTransparentForeground && a === 0) {
+                r = edgeRgb.r;
+                g = edgeRgb.g;
+                b = edgeRgb.b;
+              } else {
+                r = lerp(r, edgeRgb.r, mix);
+                g = lerp(g, edgeRgb.g, mix);
+                b = lerp(b, edgeRgb.b, mix);
+              }
               a = 255;
             }
 
             if (texture.enabled) {
-              const scan = transparent && maskStrength <= 0.03 ? 0 : paperTextureTone(x + 97, y, texture, textureStrength * 0.28, 5) * (texture.scan / 100);
+              const scan = transparent && a === 0 ? 0 : paperTextureTone(x + 97, y, texture, textureStrength * 0.28, 5) * (texture.scan / 100);
               const bleed = texture.bleed / 100;
               if (maskStrength > 0.03 && textureStrength > 0.03 && bleed > 0) {
                 r = lerp(r, inkRgb.r, bleed * hash(x, y, 33) * 0.16 * maskStrength * textureStrength);
@@ -3346,15 +4226,17 @@
         result.height = h;
         resultCtx.putImageData(out, 0, 0);
         if (decor.enabled) applyGraphicDecor(source, textureMask, w, h, clipDecor);
-        if (transparent) clipResultAlphaToMask(textureMask, w, h);
         syncResultFit();
       }
 
       function renderAll(shouldRenderOutput = true) {
+        app.classList.toggle("has-source", Boolean(state.source));
         renderPresets();
         renderNodeList();
         renderColorPanel();
         renderParams();
+        renderMobileEffects();
+        renderMobileParams();
         if (shouldRenderOutput) renderOutput();
         syncResultFit();
       }
@@ -3398,7 +4280,7 @@
         state.sourceType = type;
         state.sourceAspect = aspect || 1;
         state.sourceHasTransparency = type !== "pdf" && sourceHasTransparency(source, state.sourceAspect);
-        sidePreviews.classList.remove("hidden");
+        sidePreviews.classList.add("has-preview");
         setInputStatus(state.sourceHasTransparency ? `${status} · 已识别透明轮廓` : status);
         renderAll();
       }
@@ -3438,6 +4320,11 @@
       }
 
       fileInput.addEventListener("change", (event) => loadFile(event.target.files[0]));
+      cameraFile.addEventListener("change", (event) => loadFile(event.target.files[0]));
+      cameraButton.addEventListener("click", () => {
+        cameraFile.value = "";
+        cameraFile.click();
+      });
       drop.addEventListener("click", (event) => {
         if (event.target === fileInput) return;
         event.preventDefault();
