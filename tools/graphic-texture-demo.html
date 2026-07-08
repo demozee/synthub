@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="../assets/browser-icon.svg" />
-    <title>Synthub Graphic Texture V1.7</title>
+    <title>Synthub Graphic Texture V1.8</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
@@ -23,7 +23,8 @@
         --paper: #f4f3ef;
         --muted: #9ea2ad;
         --soft: #c7cad1;
-        --yellow: #ffd25a;
+        --yellow: #edff87;
+        --blue: #80d7f0;
         --orange: #ff682c;
         --brown: #5a3b22;
         --font-mono: "IBM Plex Mono", "TE20", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -312,7 +313,7 @@
         margin-top: 10px;
         border: 1px solid #34343a;
         border-radius: 0;
-        background: #0071bb;
+        background: var(--blue);
         color: #ffffff;
         cursor: pointer;
         font-family: var(--font-cn);
@@ -803,7 +804,7 @@
         width: 300px;
         height: 88px;
         border: 0;
-        background: #0095dd;
+        background: var(--blue);
         color: #e5e5e5;
         box-shadow: none;
         overflow: visible;
@@ -820,7 +821,7 @@
 
       .drop:hover,
       .drop.drag {
-        background: #08a2ea;
+        background: #90e2f6;
       }
 
       .drop-content {
@@ -941,7 +942,7 @@
       }
 
       .preset.active {
-        outline: 1px solid #079bda;
+        outline: 1px solid var(--yellow);
         outline-offset: -1px;
         background: #202024;
         color: #d7d7da;
@@ -1638,7 +1639,7 @@
       #drop.drop {
         width: 304px;
         height: 88px;
-        background: #0095dd;
+        background: var(--blue);
       }
 
       #drop .drop-title {
@@ -2025,7 +2026,9 @@
         }
 
         .app {
-          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           height: auto;
           min-height: 100vh;
           overflow: visible;
@@ -2541,6 +2544,1492 @@
       .app.has-source .mobile-export .export-icon img {
         filter: brightness(0) saturate(100%) invert(5%) sepia(10%) saturate(516%) hue-rotate(201deg) brightness(93%) contrast(99%);
       }
+
+      @media (min-width: 641px) {
+        :root {
+          --panel-bg: #27272a;
+          --panel-card: #222227;
+          --panel-card-dark: #1a1a1d;
+          --panel-rail: #0d0d11;
+          --panel-line: #303036;
+          --muted: #9296a0;
+        }
+
+        body {
+          background: #f5f5f5;
+        }
+
+        .app {
+          grid-template-columns: 360px minmax(0, 1fr) 360px;
+          background: #f5f5f5;
+        }
+
+        .side,
+        .right {
+          background: var(--panel-bg);
+          color: #f4f3ef;
+        }
+
+        .right {
+          border-left-color: #27272d;
+        }
+
+        .brand {
+          min-height: 140px;
+          padding: 36px 35px 36px 36px;
+          background: var(--panel-bg);
+        }
+
+        .brand img {
+          width: 289px;
+          height: 68px;
+          object-fit: contain;
+        }
+
+        .panel {
+          padding: 23px 28px 24px;
+        }
+
+        .right .panel {
+          padding: 26px 28px 24px;
+        }
+
+        h2 {
+          height: 26px;
+          margin-bottom: 15px;
+          color: #f4f3ef;
+          font-size: 18px;
+          font-weight: 400;
+          line-height: 24px;
+          letter-spacing: -0.9px;
+        }
+
+        h2::after {
+          color: var(--muted);
+          font-size: 12px;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+        }
+
+        #drop.drop {
+          width: 304px;
+          height: 88px;
+          background: var(--blue);
+          color: #202024;
+        }
+
+        #drop.drop:hover,
+        #drop.drop.drag {
+          background: #90e2f6;
+        }
+
+        #drop .input-icon,
+        #drop .input-arrow {
+          object-fit: contain;
+          filter: brightness(0) saturate(100%) invert(11%) sepia(5%) saturate(813%) hue-rotate(201deg) brightness(95%) contrast(91%);
+        }
+
+        #drop .input-icon {
+          left: 25px;
+          top: 29px;
+          width: 30px;
+          height: 30px;
+        }
+
+        #drop .input-arrow {
+          left: 263px;
+          top: 34px;
+          width: 16px;
+          height: 21px;
+        }
+
+        #drop .drop-title {
+          left: 96px;
+          top: 17px;
+          width: 112px;
+          height: 54px;
+          color: #202024;
+          font-size: 40px;
+          font-weight: 200;
+          line-height: 54px;
+          letter-spacing: -2px;
+        }
+
+        #inputStatus.drop-sub {
+          width: 304px;
+          margin-top: 23px;
+          padding-left: 17px;
+          color: #e5e5e5;
+          font-size: 15px;
+          font-weight: 300;
+          line-height: 19px;
+          letter-spacing: -0.75px;
+        }
+
+        #inputStatus.drop-sub span {
+          color: #e5e5e5;
+        }
+
+        .side-previews {
+          grid-template-columns: 148px 148px;
+          gap: 8px;
+          margin-top: 34px;
+        }
+
+        .side-preview {
+          grid-template-rows: 40px;
+          background: var(--panel-card);
+        }
+
+        .side-preview h3 {
+          padding: 9px 10px 0;
+          color: #f4f3ef;
+          font-size: 16px;
+          font-weight: 300;
+          line-height: 21px;
+          letter-spacing: -0.8px;
+        }
+
+        .side-preview canvas {
+          display: none;
+          height: 128px;
+          background: var(--panel-card);
+        }
+
+        .side-previews.has-preview .side-preview {
+          grid-template-rows: 40px 128px;
+        }
+
+        .side-previews.has-preview .side-preview canvas {
+          display: block;
+        }
+
+        .preset-grid {
+          grid-template-columns: 148px 148px;
+          gap: 8px;
+        }
+
+        .preset {
+          display: grid;
+          grid-template-columns: 20px minmax(0, 1fr);
+          align-items: start;
+          column-gap: 8px;
+          width: 148px;
+          min-height: 60px;
+          height: 60px;
+          padding: 13px 8px 8px;
+          background: var(--panel-card);
+          color: #f4f3ef;
+          font-size: 13px;
+          font-weight: 300;
+          line-height: 16px;
+          letter-spacing: -0.65px;
+        }
+
+        .preset:hover {
+          background: #29292d;
+        }
+
+        .preset.active {
+          outline: 1px solid var(--yellow);
+          outline-offset: -1px;
+          background: var(--panel-card-dark);
+          color: #f4f3ef;
+        }
+
+        .preset-icon {
+          display: block;
+          width: 20px;
+          height: 20px;
+          margin-top: 1px;
+        }
+
+        .preset-icon img {
+          display: block;
+          width: 20px;
+          height: 20px;
+          object-fit: contain;
+        }
+
+        .preset-label {
+          display: block;
+          min-width: 0;
+          white-space: nowrap;
+        }
+
+        .preset small {
+          margin-top: 2px;
+          color: var(--muted);
+          font-size: 12px;
+          line-height: 16px;
+          letter-spacing: 0.04em;
+          opacity: 1;
+          white-space: nowrap;
+        }
+
+        .preset.active small {
+          color: var(--muted);
+          letter-spacing: 0.04em;
+        }
+
+        #randomize.randomize-button {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 304px;
+          height: 60px;
+          margin-top: 20px;
+          border: 1px solid #000;
+          background: var(--panel-card);
+          color: #f4f3ef;
+          font-size: 26px;
+          font-weight: 300;
+          line-height: 34px;
+          letter-spacing: -1.3px;
+        }
+
+        #randomize.randomize-button::before {
+          content: "";
+          position: absolute;
+          left: 30px;
+          top: 15px;
+          width: 27px;
+          height: 30px;
+          background: url("../assets/desktop-nice-try-icon.svg") center / contain no-repeat;
+        }
+
+        .app.has-source #randomize.randomize-button::before {
+          background-image: url("../assets/desktop-nice-try-icon-active.svg");
+        }
+
+        .powered-by {
+          min-height: 150px;
+          margin-top: 330px;
+          padding: 31px 30px;
+          background: #1b1b1f;
+        }
+
+        .powered-by img {
+          display: block;
+          width: 300px;
+          height: 88px;
+          object-fit: contain;
+        }
+
+        .main {
+          padding: 30px 40px 24px;
+          background: #f5f5f5;
+        }
+
+        .top {
+          display: grid;
+          grid-template-columns: minmax(220px, 331px) minmax(0, 520px);
+          column-gap: clamp(28px, 4vw, 108px);
+          align-items: flex-start;
+          justify-content: flex-start;
+        }
+
+        .title {
+          width: min(331px, 100%);
+          min-width: 0;
+        }
+
+        .title img {
+          width: 100%;
+          height: auto;
+          max-height: 100px;
+          object-fit: contain;
+          object-position: left top;
+        }
+
+        .note {
+          width: min(520px, 100%);
+          max-width: 520px;
+          margin-top: 12px;
+          color: var(--muted);
+          font-family: var(--font-mono);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 21px;
+          letter-spacing: -0.35px;
+        }
+
+        .note .note-cn {
+          width: min(500px, 100%);
+          margin-top: 10px;
+          color: var(--muted);
+          font-family: var(--font-cn);
+          font-size: 13px;
+          font-weight: 300;
+          line-height: 20px;
+          letter-spacing: 0.04em;
+        }
+
+        .node-list {
+          gap: 8px;
+        }
+
+        .node {
+          grid-template-columns: 39px minmax(0, 1fr) 50px;
+          min-height: 68px;
+          border-color: transparent;
+          background: var(--panel-card);
+        }
+
+        .node:first-child {
+          min-height: 88px;
+        }
+
+        .node.active {
+          outline: 1px solid var(--yellow);
+          outline-offset: -1px;
+          background: var(--panel-card);
+        }
+
+        .node-index {
+          border-right: 1px solid var(--panel-line);
+          color: #f4f3ef;
+        }
+
+        .node-name {
+          color: #f4f3ef;
+          font-size: 19px;
+          line-height: 24px;
+        }
+
+        .node-desc {
+          color: var(--muted);
+          font-size: 12px;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+        }
+
+        .toggle {
+          color: var(--muted);
+        }
+
+        .node:not(.disabled) .toggle {
+          color: var(--yellow);
+        }
+
+        .param-flyout {
+          width: 240px;
+          padding: 20px;
+          background: var(--panel-bg);
+          color: #f4f3ef;
+        }
+
+        .param-title {
+          min-height: 80px;
+          margin: -20px -20px 16px;
+          padding: 20px;
+          background: var(--panel-card-dark);
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+          background: linear-gradient(90deg, var(--yellow) var(--pct, 50%), #555 var(--pct, 50%));
+        }
+
+        .standalone-color {
+          margin-bottom: 36px;
+        }
+
+        .standalone-color .control > .label {
+          color: #f4f3ef;
+          font-size: 20px;
+          font-weight: 400;
+          line-height: 26px;
+          letter-spacing: -0.05em;
+        }
+
+        .standalone-color .control > .label span:last-child {
+          color: var(--muted);
+          font-size: 12px;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+        }
+
+        .standalone-color .color-summary {
+          grid-template-columns: 50px 12px 1fr 20px;
+          gap: 10px;
+        }
+
+        .standalone-color .color-swatch {
+          width: 50px;
+          height: 51px;
+          object-fit: contain;
+        }
+
+        .standalone-color .color-hex-readout,
+        .standalone-color .color-hash {
+          color: #f4f3ef;
+        }
+
+        .standalone-color .alpha-mini-toggle.active img {
+          filter: brightness(0) saturate(100%) invert(92%) sepia(39%) saturate(713%) hue-rotate(24deg) brightness(107%) contrast(104%);
+        }
+
+        .export-dock {
+          grid-template-columns: 267px 60px;
+          gap: 4px;
+          width: 359px;
+          height: 88px;
+          padding: 14px;
+          background: var(--panel-rail);
+        }
+
+        .export-button {
+          width: 267px;
+          height: 60px;
+          background: var(--panel-card);
+          color: #f4f3ef;
+        }
+
+        .app.has-source .export-button {
+          background: var(--yellow);
+          color: #050506;
+        }
+
+        .export-button .export-icon {
+          left: 16px;
+          top: 16px;
+          width: 20px;
+          height: 28px;
+          background: url("../assets/desktop-output-icon.svg") center / 16px 21px no-repeat;
+          opacity: 0.58;
+        }
+
+        .export-button .export-icon img {
+          display: none;
+        }
+
+        .app.has-source .export-button .export-icon {
+          background-image: url("../assets/desktop-output-icon-active.svg");
+          opacity: 1;
+        }
+
+        #reverseToggle.reverse-toggle {
+          display: grid;
+          place-items: center;
+          width: 60px;
+          height: 60px;
+          background: var(--panel-card);
+          color: #515257;
+        }
+
+        #reverseToggle.reverse-toggle.active {
+          box-shadow: inset 0 0 0 1px var(--yellow);
+          color: var(--yellow);
+        }
+
+        #reverseToggle .reverse-icon {
+          position: static;
+          width: 20px;
+          height: 20px;
+          background: url("../assets/desktop-re-icon.svg") center / contain no-repeat;
+        }
+
+        #reverseToggle.reverse-toggle.active .reverse-icon {
+          background-image: url("../assets/desktop-re-icon-active.svg");
+        }
+
+        #reverseToggle .reverse-icon svg,
+        #reverseToggle > span:last-child {
+          display: none;
+        }
+
+        @media (max-width: 1360px) {
+          .main {
+            padding-right: 28px;
+            padding-left: 28px;
+          }
+
+          .top {
+            grid-template-columns: minmax(190px, 280px) minmax(0, 1fr);
+            column-gap: 28px;
+          }
+
+          .note {
+            width: 100%;
+            max-width: 460px;
+            font-size: 13px;
+            line-height: 20px;
+          }
+
+          .note .note-cn {
+            max-width: 440px;
+            font-size: 12px;
+            line-height: 19px;
+          }
+        }
+      }
+
+      .mobile-shell {
+        display: none;
+      }
+
+      @media (max-width: 640px) {
+        :root {
+          --mobile-bg: #27272a;
+          --mobile-card: #202024;
+          --mobile-card-dark: #1a1a1d;
+          --mobile-line: #303036;
+          --mobile-blue: #80d7f0;
+          --mobile-acid: #eaff6f;
+          --mobile-red: #ff4848;
+          --mobile-bg-chip: #b8cfdb;
+        }
+
+        html,
+        body {
+          width: 100%;
+          min-height: 100%;
+          background: var(--mobile-bg);
+        }
+
+        body {
+          overflow-x: hidden;
+          overflow-y: auto;
+          padding-bottom: 0;
+        }
+
+        .app {
+          display: block;
+          width: 100%;
+          min-height: 100vh;
+          overflow: visible;
+          background: var(--mobile-bg);
+        }
+
+        .side,
+        .main,
+        .right {
+          display: none !important;
+        }
+
+        .mobile-shell {
+          display: block;
+          width: 100%;
+          min-height: 100vh;
+          padding-top: var(--mobile-top-height, 0px);
+          padding-bottom: calc(92px + env(safe-area-inset-bottom));
+          background: var(--mobile-bg);
+          color: var(--paper);
+          font-family: var(--font-mono);
+          overflow-x: hidden;
+        }
+
+        .mobile-fixed-top {
+          position: fixed;
+          top: 0;
+          left: 50%;
+          z-index: 1000;
+          width: min(390px, 100vw);
+          max-width: 390px;
+          margin: 0 auto;
+          background: var(--mobile-bg);
+          box-shadow: 0 1px 0 rgba(0, 0, 0, 0.32);
+          transform: translateX(-50%);
+        }
+
+        .mobile-hero {
+          padding: 30px 28px 0;
+        }
+
+        .app.has-source .mobile-hero {
+          padding: 16px 21px 12px;
+        }
+
+        .mobile-title-row {
+          display: grid;
+          grid-template-columns: 60px 1.5px 198px;
+          align-items: start;
+          column-gap: 29.25px;
+          height: 60px;
+        }
+
+        .app.has-source .mobile-title-row {
+          grid-template-columns: 35px 1px minmax(0, 1fr);
+          column-gap: 13px;
+        }
+
+        .mobile-brand-mark {
+          display: block;
+          width: 60px;
+          height: 60px;
+        }
+
+        .app.has-source .mobile-brand-mark {
+          width: 34px;
+          height: 34px;
+        }
+
+        .mobile-title-divider {
+          width: 1.5px;
+          height: 50px;
+          margin-top: 5px;
+          background: #8f9096;
+        }
+
+        .app.has-source .mobile-title-divider {
+          height: 28px;
+        }
+
+        .mobile-title {
+          display: block;
+          width: 198px;
+          height: 60px;
+        }
+
+        .app.has-source .mobile-title {
+          width: 194px;
+          height: auto;
+        }
+
+        .mobile-intro {
+          display: grid;
+          grid-template-columns: 163px 163px;
+          gap: 8px;
+          margin-top: 36px;
+          color: #9296a0;
+          font-family: var(--font-mono);
+          font-size: 12px;
+          font-weight: 300;
+          line-height: normal;
+          letter-spacing: -0.6px;
+        }
+
+        .mobile-intro-cn {
+          font-family: var(--font-cn);
+          font-size: 10px;
+          line-height: normal;
+          letter-spacing: 0.04em;
+        }
+
+        .app.has-source .mobile-intro {
+          display: none;
+        }
+
+        .mobile-input-section {
+          width: 100%;
+          padding: 20px 16px 0;
+        }
+
+        .mobile-input-heading {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 32px;
+          margin: 0 12px 13px;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 20px;
+          font-weight: 400;
+          line-height: normal;
+          letter-spacing: -1px;
+        }
+
+        .mobile-input-heading span {
+          color: #9296a0;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          line-height: 18px;
+          font-weight: 300;
+          letter-spacing: 0.04em;
+          text-align: right;
+        }
+
+        .app.has-source .mobile-input-heading {
+          display: none;
+        }
+
+        .mobile-input-row {
+          display: grid;
+          grid-template-columns: 254px 96px;
+          gap: 8px;
+        }
+
+        .mobile-input-button,
+        .mobile-camera-button {
+          position: relative;
+          height: 96px;
+          border: 1px solid transparent;
+          border-radius: 0;
+          cursor: pointer;
+          font-family: var(--font-mono);
+          text-transform: uppercase;
+        }
+
+        .app.has-source .mobile-input-button,
+        .app.has-source .mobile-camera-button {
+          height: 44px;
+        }
+
+        .mobile-input-button {
+          display: block;
+          padding: 0 15px;
+          background: var(--mobile-blue);
+          color: #222227;
+        }
+
+        .mobile-input-button img {
+          position: absolute;
+          left: 24px;
+          top: 38px;
+          width: 16px;
+          height: 23px;
+          filter: brightness(0) saturate(100%) invert(9%) sepia(7%) saturate(546%) hue-rotate(201deg) brightness(97%) contrast(91%);
+        }
+
+        .mobile-input-button span {
+          position: absolute;
+          left: 58px;
+          top: 22px;
+          display: block;
+          width: 154px;
+          height: 52px;
+          color: #221819;
+          font-size: 42px;
+          font-weight: 300;
+          line-height: 54px;
+          letter-spacing: 0;
+          text-align: center;
+        }
+
+        .app.has-source .mobile-input-button {
+          grid-template-columns: 44px minmax(0, 1fr);
+          padding: 0 10px;
+        }
+
+        .app.has-source .mobile-input-button span {
+          font-size: 34px;
+          line-height: 44px;
+        }
+
+        .mobile-camera-button {
+          display: block;
+          padding: 0;
+          background: #202024;
+          border-color: var(--mobile-blue);
+          color: #f4f3ef;
+          font-size: 22px;
+          font-weight: 400;
+          line-height: normal;
+          letter-spacing: -1.5px;
+        }
+
+        .app.has-source .mobile-camera-button {
+          grid-template-columns: 30px 1fr;
+          font-size: 17px;
+        }
+
+        .mobile-camera-icon {
+          position: absolute;
+          left: 12px;
+          top: 14px;
+          display: block;
+          width: 29px;
+          height: 15px;
+          background: url("../assets/mobile-rec-icon.svg") center / contain no-repeat;
+        }
+
+        .mobile-camera-button > span:last-child {
+          position: absolute;
+          left: 51px;
+          top: 59px;
+          width: 37px;
+          height: 29px;
+          text-align: center;
+        }
+
+        .mobile-status {
+          width: 334px;
+          min-height: 18px;
+          margin: 16px auto 0;
+          padding-top: 0;
+          color: #9296a0;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+          text-align: center;
+          letter-spacing: 0.04em;
+        }
+
+        .app:not(.has-source) .mobile-status {
+          padding-top: 0;
+          color: #9296a0;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+        }
+
+        .mobile-preview-fixed {
+          display: none;
+          width: min(390px, 100vw);
+          max-width: 390px;
+          height: min(390px, 100vw);
+          aspect-ratio: 1 / 1;
+          margin: 0 auto;
+          background: #f5f5f5;
+          overflow: hidden;
+          place-items: center;
+        }
+
+        .app.has-source .mobile-preview-fixed {
+          display: grid;
+        }
+
+        #mobileResult {
+          display: block;
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+          background: transparent;
+        }
+
+        .mobile-scroll {
+          width: 100%;
+          max-width: 390px;
+          margin: 0 auto;
+          padding: 0 16px 22px;
+          background: var(--mobile-bg);
+        }
+
+        .mobile-preview-strip {
+          display: none;
+          grid-template-columns: 1fr 1fr;
+          margin: 0 -21px 28px;
+          background: #101014;
+        }
+
+        .app.has-source .mobile-preview-strip {
+          display: grid;
+        }
+
+        .mobile-mini {
+          position: relative;
+          min-height: 118px;
+          background: #151519;
+          overflow: hidden;
+        }
+
+        .mobile-mini h3 {
+          position: absolute;
+          left: 21px;
+          top: 10px;
+          z-index: 1;
+          margin: 0;
+          color: #f4f3ef;
+          font-size: 18px;
+          font-weight: 300;
+          line-height: 22px;
+          letter-spacing: -0.9px;
+        }
+
+        .mobile-mini canvas {
+          display: block;
+          width: 100%;
+          height: 118px;
+          object-fit: cover;
+        }
+
+        .mobile-section {
+          margin-top: 20px;
+        }
+
+        .app.has-source .mobile-section {
+          margin-top: 0;
+        }
+
+        .mobile-section + .mobile-section {
+          margin-top: 20px;
+        }
+
+        .mobile-section-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 26px;
+          margin: 0 12px 16px;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 20px;
+          font-weight: 400;
+          line-height: normal;
+          letter-spacing: -1px;
+        }
+
+        .mobile-section-title span {
+          color: #9296a0;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+          text-align: right;
+        }
+
+        .mobile-preset-grid {
+          display: grid;
+          grid-template-columns: 175px 175px;
+          gap: 8px;
+        }
+
+        .mobile-preset {
+          display: grid;
+          grid-template-columns: 28px 98px;
+          align-items: center;
+          column-gap: 20px;
+          width: 175px;
+          height: 60px;
+          min-height: 60px;
+          padding: 0 13px 0 16px;
+          border: 1px solid transparent;
+          border-radius: 0;
+          background: #202024;
+          color: #f4f3ef;
+          text-align: left;
+          cursor: pointer;
+        }
+
+        .mobile-preset.active {
+          border-color: var(--mobile-acid);
+          background: #1a1a1d;
+        }
+
+        .mobile-preset-icon {
+          width: 34px;
+          height: 34px;
+          margin-left: 0;
+        }
+
+        .mobile-preset-icon img {
+          display: block;
+          width: 28px;
+          height: 28px;
+          object-fit: contain;
+        }
+
+        .mobile-preset strong {
+          display: block;
+          overflow: hidden;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 16px;
+          font-weight: 400;
+          line-height: normal;
+          letter-spacing: -0.8px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .mobile-preset small {
+          display: block;
+          margin-top: 2px;
+          color: #9296a0;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+        }
+
+        .mobile-color-row {
+          display: grid;
+          grid-template-columns: 140px 140px 62px;
+          gap: 8px;
+        }
+
+        .mobile-color-card,
+        .mobile-re-card {
+          height: 40px;
+          border: 1px solid #050506;
+          border-radius: 0;
+          background: #202024;
+          color: #f4f3ef;
+          cursor: pointer;
+          font-family: var(--font-mono);
+        }
+
+        .mobile-color-card {
+          display: grid;
+          grid-template-columns: 40px 14px minmax(0, 1fr) 24px;
+          align-items: center;
+          padding: 0;
+          overflow: hidden;
+        }
+
+        .mobile-color-card.active,
+        .mobile-re-card.active {
+          border-color: var(--mobile-acid);
+        }
+
+        .mobile-color-label {
+          display: grid;
+          place-items: center;
+          height: 100%;
+          color: #f4f3ef;
+          font-size: 20px;
+          font-weight: 300;
+          line-height: 26px;
+          letter-spacing: -1px;
+        }
+
+        .mobile-color-card[data-mobile-color-target="fg"] .mobile-color-label {
+          background: var(--mobile-red);
+        }
+
+        .mobile-color-card[data-mobile-color-target="bg"] .mobile-color-label {
+          background: var(--mobile-bg-chip);
+          color: #202024;
+        }
+
+        .mobile-color-hash {
+          color: #595960;
+          font-size: 16px;
+          line-height: 20px;
+          text-align: center;
+        }
+
+        .mobile-color-value {
+          overflow: hidden;
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 19px;
+          letter-spacing: -0.7px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .mobile-alpha-toggle {
+          width: 24px;
+          height: 100%;
+          padding: 0;
+          border: 0;
+          border-radius: 0;
+          background:
+            linear-gradient(45deg, #4e4e55 25%, transparent 25%, transparent 75%, #4e4e55 75%) 0 0 / 8px 8px,
+            linear-gradient(45deg, #4e4e55 25%, transparent 25%, transparent 75%, #4e4e55 75%) 4px 4px / 8px 8px,
+            #202024;
+          cursor: pointer;
+        }
+
+        .mobile-alpha-toggle.active {
+          background:
+            linear-gradient(45deg, var(--mobile-acid) 25%, transparent 25%, transparent 75%, var(--mobile-acid) 75%) 0 0 / 8px 8px,
+            linear-gradient(45deg, var(--mobile-acid) 25%, transparent 25%, transparent 75%, var(--mobile-acid) 75%) 4px 4px / 8px 8px,
+            #202024;
+        }
+
+        .mobile-color-card.transparent .mobile-color-value,
+        .mobile-color-card.transparent .mobile-color-hash {
+          color: #595960;
+          text-decoration: line-through;
+        }
+
+        .mobile-re-card {
+          position: relative;
+          display: block;
+          padding: 0;
+          font-size: 20px;
+          font-weight: 400;
+          line-height: normal;
+          letter-spacing: -1px;
+        }
+
+        .mobile-re-icon {
+          position: relative;
+          display: block;
+          width: 20px;
+          height: 20px;
+          margin: 9px 0 0 21px;
+          background: url("../assets/mobile-re-icon.svg") center / contain no-repeat;
+        }
+
+        .mobile-re-card.active {
+          color: var(--mobile-acid);
+        }
+
+        .mobile-re-card span:last-child {
+          position: absolute;
+          left: 40px;
+          top: 7px;
+          width: 28px;
+          height: 26px;
+          color: #f4f3ef;
+        }
+
+        .mobile-color-wheel {
+          display: none;
+          margin: 22px -5px 0;
+          padding: 8px 0 0;
+        }
+
+        .mobile-color-wheel.open {
+          display: block;
+        }
+
+        .mobile-wheel-switches {
+          display: grid;
+          grid-template-columns: 48px minmax(0, 1fr) 48px;
+          align-items: center;
+          margin: 0 0 -22px;
+          pointer-events: none;
+        }
+
+        .mobile-wheel-switch {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          place-items: center;
+          width: 48px;
+          height: 48px;
+          border: 0;
+          border-radius: 50%;
+          background: #202024;
+          color: #f4f3ef;
+          cursor: pointer;
+          font-family: var(--font-mono);
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 1;
+          pointer-events: auto;
+        }
+
+        .mobile-wheel-switch::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: var(--switch-gradient);
+          z-index: -1;
+        }
+
+        .mobile-wheel-switch::after {
+          content: "";
+          position: absolute;
+          inset: 11px;
+          border-radius: 50%;
+          background: #202024;
+          z-index: -1;
+        }
+
+        .mobile-wheel-switch.active {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .mobile-wheel-wrap {
+          position: relative;
+          display: grid;
+          place-items: center;
+          width: min(320px, calc(100vw - 54px));
+          aspect-ratio: 1 / 1;
+          margin: 0 auto;
+        }
+
+        .mobile-wheel-ring {
+          position: absolute;
+          inset: 0;
+          border: 0;
+          border-radius: 50%;
+          background: var(--ring-gradient);
+          cursor: grab;
+          touch-action: none;
+        }
+
+        .mobile-wheel-ring:active {
+          cursor: grabbing;
+        }
+
+        .mobile-wheel-ring::after {
+          content: "";
+          position: absolute;
+          inset: 80px;
+          border-radius: 50%;
+          background: var(--mobile-bg);
+        }
+
+        .mobile-wheel-center {
+          position: relative;
+          z-index: 1;
+          display: grid;
+          place-items: center;
+          width: 152px;
+          height: 152px;
+          border-radius: 50%;
+          background: var(--mobile-bg);
+          color: var(--mobile-red);
+        }
+
+        .mobile-wheel-pointer {
+          position: absolute;
+          left: 50%;
+          top: 8px;
+          z-index: 3;
+          width: 5px;
+          height: 128px;
+          border-radius: 999px;
+          background: var(--mobile-red);
+          transform: translateX(-50%);
+          pointer-events: none;
+        }
+
+        .mobile-wheel-pointer::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          bottom: -12px;
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 11px solid var(--mobile-acid);
+          transform: translateX(-50%);
+        }
+
+        .mobile-wheel-channel {
+          position: absolute;
+          top: 38px;
+          left: 0;
+          right: 0;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 18px;
+          text-align: center;
+        }
+
+        .mobile-current-mark {
+          width: 58px;
+          height: 58px;
+          margin-top: 10px;
+          color: var(--current-color);
+          filter: drop-shadow(0 3px 0 #050506);
+        }
+
+        .mobile-wheel-hex-wrap {
+          position: absolute;
+          left: 26px;
+          right: 26px;
+          bottom: 37px;
+          display: grid;
+          grid-template-columns: 16px minmax(0, 1fr);
+          align-items: center;
+          justify-content: center;
+          color: #f4f3ef;
+        }
+
+        .mobile-wheel-hex-wrap::after {
+          content: "";
+          position: absolute;
+          left: 40px;
+          right: 40px;
+          bottom: -14px;
+          height: 3px;
+          background: #050506;
+        }
+
+        .mobile-wheel-hex-prefix {
+          color: #77777f;
+          font-size: 16px;
+          line-height: 20px;
+          text-align: right;
+        }
+
+        .mobile-wheel-hex {
+          width: 88px;
+          height: 28px;
+          margin: 0 auto;
+          padding: 0;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 18px;
+          font-weight: 300;
+          line-height: 24px;
+          letter-spacing: -0.9px;
+          text-transform: uppercase;
+          text-align: left;
+          outline: 0;
+        }
+
+        .mobile-wheel-ticks {
+          position: absolute;
+          inset: 46px;
+          border-radius: 50%;
+          pointer-events: none;
+        }
+
+        .mobile-wheel-ticks span {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 10px;
+          height: 2px;
+          background: #050506;
+          transform-origin: -32px 1px;
+        }
+
+        .mobile-wheel-ticks span:nth-child(1) { transform: rotate(0deg) translateX(68px); }
+        .mobile-wheel-ticks span:nth-child(2) { transform: rotate(45deg) translateX(68px); }
+        .mobile-wheel-ticks span:nth-child(3) { transform: rotate(90deg) translateX(68px); }
+        .mobile-wheel-ticks span:nth-child(4) { transform: rotate(135deg) translateX(68px); }
+        .mobile-wheel-ticks span:nth-child(5) { transform: rotate(180deg) translateX(68px); }
+        .mobile-wheel-ticks span:nth-child(6) { transform: rotate(225deg) translateX(68px); }
+        .mobile-wheel-ticks span:nth-child(7) { transform: rotate(270deg) translateX(68px); }
+        .mobile-wheel-ticks span:nth-child(8) { transform: rotate(315deg) translateX(68px); }
+
+        .mobile-bottom-dock {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 120;
+          display: grid;
+          grid-template-columns: 190px 160px;
+          gap: 8px;
+          width: 100%;
+          max-width: 390px;
+          height: calc(92px + env(safe-area-inset-bottom));
+          margin: 0 auto;
+          padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+          background: #0d0d11;
+        }
+
+        .mobile-dock-button {
+          position: relative;
+          display: block;
+          height: 60px;
+          padding: 0;
+          border: 1px solid #050506;
+          border-radius: 0;
+          background: #202024;
+          color: #f4f3ef;
+          cursor: pointer;
+          font-family: var(--font-mono);
+          font-size: 28px;
+          font-weight: 300;
+          line-height: 36px;
+          letter-spacing: -1.4px;
+          text-transform: uppercase;
+        }
+
+        .mobile-dock-button.nice {
+          width: 190px;
+        }
+
+        .mobile-dock-button.output {
+          width: 160px;
+          background: #202024;
+          color: #f4f3ef;
+        }
+
+        .app.has-source .mobile-dock-button.output {
+          background: var(--mobile-acid);
+          color: #050506;
+        }
+
+        .mobile-dock-icon {
+          position: absolute;
+          display: block;
+          color: currentColor;
+        }
+
+        .mobile-dock-icon img {
+          display: block;
+          object-fit: contain;
+          filter: none;
+        }
+
+        .app.has-source .mobile-dock-button.output .mobile-dock-icon img {
+          filter: brightness(0) saturate(100%) invert(5%) sepia(10%) saturate(516%) hue-rotate(201deg) brightness(93%) contrast(99%);
+        }
+
+        .mobile-dock-label {
+          position: absolute;
+          top: 11px;
+          height: 36px;
+          text-align: center;
+          white-space: nowrap;
+        }
+
+        .mobile-dock-button.nice .mobile-dock-icon {
+          left: 18px;
+          top: 18px;
+          width: 21px;
+          height: 24px;
+          background: currentColor;
+          mask: url("../assets/mobile-nice-try-icon.svg") center / contain no-repeat;
+          -webkit-mask: url("../assets/mobile-nice-try-icon.svg") center / contain no-repeat;
+        }
+
+        .mobile-dock-button.nice .mobile-dock-label {
+          left: 49px;
+          width: 125px;
+        }
+
+        .mobile-dock-button.output .mobile-dock-icon {
+          left: 16px;
+          top: 20px;
+          width: 16px;
+          height: 20.5px;
+          background: currentColor;
+          mask: url("../assets/mobile-output-icon.svg") center / contain no-repeat;
+          -webkit-mask: url("../assets/mobile-output-icon.svg") center / contain no-repeat;
+        }
+
+        .mobile-dock-button.output .mobile-dock-icon img {
+          display: none;
+        }
+
+        .mobile-dock-button.output .mobile-dock-label {
+          left: 46px;
+          width: 94px;
+        }
+
+        @media (max-width: 389px) {
+          .mobile-input-row {
+            grid-template-columns: minmax(0, 1fr) 96px;
+          }
+
+          .mobile-input-button span {
+            left: 50%;
+            transform: translateX(-50%);
+          }
+
+          .mobile-preset-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .mobile-preset {
+            width: auto;
+            column-gap: 16px;
+            padding: 0 12px;
+            grid-template-columns: 28px minmax(0, 1fr);
+          }
+
+          .mobile-color-row {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 62px;
+          }
+
+          .mobile-bottom-dock {
+            grid-template-columns: minmax(0, 1fr) 160px;
+          }
+
+          .mobile-dock-button.nice {
+            width: auto;
+          }
+        }
+      }
     </style>
   </head>
   <body>
@@ -2643,6 +4132,73 @@
           </button>
         </div>
       </aside>
+
+      <section class="mobile-shell" aria-label="Synthub mobile interface">
+        <div class="mobile-fixed-top">
+          <div class="mobile-hero">
+            <div class="mobile-title-row">
+              <img class="mobile-brand-mark" src="../assets/mobile-mark.svg" alt="" />
+              <span class="mobile-title-divider" aria-hidden="true"></span>
+              <img class="mobile-title" src="../assets/mobile-title-logo.svg" alt="Graphic Texture 印花" />
+            </div>
+            <div class="mobile-intro">
+              <p>Upload an image, choose a style, and turn it into a graphic texture.</p>
+              <p class="mobile-intro-cn">上传素材，选择风格，生成带有印刷感、颗粒感和手工痕迹的图形纹理。</p>
+            </div>
+          </div>
+          <div class="mobile-input-section">
+            <div class="mobile-input-heading">Input <span>输入</span></div>
+            <div class="mobile-input-row">
+              <button class="mobile-input-button" id="mobileInputButton" type="button">
+                <img src="../assets/input-arrow-figma.svg" alt="" />
+                <span>INPUT</span>
+              </button>
+              <button class="mobile-camera-button" id="mobileCameraButton" type="button">
+                <span class="mobile-camera-icon" aria-hidden="true"></span>
+                <span>REC</span>
+              </button>
+            </div>
+            <div class="mobile-status" id="mobileStatus">* PNG / JPG / WebP / SVG / PDF</div>
+          </div>
+          <div class="mobile-preview-fixed" aria-label="Result preview">
+            <canvas id="mobileResult" width="1000" height="1000"></canvas>
+          </div>
+        </div>
+
+        <div class="mobile-scroll">
+          <div class="mobile-preview-strip" id="mobilePreviewStrip">
+            <div class="mobile-mini">
+              <h3>source</h3>
+              <canvas id="mobileSourceMini" width="320" height="320"></canvas>
+            </div>
+            <div class="mobile-mini">
+              <h3>mask</h3>
+              <canvas id="mobileMaskMini" width="320" height="320"></canvas>
+            </div>
+          </div>
+
+          <section class="mobile-section">
+            <h2 class="mobile-section-title">Presets <span>预设</span></h2>
+            <div class="mobile-preset-grid" id="mobilePresetGrid"></div>
+          </section>
+
+          <section class="mobile-section">
+            <h2 class="mobile-section-title">Color <span>颜色</span></h2>
+            <div id="mobileColorPanel"></div>
+          </section>
+        </div>
+
+        <div class="mobile-bottom-dock">
+          <button class="mobile-dock-button nice" id="mobileRandomize" type="button">
+            <span class="mobile-dock-icon" aria-hidden="true"></span>
+            <span class="mobile-dock-label">NICE TRY</span>
+          </button>
+          <button class="mobile-dock-button output" data-export-png>
+            <span class="mobile-dock-icon" aria-hidden="true"></span>
+            <span class="mobile-dock-label">OUTPUT</span>
+          </button>
+        </div>
+      </section>
     </main>
 
     <canvas id="work" width="1000" height="1000" class="hidden"></canvas>
@@ -2652,7 +4208,7 @@
       const presets = {
         thermalMap: {
           label: "Thermal Map",
-          sub: "热成像构成",
+          sub: "热感构成",
           selected: "decor",
           nodes: {
             extract: { enabled: true, threshold: 116, contrast: 50, grayKeep: 0, invert: true },
@@ -2667,7 +4223,7 @@
         },
         penTrace: {
           label: "Pen Trace",
-          sub: "针管笔线稿",
+          sub: "针管线稿",
           selected: "extract",
           nodes: {
             extract: { enabled: true, threshold: 142, contrast: 38, grayKeep: 0, invert: false },
@@ -2682,7 +4238,7 @@
         },
         dotShirt: {
           label: "Dot Shirt",
-          sub: "半调印花",
+          sub: "网点印花",
           selected: "screen",
           nodes: {
             extract: { enabled: true, threshold: 154, contrast: 54, grayKeep: 0, invert: false },
@@ -2697,7 +4253,7 @@
         },
         xerox: {
           label: "Xerox",
-          sub: "复印机",
+          sub: "影印油墨",
           selected: "extract",
           nodes: {
             extract: { enabled: true, threshold: 118, contrast: 92, grayKeep: 0, invert: false },
@@ -2735,6 +4291,9 @@
         nodes: clone(presets.thermalMap.nodes),
         outputReverse: false,
         flyoutOpen: false,
+        mobileColorTarget: "fg",
+        mobileColorChannel: "hue",
+        mobileColorOpen: false,
       };
 
       const fileInput = document.getElementById("file");
@@ -2762,7 +4321,21 @@
       const presetGrid = document.getElementById("presetGrid");
       const mobileEffects = document.getElementById("mobileEffects");
       const mobileParamPanel = document.getElementById("mobileParamPanel");
+      const mobileInputButton = document.getElementById("mobileInputButton");
+      const mobileCameraButton = document.getElementById("mobileCameraButton");
+      const mobileStatus = document.getElementById("mobileStatus");
+      const mobileResult = document.getElementById("mobileResult");
+      const mobileResultCtx = mobileResult.getContext("2d", { willReadFrequently: true });
+      const mobileSourceMini = document.getElementById("mobileSourceMini");
+      const mobileSourceMiniCtx = mobileSourceMini.getContext("2d", { willReadFrequently: true });
+      const mobileMaskMini = document.getElementById("mobileMaskMini");
+      const mobileMaskMiniCtx = mobileMaskMini.getContext("2d", { willReadFrequently: true });
+      const mobilePresetGrid = document.getElementById("mobilePresetGrid");
+      const mobileColorPanel = document.getElementById("mobileColorPanel");
+      const mobileRandomize = document.getElementById("mobileRandomize");
+      const mobileFixedTop = document.querySelector(".mobile-fixed-top");
       let renderFrameQueued = false;
+      let renderOutputTimer = 0;
       let colorRenderTimer = 0;
       let colorOutsideHandlerBound = false;
       let sourceImageCache = null;
@@ -2776,13 +4349,24 @@
       }
 
       function scheduleRenderOutput() {
-        if (renderFrameQueued) return;
+        if (renderOutputTimer || renderFrameQueued) return;
         renderFrameQueued = true;
-        requestAnimationFrame(() => {
+        renderOutputTimer = window.setTimeout(() => {
+          renderOutputTimer = 0;
           renderFrameQueued = false;
-          renderOutput();
-          syncResultFit();
-        });
+          requestAnimationFrame(() => {
+            renderOutput();
+          });
+        }, 80);
+      }
+
+      function flushRenderOutput() {
+        if (renderOutputTimer) {
+          window.clearTimeout(renderOutputTimer);
+          renderOutputTimer = 0;
+        }
+        renderFrameQueued = false;
+        renderOutput();
       }
 
       function scheduleColorRenderOutput() {
@@ -2799,6 +4383,14 @@
           colorRenderTimer = 0;
         }
         scheduleRenderOutput();
+      }
+
+      function syncMobileTopOffset() {
+        if (!mobileFixedTop) return;
+        requestAnimationFrame(() => {
+          const topHeight = Math.ceil(mobileFixedTop.getBoundingClientRect().height);
+          app.style.setProperty("--mobile-top-height", `${topHeight}px`);
+        });
       }
 
       function isTransparentOutput() {
@@ -2821,13 +4413,30 @@
         const stageH = stage.clientHeight;
         const canvasW = result.width || 1;
         const canvasH = result.height || 1;
-        if (!stageW || !stageH || !canvasW || !canvasH) return;
+        if (!stageW || !stageH || !canvasW || !canvasH) {
+          syncMobileResult();
+          return;
+        }
 
         const scale = Math.min(stageW / canvasW, stageH / canvasH);
         const width = Math.max(1, Math.floor(canvasW * scale));
         const height = Math.max(1, Math.floor(canvasH * scale));
         result.style.setProperty("--fit-width", `${width}px`);
         result.style.setProperty("--fit-height", `${height}px`);
+        syncMobileResult();
+      }
+
+      function copyCanvas(sourceCanvas, targetCanvas, targetCtx) {
+        if (!sourceCanvas || !targetCanvas || !targetCtx) return;
+        if (targetCanvas.width !== sourceCanvas.width) targetCanvas.width = sourceCanvas.width;
+        if (targetCanvas.height !== sourceCanvas.height) targetCanvas.height = sourceCanvas.height;
+        targetCtx.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+        targetCtx.drawImage(sourceCanvas, 0, 0);
+      }
+
+      function syncMobileResult() {
+        if (!mobileResult || !mobileResultCtx || !result.width || !result.height) return;
+        copyCanvas(result, mobileResult, mobileResultCtx);
       }
 
       function lerp(a, b, t) {
@@ -3128,14 +4737,46 @@
         renderAll();
       }
 
+      function presetIcon(id) {
+        const icons = {
+          thermalMap: "../assets/mobile-preset-thermal.svg",
+          penTrace: "../assets/mobile-preset-pen.svg",
+          dotShirt: "../assets/mobile-preset-dot.svg",
+          xerox: "../assets/mobile-preset-xerox.svg",
+        };
+        return `<img src="${icons[id] || icons.xerox}" alt="" aria-hidden="true" />`;
+      }
+
       function renderPresets() {
         presetGrid.innerHTML = "";
         Object.entries(presets).forEach(([id, preset]) => {
           const button = document.createElement("button");
           button.className = `preset${state.preset === id ? " active" : ""}`;
-          button.innerHTML = `${preset.label}<small>${preset.sub}</small>`;
+          button.innerHTML = `
+            <span class="preset-icon">${presetIcon(id)}</span>
+            <span class="preset-label">
+              ${preset.label}
+              <small>${preset.sub}</small>
+            </span>
+          `;
           button.addEventListener("click", () => setPreset(id));
           presetGrid.appendChild(button);
+        });
+        if (!mobilePresetGrid) return;
+        mobilePresetGrid.innerHTML = "";
+        Object.entries(presets).forEach(([id, preset]) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `mobile-preset${state.preset === id ? " active" : ""}`;
+          button.innerHTML = `
+            <span class="mobile-preset-icon">${presetIcon(id)}</span>
+            <span>
+              <strong>${preset.label}</strong>
+              <small>${preset.sub}</small>
+            </span>
+          `;
+          button.addEventListener("click", () => setPreset(id));
+          mobilePresetGrid.appendChild(button);
         });
       }
 
@@ -3302,6 +4943,7 @@
             if (input.type === "range") updateRangeStyle(input);
             scheduleRenderOutput();
           });
+          input.addEventListener("change", flushRenderOutput);
         });
       }
 
@@ -3325,6 +4967,294 @@
         ].join("");
         attachColorPickers(colorPanel);
         syncReverseToggle();
+      }
+
+      function mobileColorDescriptor(target = state.mobileColorTarget) {
+        return target === "bg"
+          ? { nodeId: "color", key: "bg", label: "BG", alphaLabel: "背景透明" }
+          : { nodeId: "ink", key: "color", label: "FG", alphaLabel: "图形透明" };
+      }
+
+      function getMobileColor(target = state.mobileColorTarget) {
+        const { nodeId, key } = mobileColorDescriptor(target);
+        return state.nodes[nodeId][key];
+      }
+
+      function setMobileColor(target, value) {
+        const { nodeId, key } = mobileColorDescriptor(target);
+        const clean = value.startsWith("#") ? value : `#${value}`;
+        state.nodes[nodeId][key] = clean;
+        if (nodeId === "ink" && key === "color") syncGraphicColor(clean);
+      }
+
+      function getMobileColorAlpha(target) {
+        const { nodeId, key } = mobileColorDescriptor(target);
+        return getUiColorAlpha(nodeId, key);
+      }
+
+      function channelLabel(channel = state.mobileColorChannel) {
+        if (channel === "sat") return "SAT";
+        if (channel === "val") return "VAL";
+        return "HUE";
+      }
+
+      function mobileColorHsv() {
+        return rgbToHsv(hexToRgb(getMobileColor()));
+      }
+
+      function colorStop(rgb) {
+        return rgbToHex(rgb);
+      }
+
+      function mobileRingGradient(hsv, channel) {
+        if (channel === "hue") {
+          return `conic-gradient(from ${-hsv.h}deg, #ff0000 0deg, #ffff00 60deg, #00ff00 120deg, #00ffff 180deg, #0000ff 240deg, #ff00ff 300deg, #ff0000 360deg)`;
+        }
+        const stops = [];
+        for (let i = 0; i <= 24; i++) {
+          const t = i / 24;
+          const rgb = channel === "sat"
+            ? hsvToRgb({ h: hsv.h, s: t, v: hsv.v })
+            : hsvToRgb({ h: hsv.h, s: hsv.s, v: t });
+          stops.push(`${colorStop(rgb)} ${Math.round(t * 360)}deg`);
+        }
+        const offset = channel === "sat" ? hsv.s * -360 : hsv.v * -360;
+        return `conic-gradient(from ${offset}deg, ${stops.join(", ")})`;
+      }
+
+      function mobileSwitchGradient(channel) {
+        const hsv = mobileColorHsv();
+        if (channel === "hue") {
+          return "conic-gradient(#ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)";
+        }
+        if (channel === "sat") {
+          const low = colorStop(hsvToRgb({ h: hsv.h, s: 0, v: hsv.v }));
+          const high = colorStop(hsvToRgb({ h: hsv.h, s: 1, v: hsv.v }));
+          return `conic-gradient(${low}, ${high}, ${low})`;
+        }
+        const dark = colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 0 }));
+        const bright = colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 1 }));
+        return `conic-gradient(${dark}, ${bright}, ${dark})`;
+      }
+
+      function mobileCurrentMark() {
+        return `
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <g fill="currentColor">
+              <rect x="28" y="4" width="8" height="56"/>
+              <rect x="28" y="4" width="8" height="56" transform="rotate(45 32 32)"/>
+              <rect x="28" y="4" width="8" height="56" transform="rotate(90 32 32)"/>
+              <rect x="28" y="4" width="8" height="56" transform="rotate(135 32 32)"/>
+            </g>
+          </svg>
+        `;
+      }
+
+      function syncMobileColorUi() {
+        if (!mobileColorPanel) return;
+        const hsv = mobileColorHsv();
+        const currentHex = rgbToHex(hsvToRgb(hsv)).replace("#", "").toUpperCase();
+        const currentColor = `#${currentHex}`;
+        const ring = mobileColorPanel.querySelector("[data-mobile-wheel-ring]");
+        const wheel = mobileColorPanel.querySelector(".mobile-color-wheel");
+        const channel = mobileColorPanel.querySelector("[data-mobile-channel-label]");
+        const hex = mobileColorPanel.querySelector("[data-mobile-hex]");
+        const mark = mobileColorPanel.querySelector(".mobile-current-mark");
+
+        mobileColorPanel.querySelectorAll("[data-mobile-color-target]").forEach((card) => {
+          const target = card.dataset.mobileColorTarget;
+          const alpha = getMobileColorAlpha(target);
+          const value = getMobileColor(target).replace("#", "").toUpperCase();
+          card.classList.toggle("active", target === state.mobileColorTarget);
+          card.classList.toggle("transparent", alpha <= 0);
+          const readout = card.querySelector("[data-mobile-color-value]");
+          const alphaButton = card.querySelector("[data-mobile-alpha]");
+          if (readout) readout.textContent = value;
+          if (alphaButton) alphaButton.classList.toggle("active", alpha <= 0);
+        });
+
+        mobileColorPanel.querySelectorAll("[data-mobile-channel]").forEach((button) => {
+          const itemChannel = button.dataset.mobileChannel;
+          button.classList.toggle("active", itemChannel === state.mobileColorChannel);
+          button.style.setProperty("--switch-gradient", mobileSwitchGradient(itemChannel));
+        });
+
+        if (wheel) wheel.classList.toggle("open", state.mobileColorOpen);
+        if (ring) ring.style.setProperty("--ring-gradient", mobileRingGradient(hsv, state.mobileColorChannel));
+        if (channel) channel.textContent = channelLabel();
+        if (hex && document.activeElement !== hex) hex.value = currentHex;
+        if (mark) {
+          mark.style.setProperty("--current-color", currentColor);
+          mark.style.color = currentColor;
+        }
+      }
+
+      function scrollMobileWheelIntoView() {
+        if (!mobileColorPanel || window.innerWidth > 640) return;
+        const wheel = mobileColorPanel.querySelector(".mobile-color-wheel");
+        if (!wheel || !wheel.classList.contains("open")) return;
+        requestAnimationFrame(() => {
+          wheel.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
+        });
+      }
+
+      function setMobileColorFromHsv(next) {
+        const hsv = mobileColorHsv();
+        const updated = {
+          h: Number(next.h ?? hsv.h),
+          s: clamp(Number(next.s ?? hsv.s), 0, 1),
+          v: clamp(Number(next.v ?? hsv.v), 0, 1),
+        };
+        updated.h = ((updated.h % 360) + 360) % 360;
+        setMobileColor(state.mobileColorTarget, rgbToHex(hsvToRgb(updated)));
+        syncMobileColorUi();
+        scheduleColorRenderOutput();
+      }
+
+      function angleFromEvent(event, element) {
+        const rect = element.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = event.clientX - cx;
+        const dy = event.clientY - cy;
+        return (Math.atan2(dx, -dy) * 180 / Math.PI + 360) % 360;
+      }
+
+      function bindMobileColorPanel() {
+        if (!mobileColorPanel) return;
+        mobileColorPanel.querySelectorAll("[data-mobile-color-target]").forEach((card) => {
+          const activate = () => {
+            state.mobileColorTarget = card.dataset.mobileColorTarget;
+            state.mobileColorOpen = true;
+            syncMobileColorUi();
+            scrollMobileWheelIntoView();
+          };
+          card.addEventListener("click", activate);
+          card.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              activate();
+            }
+          });
+        });
+
+        mobileColorPanel.querySelectorAll("[data-mobile-alpha]").forEach((button) => {
+          button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const { nodeId, key } = mobileColorDescriptor(button.dataset.mobileAlpha);
+            toggleUiColorAlpha(nodeId, key);
+          });
+        });
+
+        mobileColorPanel.querySelector("[data-mobile-re]")?.addEventListener("click", () => {
+          state.outputReverse = !state.outputReverse;
+          renderAll();
+        });
+
+        mobileColorPanel.querySelectorAll("[data-mobile-channel]").forEach((button) => {
+          button.addEventListener("click", () => {
+            state.mobileColorChannel = button.dataset.mobileChannel;
+            state.mobileColorOpen = true;
+            renderMobileColorPanel();
+            scrollMobileWheelIntoView();
+          });
+        });
+
+        const ring = mobileColorPanel.querySelector("[data-mobile-wheel-ring]");
+        if (ring) {
+          const updateFromDrag = (event) => {
+            const startAngle = Number(ring.dataset.startAngle || 0);
+            const startValue = Number(ring.dataset.startValue || 0);
+            const angle = angleFromEvent(event, ring);
+            const delta = ((angle - startAngle + 540) % 360) - 180;
+            if (state.mobileColorChannel === "hue") {
+              setMobileColorFromHsv({ h: startValue + delta });
+            } else if (state.mobileColorChannel === "sat") {
+              setMobileColorFromHsv({ s: startValue + delta / 360 });
+            } else {
+              setMobileColorFromHsv({ v: startValue + delta / 360 });
+            }
+          };
+
+          ring.addEventListener("pointerdown", (event) => {
+            event.preventDefault();
+            const hsv = mobileColorHsv();
+            ring.setPointerCapture(event.pointerId);
+            ring.dataset.startAngle = String(angleFromEvent(event, ring));
+            ring.dataset.startValue = String(
+              state.mobileColorChannel === "hue" ? hsv.h : state.mobileColorChannel === "sat" ? hsv.s : hsv.v
+            );
+          });
+          ring.addEventListener("pointermove", (event) => {
+            if (event.buttons) updateFromDrag(event);
+          });
+          ring.addEventListener("pointerup", flushColorRenderOutput);
+          ring.addEventListener("pointercancel", flushColorRenderOutput);
+        }
+
+        const hex = mobileColorPanel.querySelector("[data-mobile-hex]");
+        if (hex) {
+          hex.addEventListener("input", () => {
+            const clean = hex.value.replace(/[^0-9a-fA-F]/g, "").slice(0, 6).toUpperCase();
+            hex.value = clean;
+            if (clean.length === 3 || clean.length === 6) {
+              setMobileColor(state.mobileColorTarget, `#${clean}`);
+              syncMobileColorUi();
+              scheduleColorRenderOutput();
+            }
+          });
+          hex.addEventListener("change", flushColorRenderOutput);
+        }
+      }
+
+      function renderMobileColorPanel() {
+        if (!mobileColorPanel) return;
+        const channels = ["hue", "sat", "val"];
+        const otherChannels = channels.filter((item) => item !== state.mobileColorChannel);
+        mobileColorPanel.innerHTML = `
+          <div class="mobile-color-row">
+            ${["fg", "bg"].map((target) => {
+              const descriptor = mobileColorDescriptor(target);
+              const alpha = getMobileColorAlpha(target);
+              return `
+                <div class="mobile-color-card${target === state.mobileColorTarget ? " active" : ""}${alpha <= 0 ? " transparent" : ""}" data-mobile-color-target="${target}" role="button" tabindex="0">
+                  <span class="mobile-color-label">${descriptor.label}</span>
+                  <span class="mobile-color-hash">#</span>
+                  <span class="mobile-color-value" data-mobile-color-value>${getMobileColor(target).replace("#", "").toUpperCase()}</span>
+                  <button class="mobile-alpha-toggle${alpha <= 0 ? " active" : ""}" type="button" data-mobile-alpha="${target}" aria-label="${descriptor.alphaLabel}"></button>
+                </div>
+              `;
+            }).join("")}
+            <button class="mobile-re-card${state.outputReverse ? " active" : ""}" type="button" data-mobile-re aria-pressed="${state.outputReverse}">
+              <span class="mobile-re-icon" aria-hidden="true"></span>
+              <span>RE</span>
+            </button>
+          </div>
+          <div class="mobile-color-wheel${state.mobileColorOpen ? " open" : ""}">
+            <div class="mobile-wheel-switches">
+              <button class="mobile-wheel-switch" type="button" data-mobile-channel="${otherChannels[0]}">${channelLabel(otherChannels[0]).slice(0, 1)}</button>
+              <span></span>
+              <button class="mobile-wheel-switch" type="button" data-mobile-channel="${otherChannels[1]}">${channelLabel(otherChannels[1]).slice(0, 1)}</button>
+            </div>
+            <div class="mobile-wheel-wrap">
+              <div class="mobile-wheel-ring" data-mobile-wheel-ring></div>
+              <div class="mobile-wheel-pointer" aria-hidden="true"></div>
+              <div class="mobile-wheel-center">
+                <div class="mobile-wheel-channel" data-mobile-channel-label>${channelLabel()}</div>
+                <div class="mobile-wheel-ticks" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="mobile-current-mark">${mobileCurrentMark()}</div>
+                <label class="mobile-wheel-hex-wrap">
+                  <span class="mobile-wheel-hex-prefix">#</span>
+                  <input class="mobile-wheel-hex" data-mobile-hex inputmode="text" autocapitalize="characters" spellcheck="false" value="${getMobileColor().replace("#", "").toUpperCase()}" aria-label="Hex color" />
+                </label>
+              </div>
+            </div>
+          </div>
+        `;
+        bindMobileColorPanel();
+        syncMobileColorUi();
       }
 
       function renderMobileEffects() {
@@ -3551,6 +5481,7 @@
         } else {
           drawContain(sourceMiniCtx, state.source, aspect, miniWidth, miniHeight, "#ffffff");
         }
+        copyCanvas(sourceMini, mobileSourceMini, mobileSourceMiniCtx);
         const imageData = workCtx.getImageData(0, 0, width, height);
         sourceImageCache = {
           source: state.source,
@@ -3745,6 +5676,7 @@
           }
         }
         maskMiniCtx.putImageData(image, 0, 0);
+        copyCanvas(maskMini, mobileMaskMini, mobileMaskMiniCtx);
       }
 
       function lumaAt(data, w, h, x, y) {
@@ -4304,6 +6236,11 @@
       }
 
       function renderAll(shouldRenderOutput = true) {
+        if (renderOutputTimer) {
+          window.clearTimeout(renderOutputTimer);
+          renderOutputTimer = 0;
+          renderFrameQueued = false;
+        }
         app.classList.toggle("has-source", Boolean(state.source));
         renderPresets();
         renderNodeList();
@@ -4311,8 +6248,10 @@
         renderParams();
         renderMobileEffects();
         renderMobileParams();
+        renderMobileColorPanel();
         if (shouldRenderOutput) renderOutput();
         syncResultFit();
+        syncMobileTopOffset();
       }
 
       function setInputStatus(text) {
@@ -4320,6 +6259,8 @@
         const mark = document.createElement("span");
         mark.textContent = "*";
         inputStatus.append(mark, document.createTextNode(` ${text}`));
+        if (mobileStatus) mobileStatus.textContent = `* ${text}`;
+        syncMobileTopOffset();
       }
 
       function isSvgFile(file) {
@@ -4400,6 +6341,14 @@
         cameraFile.value = "";
         cameraFile.click();
       });
+      mobileInputButton?.addEventListener("click", () => {
+        fileInput.value = "";
+        fileInput.click();
+      });
+      mobileCameraButton?.addEventListener("click", () => {
+        cameraFile.value = "";
+        cameraFile.click();
+      });
       drop.addEventListener("click", (event) => {
         if (event.target === fileInput) return;
         event.preventDefault();
@@ -4429,14 +6378,18 @@
       document.getElementById("randomize").addEventListener("click", () => {
         randomizeChain();
       });
-  reverseToggle.addEventListener("click", () => {
-    state.outputReverse = !state.outputReverse;
-    syncReverseToggle();
-    renderAll();
-  });
+      mobileRandomize?.addEventListener("click", () => {
+        randomizeChain();
+      });
+      reverseToggle.addEventListener("click", () => {
+        state.outputReverse = !state.outputReverse;
+        syncReverseToggle();
+        renderAll();
+      });
       window.addEventListener("resize", () => {
         positionParamFlyout();
         syncResultFit();
+        syncMobileTopOffset();
       });
 
       renderAll(false);

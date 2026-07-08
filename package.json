@@ -1,8 +1,8 @@
 {
   "name": "synths-lab-graphic-texture",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "private": true,
-  "description": "Synthub Graphic Texture V1.7 - refined transparent-background rendering, responsive UI, and favicon branding.",
+  "description": "Synthub Graphic Texture V1.8 - Figma-aligned desktop and mobile UI refinements with updated Synthub graphic assets.",
   "scripts": {
     "start": "python3 -m http.server 4178",
     "serve": "python3 -m http.server 4178"

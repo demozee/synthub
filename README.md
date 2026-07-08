@@ -1,6 +1,6 @@
 # Synths Lab Graphic Texture
 
-Version: `V1.7`
+Version: `V1.8`
 
 A browser-based graphic texture generator for turning images, video frames, and SVG assets into print-inspired visual styles such as thermal-map compositions, halftone graphics, pen-trace outlines, rough ink, distressed grain, and fabric-like texture.
 
@@ -32,6 +32,13 @@ http://localhost:4178/tools/graphic-texture-demo.html
 ```
 
 ## Version Notes
+
+### V1.8 - Figma Desktop and Mobile UI Refinements
+
+- Reworks the desktop Synthub layout with updated yellow and blue theme colors, exported icon assets, preset cards, color controls, and output dock states.
+- Adds the redesigned mobile Graphic Texture interface with fixed top/bottom regions, upload/camera entry points, 390px result preview behavior, mobile presets, FG/BG/RE controls, and color wheel interaction.
+- Keeps source, mask, result, randomization, reverse, and PNG output behavior connected across desktop and mobile.
+- Adds throttled render scheduling for smoother color and parameter interactions.
 
 ### V1.7 - Synthub UI and Transparent Output
 
