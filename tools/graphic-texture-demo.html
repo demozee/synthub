@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="../assets/browser-icon.svg" />
-    <title>Synthub Graphic Texture V1.8</title>
+    <title>Synthub Graphic Texture V1.9</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
@@ -3807,7 +3807,7 @@
         }
 
         .mobile-current-mark {
-          width: 58px;
+          width: 54px;
           height: 58px;
           margin-top: 10px;
           color: var(--current-color);
@@ -4030,6 +4030,1013 @@
           }
         }
       }
+
+      /* Mobile 3.0: Figma nodes 3445:590, 3609:1499, 4007:50 and 3609:2158. */
+      @media (max-width: 640px) {
+        :root {
+          --mobile-bg: #242528;
+          --mobile-card: #1d1d20;
+          --mobile-card-dark: #222227;
+          --mobile-line: #515257;
+          --mobile-blue: #87e3ff;
+          --mobile-acid: #edff87;
+          --mobile-red: #ff4848;
+          --mobile-bg-chip: #b8cfdb;
+          --mobile-page-width: min(390px, 100%);
+          --mobile-preview-size: min(390px, 100vw);
+          --mobile-preview-height: var(--mobile-preview-size);
+        }
+
+        html,
+        body,
+        .app,
+        .mobile-shell {
+          background: var(--mobile-bg);
+        }
+
+        html,
+        body {
+          scrollbar-width: none;
+        }
+
+        body::-webkit-scrollbar {
+          display: none;
+        }
+
+        .mobile-shell {
+          width: var(--mobile-page-width);
+          min-height: 100dvh;
+          margin: 0 auto;
+          padding-top: var(--mobile-top-height, 344px);
+          padding-bottom: calc(80px + env(safe-area-inset-bottom));
+          overflow: visible;
+        }
+
+        .mobile-fixed-top {
+          --mobile-collapse-offset: 0px;
+          position: fixed;
+          top: 0;
+          left: 50%;
+          z-index: 1000;
+          width: var(--mobile-page-width);
+          max-width: 390px;
+          margin: 0;
+          overflow: visible;
+          background: var(--mobile-bg);
+          box-shadow: none;
+          transform: translate3d(-50%, calc(-1 * var(--mobile-collapse-offset)), 0);
+          will-change: transform;
+        }
+
+        .app:not(.has-source) .mobile-fixed-top {
+          height: 344px;
+        }
+
+        .app.has-source .mobile-fixed-top {
+          height: calc(175px + var(--mobile-preview-height));
+        }
+
+        .mobile-hero,
+        .mobile-input-section {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          padding: 0;
+        }
+
+        .mobile-hero {
+          top: 30px;
+        }
+
+        .app.has-source .mobile-hero {
+          top: 17px;
+          padding: 0;
+        }
+
+        .mobile-title-row {
+          display: grid;
+          grid-template-columns: 60px 60px 198px;
+          column-gap: 0;
+          align-items: start;
+          width: 318px;
+          height: 60px;
+          margin: 0 0 0 28px;
+        }
+
+        .app.has-source .mobile-title-row {
+          grid-template-columns: 34px 20px minmax(0, 1fr);
+          column-gap: 0;
+          width: calc(100% - 44px);
+          height: auto;
+          margin-left: 28px;
+        }
+
+        .mobile-brand-mark {
+          width: 60px;
+          height: 60px;
+        }
+
+        .app.has-source .mobile-brand-mark {
+          width: 34px;
+          height: 34px;
+          object-fit: cover;
+          object-position: left center;
+        }
+
+        .mobile-title-divider {
+          width: 1.5px;
+          height: 50px;
+          margin-top: 5px;
+          margin-left: 29.25px;
+          background: #8f9096;
+        }
+
+        .app.has-source .mobile-title-divider {
+          width: 1px;
+          height: 26px;
+          margin-top: 1px;
+          margin-left: 0;
+          justify-self: center;
+        }
+
+        .mobile-title {
+          width: 198px;
+          height: 60px;
+        }
+
+        .app.has-source .mobile-title {
+          width: 100%;
+          height: auto;
+          aspect-ratio: 271 / 28;
+          object-fit: contain;
+        }
+
+        .mobile-intro {
+          position: absolute;
+          top: 96px;
+          left: 28px;
+          display: grid;
+          grid-template-columns: 163px 163px;
+          gap: 8px;
+          width: 334px;
+          margin: 0;
+          color: #9296a0;
+          font-size: 12px;
+          font-weight: 300;
+          line-height: normal;
+          letter-spacing: -0.6px;
+        }
+
+        .mobile-intro p {
+          margin: 0;
+        }
+
+        .mobile-intro-cn {
+          font-size: 10px;
+          font-weight: 300;
+          letter-spacing: 0.04em;
+        }
+
+        .app.has-source .mobile-intro {
+          display: none;
+        }
+
+        .mobile-input-section {
+          top: 194px;
+        }
+
+        .app.has-source .mobile-input-section {
+          top: 65px;
+        }
+
+        .mobile-input-heading {
+          height: 32px;
+          margin: 0 28px 14px;
+          color: #f4f3ef;
+          font-size: 20px;
+          font-weight: 400;
+          line-height: 32px;
+          letter-spacing: -1px;
+        }
+
+        .mobile-input-heading span,
+        .mobile-section-title span {
+          color: #9296a0;
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+        }
+
+        .app.has-source .mobile-input-heading {
+          display: none;
+        }
+
+        .mobile-input-row {
+          grid-template-columns: minmax(0, 254px) 96px;
+          gap: 8px;
+          width: calc(100% - 32px);
+          margin: 0 16px;
+        }
+
+        .mobile-input-button,
+        .mobile-camera-button,
+        .app.has-source .mobile-input-button,
+        .app.has-source .mobile-camera-button {
+          height: 60px;
+        }
+
+        .mobile-input-button {
+          padding: 0;
+          background: var(--mobile-blue);
+        }
+
+        .mobile-input-button img {
+          left: 32px;
+          top: 18px;
+          width: 16px;
+          height: 23px;
+        }
+
+        .mobile-input-button span,
+        .app.has-source .mobile-input-button span {
+          left: 58px;
+          top: 3px;
+          width: 154px;
+          height: 52px;
+          font-size: 42px;
+          font-weight: 300;
+          line-height: 54px;
+          letter-spacing: 0;
+          transform: none;
+        }
+
+        .mobile-camera-button {
+          border: 1.5px solid var(--mobile-blue);
+          background: var(--mobile-card);
+          font-size: 22px;
+          font-weight: 400;
+          letter-spacing: -1.5px;
+        }
+
+        .app.has-source .mobile-camera-button {
+          font-size: 22px;
+        }
+
+        .mobile-camera-icon {
+          left: 12px;
+          top: 22px;
+          width: 29px;
+          height: 15px;
+        }
+
+        .mobile-camera-button > span:last-child {
+          left: 51px;
+          top: 15px;
+          width: 37px;
+          height: 29px;
+          line-height: 29px;
+        }
+
+        .mobile-status,
+        .app:not(.has-source) .mobile-status {
+          width: calc(100% - 56px);
+          min-height: 18px;
+          margin: 16px 28px 0;
+          padding: 0;
+          color: #9296a0;
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+        }
+
+        .mobile-preview-fixed {
+          position: absolute;
+          top: 175px;
+          left: 0;
+          display: none;
+          width: 100%;
+          max-width: 390px;
+          height: var(--mobile-preview-height);
+          margin: 0;
+          overflow: hidden;
+          background: #f4f3ef;
+          place-items: center;
+        }
+
+        .app.has-source .mobile-preview-fixed {
+          display: grid;
+        }
+
+        #mobileResult {
+          display: block;
+          width: 100%;
+          height: 100%;
+          background: transparent;
+        }
+
+        .mobile-scroll {
+          position: relative;
+          z-index: 1;
+          width: var(--mobile-page-width);
+          max-width: 390px;
+          margin: 0 auto;
+          padding: 10px 16px 22px;
+          background: var(--mobile-bg);
+        }
+
+        .app.has-source .mobile-scroll {
+          padding-top: 8px;
+        }
+
+        .mobile-preview-strip {
+          grid-template-columns: 1fr 1fr;
+          align-items: start;
+          gap: 8px;
+          height: auto;
+          margin: 0 -16px 16px;
+          background: #0d0d11;
+        }
+
+        .mobile-mini {
+          min-width: 0;
+          min-height: 0;
+          background: #1d1d20;
+        }
+
+        .mobile-mini h3 {
+          left: 16px;
+          top: 10px;
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 16px;
+          letter-spacing: -0.8px;
+        }
+
+        .mobile-mini canvas {
+          width: 100%;
+          height: auto;
+          object-fit: contain;
+        }
+
+        .mobile-section,
+        .app.has-source .mobile-section {
+          margin-top: 0;
+        }
+
+        .mobile-section + .mobile-section {
+          margin-top: 20px;
+        }
+
+        .mobile-section-title {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          width: calc(100% - 24px);
+          height: 26px;
+          margin: 0 12px 16px;
+          color: #f4f3ef;
+          font-size: 20px;
+          font-weight: 400;
+          line-height: 26px;
+          letter-spacing: -1px;
+        }
+
+        .mobile-section-title span {
+          justify-self: end;
+          text-align: right;
+        }
+
+        .mobile-preset-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+        }
+
+        .mobile-preset {
+          grid-template-columns: 28px minmax(0, 1fr);
+          column-gap: 16px;
+          width: auto;
+          height: 60px;
+          min-height: 60px;
+          padding: 0 16px;
+          border: 1px solid transparent;
+          background: var(--mobile-card);
+        }
+
+        .mobile-preset.active {
+          border-color: var(--mobile-acid);
+          background: var(--mobile-card);
+        }
+
+        .app:not(.has-source) .mobile-preset.active {
+          border-color: transparent;
+        }
+
+        .mobile-preset-icon,
+        .mobile-preset-icon img {
+          width: 28px;
+          height: 28px;
+          margin: 0;
+        }
+
+        .mobile-preset strong {
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 20px;
+          letter-spacing: -0.8px;
+        }
+
+        .mobile-preset small {
+          margin-top: 3px;
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+          letter-spacing: 0.04em;
+        }
+
+        .mobile-color-row {
+          grid-template-columns: minmax(0, 140px) minmax(0, 140px) 62px;
+          gap: 8px;
+        }
+
+        .mobile-color-card {
+          position: relative;
+          display: block;
+          height: 40px;
+          overflow: hidden;
+          border: 1px solid #050506;
+          background: var(--mobile-card-dark);
+        }
+
+        .mobile-color-card.active {
+          border-color: var(--mobile-acid);
+        }
+
+        .mobile-color-label {
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: block;
+          width: 40px;
+          height: 40px;
+          font-size: 20px;
+          font-weight: 400;
+          line-height: 40px;
+          letter-spacing: -1px;
+          text-align: center;
+        }
+
+        .mobile-color-hash {
+          position: absolute;
+          top: 3px;
+          left: 44px;
+          width: 8px;
+          color: #515257;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 16px;
+          letter-spacing: -0.6px;
+        }
+
+        .mobile-color-value {
+          position: absolute;
+          top: 18px;
+          left: 44px;
+          overflow: hidden;
+          width: 58px;
+          color: #f4f3ef;
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 20px;
+          letter-spacing: -0.8px;
+        }
+
+        .mobile-alpha-toggle {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 40px;
+          height: 40px;
+          border: 0;
+          background: url("../assets/png-alpha-icon-figma.svg") center / 40px 40px no-repeat;
+        }
+
+        .mobile-alpha-toggle.active {
+          background: url("../assets/png-alpha-icon-figma.svg") center / 40px 40px no-repeat;
+          filter: brightness(0) saturate(100%) invert(92%) sepia(30%) saturate(633%) hue-rotate(31deg) brightness(103%) contrast(102%);
+        }
+
+        .mobile-color-card.transparent .mobile-color-label {
+          background:
+            repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.22) 0 4px, transparent 4px 8px),
+            var(--mobile-card-dark) !important;
+          color: #f4f3ef !important;
+        }
+
+        .mobile-re-card {
+          position: relative;
+          height: 40px;
+          padding: 0;
+          border: 1px solid #050506;
+          background: var(--mobile-card-dark);
+          color: transparent;
+          font-size: 0;
+        }
+
+        .mobile-re-card::before {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 20px;
+          height: 20px;
+          background: url("../assets/mobile-re-icon-off.svg") center / contain no-repeat;
+          transform: translate(-50%, -50%);
+        }
+
+        .mobile-re-card.active {
+          border-color: var(--mobile-acid);
+          outline: 0;
+        }
+
+        .mobile-re-card.active::before {
+          background-image: url("../assets/mobile-re-icon-on.svg");
+        }
+
+        .mobile-re-card span {
+          display: none;
+        }
+
+        .mobile-color-wheel {
+          position: relative;
+          display: none;
+          margin: 25px 0 0;
+          padding: 0;
+        }
+
+        .mobile-color-wheel.open {
+          display: block;
+        }
+
+        .mobile-wheel-switches {
+          position: absolute;
+          top: 5px;
+          left: 0;
+          right: 0;
+          z-index: 5;
+          display: flex;
+          justify-content: space-between;
+          margin: 0;
+          padding: 0;
+          pointer-events: none;
+        }
+
+        .mobile-wheel-switch {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+          font-weight: 500;
+        }
+
+        .mobile-wheel-switch::after {
+          inset: 9px;
+          background: var(--mobile-bg);
+        }
+
+        .mobile-wheel-wrap {
+          width: min(350px, calc(100% - 8px));
+          height: auto;
+          aspect-ratio: 1 / 1;
+          margin: 0 auto;
+        }
+
+        .mobile-wheel-ring-clip {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          border-radius: 50%;
+        }
+
+        .mobile-wheel-ring {
+          --ring-rotation: 0deg;
+          transform: rotate(var(--ring-rotation));
+          transition: none;
+        }
+
+        .mobile-wheel-ring::before {
+          content: "";
+          position: absolute;
+          inset: 10px;
+          border-radius: 0;
+          background: url("../assets/mobile-wheel-hold-lines.svg") center / contain no-repeat;
+          opacity: 0;
+          pointer-events: none;
+          -webkit-mask: none;
+          mask: none;
+        }
+
+        .mobile-color-wheel.dragging .mobile-wheel-ring::before {
+          opacity: 1;
+        }
+
+        .mobile-wheel-ring::after {
+          inset: 80px;
+          background: var(--mobile-bg);
+        }
+
+        .mobile-wheel-center {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          display: block;
+          width: 190px;
+          height: 190px;
+          background: var(--mobile-bg);
+          transform: translate(-50%, -50%);
+        }
+
+        .mobile-wheel-pointer {
+          --pointer-height: min(110px, 28.205vw);
+          --pointer-overhang: min(10px, 2.564vw);
+          top: calc(-1 * var(--pointer-overhang));
+          box-sizing: border-box;
+          width: 4px;
+          height: var(--pointer-height);
+          border: 1px solid var(--mobile-red);
+          border-radius: 2px;
+          background: var(--pointer-color, var(--mobile-red));
+          box-shadow: 0 0 0 3px var(--mobile-bg);
+          opacity: 1;
+        }
+
+        .mobile-wheel-pointer::after {
+          width: 10px;
+          height: 10px;
+          top: calc(100% + 6px);
+          bottom: auto;
+          border: 0;
+          background: url("../assets/mobile-wheel-pointer.svg") center top / 8.66px 7.5px no-repeat;
+        }
+
+        .mobile-wheel-channel {
+          top: 38px;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 21px;
+        }
+
+        .mobile-current-mark {
+          position: absolute;
+          top: 70px;
+          left: 50%;
+          width: 50px;
+          height: 50px;
+          margin: 0;
+          color: var(--current-color);
+          transform: translateX(-50%);
+        }
+
+        .mobile-current-mark svg {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+
+        .mobile-wheel-hex-wrap {
+          left: 0;
+          right: 0;
+          bottom: 33px;
+          display: block;
+          width: 190px;
+          height: 21px;
+        }
+
+        .mobile-wheel-hex-wrap::after {
+          left: 50%;
+          right: auto;
+          bottom: -11px;
+          width: 40px;
+          height: 2px;
+          transform: translateX(-50%);
+        }
+
+        .mobile-wheel-hex-wrap.hex-editing::after,
+        .mobile-wheel-hex-wrap:focus-within::after {
+          background: var(--mobile-acid);
+        }
+
+        .mobile-wheel-hex-prefix {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 12px;
+          height: 12px;
+          color: #515257;
+          font-size: 0;
+          line-height: 0;
+          transform: translate(-45px, -50%);
+        }
+
+        .mobile-wheel-hex-prefix svg {
+          display: block;
+          width: 12px;
+          height: 12px;
+        }
+
+        .mobile-wheel-hex-wrap.hex-editing .mobile-wheel-hex-prefix,
+        .mobile-wheel-hex-wrap:focus-within .mobile-wheel-hex-prefix {
+          color: var(--mobile-acid);
+        }
+
+        .mobile-wheel-hex {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 58px;
+          height: 21px;
+          padding: 0;
+          border: 0 !important;
+          border-radius: 0 !important;
+          outline: 0 !important;
+          box-shadow: none !important;
+          background: transparent !important;
+          appearance: none;
+          -webkit-appearance: none;
+          caret-color: var(--mobile-acid);
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 21px;
+          letter-spacing: 0;
+          text-align: center;
+          transform: translateX(-50%);
+          -webkit-user-select: text;
+          user-select: text;
+        }
+
+        .mobile-wheel-hex:focus,
+        .mobile-wheel-hex:focus-visible {
+          border: 0 !important;
+          outline: 0 !important;
+          box-shadow: none !important;
+        }
+
+        .mobile-wheel-ticks {
+          inset: 0;
+        }
+
+        .mobile-wheel-ticks span {
+          left: 50%;
+          top: 50%;
+          width: 1.5px;
+          height: 7px;
+          transform-origin: 50% 50%;
+        }
+
+        .mobile-wheel-ticks span:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg) translateY(-55px); }
+        .mobile-wheel-ticks span:nth-child(2) { transform: translate(-50%, -50%) rotate(45deg) translateY(-55px); }
+        .mobile-wheel-ticks span:nth-child(3) { transform: translate(-50%, -50%) rotate(90deg) translateY(-55px); }
+        .mobile-wheel-ticks span:nth-child(4) { transform: translate(-50%, -50%) rotate(135deg) translateY(-55px); }
+        .mobile-wheel-ticks span:nth-child(5) { transform: translate(-50%, -50%) rotate(180deg) translateY(-55px); }
+        .mobile-wheel-ticks span:nth-child(6) { transform: translate(-50%, -50%) rotate(225deg) translateY(-55px); }
+        .mobile-wheel-ticks span:nth-child(7) { transform: translate(-50%, -50%) rotate(270deg) translateY(-55px); }
+        .mobile-wheel-ticks span:nth-child(8) { transform: translate(-50%, -50%) rotate(315deg) translateY(-55px); }
+
+        .mobile-bottom-dock {
+          left: 50%;
+          right: auto;
+          z-index: 1100;
+          grid-template-columns: minmax(0, 190fr) minmax(0, 160fr);
+          gap: 8px;
+          width: var(--mobile-page-width);
+          max-width: 390px;
+          height: calc(64px + env(safe-area-inset-bottom));
+          margin: 0;
+          padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+          background: #0d0d11;
+          box-sizing: border-box;
+          transform: translateX(-50%);
+        }
+
+        .mobile-dock-button {
+          width: auto !important;
+          height: 48px;
+          border: 1px solid #050506;
+          background: var(--mobile-card-dark);
+          font-size: 24px;
+          font-weight: 300;
+          line-height: 36px;
+          letter-spacing: -1.2px;
+        }
+
+        .mobile-dock-button.output {
+          background: var(--mobile-card-dark);
+          color: #f4f3ef;
+        }
+
+        .app.has-source .mobile-dock-button.output {
+          background: var(--mobile-acid);
+          color: #08080a;
+        }
+
+        .mobile-dock-button.nice .mobile-dock-icon,
+        .mobile-dock-button.output .mobile-dock-icon {
+          color: #555555;
+        }
+
+        .app.has-source .mobile-dock-button.nice .mobile-dock-icon {
+          color: var(--mobile-acid);
+        }
+
+        .app.has-source .mobile-dock-button.output .mobile-dock-icon {
+          color: #08080a;
+        }
+
+        .mobile-dock-label {
+          top: 5px;
+          height: 36px;
+        }
+
+        .mobile-dock-button.nice .mobile-dock-icon {
+          left: 15px;
+          top: 11px;
+          width: 21px;
+          height: 24px;
+        }
+
+        .mobile-dock-button.nice .mobile-dock-label {
+          left: 52px;
+          width: 107px;
+        }
+
+        .mobile-dock-button.output .mobile-dock-icon {
+          left: 15px;
+          top: 13px;
+          width: 16px;
+          height: 20.5px;
+        }
+
+        .mobile-dock-button.output .mobile-dock-label {
+          left: 47px;
+          width: 81px;
+        }
+
+        @media (max-width: 389px) {
+          .mobile-input-row {
+            grid-template-columns: minmax(0, 1fr) 96px;
+          }
+
+          .mobile-color-row {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 62px;
+          }
+
+          .mobile-bottom-dock {
+            grid-template-columns: minmax(0, 190fr) minmax(0, 160fr);
+          }
+        }
+      }
+
+      /* Interaction system: flat, precise, and shared across desktop and mobile. */
+      :root {
+        --motion-fast: 100ms;
+        --motion-standard: 180ms;
+        --motion-ease: cubic-bezier(0.22, 0.8, 0.2, 1);
+        --motion-press: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .app,
+      .app * {
+        -webkit-user-select: none;
+        user-select: none;
+      }
+
+      .app input[type="text"],
+      .app input:not([type]),
+      .app textarea,
+      .app [contenteditable="true"] {
+        -webkit-user-select: text;
+        user-select: text;
+      }
+
+      .app input[type="text"]::selection,
+      .app input:not([type])::selection,
+      .app textarea::selection,
+      .app [contenteditable="true"]::selection {
+        background: rgba(237, 255, 135, 0.36);
+        color: inherit;
+      }
+
+      #drop,
+      .preset,
+      .node,
+      .toggle,
+      .randomize-button,
+      .export-button,
+      .reverse-toggle,
+      .color-swatch,
+      .alpha-mini-toggle,
+      .mobile-input-button,
+      .mobile-camera-button,
+      .mobile-preset,
+      .mobile-color-card,
+      .mobile-re-card,
+      .mobile-alpha-toggle,
+      .mobile-wheel-switch,
+      .mobile-dock-button {
+        -webkit-tap-highlight-color: transparent;
+        transition:
+          transform var(--motion-standard) var(--motion-ease),
+          background-color var(--motion-standard) var(--motion-ease),
+          border-color var(--motion-standard) var(--motion-ease),
+          outline-color var(--motion-standard) var(--motion-ease),
+          color var(--motion-standard) var(--motion-ease),
+          box-shadow var(--motion-standard) var(--motion-ease),
+          filter var(--motion-standard) var(--motion-ease),
+          opacity var(--motion-fast) linear;
+      }
+
+      :where(button, input, .node, .mobile-color-card):focus-visible {
+        outline: 1px solid var(--yellow);
+        outline-offset: 3px;
+      }
+
+      #drop:focus-within {
+        outline: 0;
+      }
+
+      @media (min-width: 641px) {
+        .color-popover {
+          padding: 20px;
+          border: 0;
+          background: var(--panel-bg, #27272a);
+          box-shadow: 0 12px 34px rgba(0, 0, 0, 0.22);
+        }
+
+        .color-popover .color-fields,
+        .color-popover .hex-prefix,
+        .color-popover .hex {
+          border-color: var(--panel-line, #303036);
+          background: var(--panel-card-dark, #1a1a1d);
+        }
+      }
+
+      [data-export-png]:disabled {
+        cursor: not-allowed;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        #drop:hover,
+        .randomize-button:hover,
+        .export-button:not(:disabled):hover,
+        .reverse-toggle:hover,
+        .color-swatch:hover,
+        .alpha-mini-toggle:hover {
+          transform: translateY(-1px);
+        }
+
+        .preset:not(.active):hover,
+        .node:not(.active):not(.disabled):hover {
+          transform: translateY(-1px);
+          background: #2a2a2f;
+        }
+
+        .preset.active:hover,
+        .node.active:hover {
+          transform: translateY(-1px);
+        }
+      }
+
+      #drop:active,
+      .preset:active,
+      .node:not(.disabled):active,
+      .randomize-button:active,
+      .export-button:not(:disabled):active,
+      .reverse-toggle:active,
+      .color-swatch:active,
+      .alpha-mini-toggle:active,
+      .mobile-input-button:active,
+      .mobile-camera-button:active,
+      .mobile-preset:active,
+      .mobile-color-card:active,
+      .mobile-re-card:active,
+      .mobile-alpha-toggle:active,
+      .mobile-wheel-switch:active,
+      .mobile-dock-button:not(:disabled):active {
+        transform: translateY(1px) scale(0.99);
+        transition-duration: var(--motion-fast);
+        transition-timing-function: var(--motion-press);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -4052,6 +5059,7 @@
               </div>
             </label>
             <input id="cameraFile" class="camera-input" type="file" accept="image/*" capture="environment" />
+            <input id="mobileGalleryFile" class="camera-input" type="file" accept="image/*" />
             <button class="camera-button" id="cameraButton" type="button">Camera</button>
             <div class="drop-sub" id="inputStatus"><span>*</span> PNG / JPG / WebP / SVG / PDF</div>
             <div id="sidePreviews" class="side-previews">
@@ -4137,9 +5145,23 @@
         <div class="mobile-fixed-top">
           <div class="mobile-hero">
             <div class="mobile-title-row">
-              <img class="mobile-brand-mark" src="../assets/mobile-mark.svg" alt="" />
+              <img
+                class="mobile-brand-mark"
+                id="mobileBrandMark"
+                src="../assets/mobile-mark.svg"
+                data-default-src="../assets/mobile-mark.svg"
+                data-loaded-src="../assets/logo-svg.svg"
+                alt=""
+              />
               <span class="mobile-title-divider" aria-hidden="true"></span>
-              <img class="mobile-title" src="../assets/mobile-title-logo.svg" alt="Graphic Texture 印花" />
+              <img
+                class="mobile-title"
+                id="mobileTitle"
+                src="../assets/mobile-title-logo.svg"
+                data-default-src="../assets/mobile-title-logo.svg"
+                data-loaded-src="../assets/mobile-title-logo-compact.svg"
+                alt="Graphic Texture 印花"
+              />
             </div>
             <div class="mobile-intro">
               <p>Upload an image, choose a style, and turn it into a graphic texture.</p>
@@ -4288,6 +5310,7 @@
         sourceAspect: 1,
         sourceHasTransparency: false,
         size: 1000,
+        previewSize: 720,
         nodes: clone(presets.thermalMap.nodes),
         outputReverse: false,
         flyoutOpen: false,
@@ -4299,6 +5322,7 @@
       const fileInput = document.getElementById("file");
       const app = document.querySelector(".app");
       const cameraFile = document.getElementById("cameraFile");
+      const mobileGalleryFile = document.getElementById("mobileGalleryFile");
       const cameraButton = document.getElementById("cameraButton");
       const drop = document.getElementById("drop");
       const inputStatus = document.getElementById("inputStatus");
@@ -4334,11 +5358,17 @@
       const mobileColorPanel = document.getElementById("mobileColorPanel");
       const mobileRandomize = document.getElementById("mobileRandomize");
       const mobileFixedTop = document.querySelector(".mobile-fixed-top");
+      const mobileBrandMark = document.getElementById("mobileBrandMark");
+      const mobileTitle = document.getElementById("mobileTitle");
       let renderFrameQueued = false;
       let renderOutputTimer = 0;
+      let renderOutputFrame = 0;
       let colorRenderTimer = 0;
       let colorOutsideHandlerBound = false;
       let sourceImageCache = null;
+      let mobileScrollFrame = 0;
+      let mobileWheelFrame = 0;
+      let pendingMobileWheelHsv = null;
 
       if (window.pdfjsLib) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -4349,32 +5379,41 @@
       }
 
       function scheduleRenderOutput() {
-        if (renderOutputTimer || renderFrameQueued) return;
+        if (renderFrameQueued) return;
         renderFrameQueued = true;
         renderOutputTimer = window.setTimeout(() => {
           renderOutputTimer = 0;
-          renderFrameQueued = false;
-          requestAnimationFrame(() => {
-            renderOutput();
+          renderOutputFrame = requestAnimationFrame(() => {
+            renderOutputFrame = 0;
+            renderFrameQueued = false;
+            renderOutput(state.previewSize);
           });
         }, 80);
       }
 
-      function flushRenderOutput() {
+      function cancelScheduledRenderOutput() {
         if (renderOutputTimer) {
           window.clearTimeout(renderOutputTimer);
           renderOutputTimer = 0;
         }
+        if (renderOutputFrame) {
+          cancelAnimationFrame(renderOutputFrame);
+          renderOutputFrame = 0;
+        }
         renderFrameQueued = false;
-        renderOutput();
+      }
+
+      function flushRenderOutput() {
+        cancelScheduledRenderOutput();
+        renderOutput(state.size);
       }
 
       function scheduleColorRenderOutput() {
-        if (colorRenderTimer) return;
+        if (colorRenderTimer) window.clearTimeout(colorRenderTimer);
         colorRenderTimer = window.setTimeout(() => {
           colorRenderTimer = 0;
           scheduleRenderOutput();
-        }, 48);
+        }, 140);
       }
 
       function flushColorRenderOutput() {
@@ -4382,14 +5421,48 @@
           window.clearTimeout(colorRenderTimer);
           colorRenderTimer = 0;
         }
-        scheduleRenderOutput();
+        flushRenderOutput();
+      }
+
+      function syncMobileHeaderAssets() {
+        [mobileBrandMark, mobileTitle].forEach((asset) => {
+          if (!asset) return;
+          const nextSrc = state.source ? asset.dataset.loadedSrc : asset.dataset.defaultSrc;
+          if (nextSrc && asset.getAttribute("src") !== nextSrc) asset.setAttribute("src", nextSrc);
+        });
+      }
+
+      function syncMobileScrollPosition() {
+        if (!mobileFixedTop || window.innerWidth > 640) return;
+        const preview = mobileFixedTop.querySelector(".mobile-preview-fixed");
+        const collapseHeight = state.source && preview ? preview.offsetTop : 0;
+        const offset = Math.min(Math.max(0, window.scrollY || 0), collapseHeight);
+        mobileFixedTop.style.setProperty("--mobile-collapse-offset", `${offset}px`);
+        app.classList.toggle("mobile-header-collapsed", Boolean(collapseHeight && offset >= collapseHeight));
+      }
+
+      function scheduleMobileScrollSync() {
+        if (mobileScrollFrame) return;
+        mobileScrollFrame = requestAnimationFrame(() => {
+          mobileScrollFrame = 0;
+          syncMobileScrollPosition();
+        });
       }
 
       function syncMobileTopOffset() {
         if (!mobileFixedTop) return;
         requestAnimationFrame(() => {
+          const previewSize = Math.ceil(mobileFixedTop.getBoundingClientRect().width);
+          const resultAspect = result.width && result.height
+            ? result.width / result.height
+            : Math.max(0.01, state.sourceAspect || 1);
+          const previewHeight = Math.ceil(previewSize / Math.max(1, resultAspect));
+          app.style.setProperty("--mobile-preview-size", `${previewSize}px`);
+          app.style.setProperty("--mobile-preview-height", `${previewHeight}px`);
           const topHeight = Math.ceil(mobileFixedTop.getBoundingClientRect().height);
           app.style.setProperty("--mobile-top-height", `${topHeight}px`);
+          syncMobileHeaderAssets();
+          syncMobileScrollPosition();
         });
       }
 
@@ -4436,7 +5509,16 @@
 
       function syncMobileResult() {
         if (!mobileResult || !mobileResultCtx || !result.width || !result.height) return;
-        copyCanvas(result, mobileResult, mobileResultCtx);
+        const aspect = result.width / result.height;
+        if (aspect >= 1) {
+          copyCanvas(result, mobileResult, mobileResultCtx);
+          return;
+        }
+        const side = result.height;
+        if (mobileResult.width !== side) mobileResult.width = side;
+        if (mobileResult.height !== side) mobileResult.height = side;
+        mobileResultCtx.clearRect(0, 0, side, side);
+        mobileResultCtx.drawImage(result, (side - result.width) / 2, 0);
       }
 
       function lerp(a, b, t) {
@@ -4794,7 +5876,9 @@
             </div>
             <div class="toggle">${node.enabled ? "on" : "off"}</div>
           `;
-          item.addEventListener("click", () => {
+          item.addEventListener("click", (event) => {
+            event.stopPropagation();
+            closeColorPopovers();
             const isCurrentOpen = state.flyoutOpen && state.selected === meta.id;
             state.selected = meta.id;
             state.flyoutOpen = !isCurrentOpen;
@@ -4802,12 +5886,21 @@
           });
           item.querySelector(".toggle").addEventListener("click", (event) => {
             event.stopPropagation();
+            closeColorPopovers();
+            closeParamFlyout();
             node.enabled = !node.enabled;
             renderAll();
           });
           nodeList.appendChild(item);
         });
         requestAnimationFrame(positionParamFlyout);
+      }
+
+      function closeParamFlyout() {
+        if (!state.flyoutOpen && paramFlyout.classList.contains("closed")) return;
+        state.flyoutOpen = false;
+        paramFlyout.classList.add("closed");
+        nodeList.querySelector(".node.active")?.classList.remove("active");
       }
 
       function positionParamFlyout() {
@@ -5008,18 +6101,27 @@
 
       function mobileRingGradient(hsv, channel) {
         if (channel === "hue") {
-          return `conic-gradient(from ${-hsv.h}deg, #ff0000 0deg, #ffff00 60deg, #00ff00 120deg, #00ffff 180deg, #0000ff 240deg, #ff00ff 300deg, #ff0000 360deg)`;
+          return "conic-gradient(from 0deg, #ff2102 0deg, #f5ff01 65.7692deg, #02ff02 122.885deg, #00eeff 183.462deg, #0015ff 247.5deg, #ff02fb 308.077deg, #ff0010 360deg)";
         }
-        const stops = [];
-        for (let i = 0; i <= 24; i++) {
-          const t = i / 24;
-          const rgb = channel === "sat"
-            ? hsvToRgb({ h: hsv.h, s: t, v: hsv.v })
-            : hsvToRgb({ h: hsv.h, s: hsv.s, v: t });
-          stops.push(`${colorStop(rgb)} ${Math.round(t * 360)}deg`);
-        }
-        const offset = channel === "sat" ? hsv.s * -360 : hsv.v * -360;
-        return `conic-gradient(from ${offset}deg, ${stops.join(", ")})`;
+        const low = channel === "sat"
+          ? colorStop(hsvToRgb({ h: hsv.h, s: 0, v: hsv.v }))
+          : colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 0 }));
+        const high = channel === "sat"
+          ? colorStop(hsvToRgb({ h: hsv.h, s: 1, v: hsv.v }))
+          : colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 1 }));
+        return `linear-gradient(135deg, ${low} 0%, ${high} 100%)`;
+      }
+
+      function mobileRingRotation(hsv, channel) {
+        if (channel === "hue") return -hsv.h;
+        const value = channel === "sat" ? hsv.s : hsv.v;
+        return -value * 360;
+      }
+
+      function mobileColorTextColor(hex) {
+        const { r, g, b } = hexToRgb(hex);
+        const luminance = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
+        return luminance > 0.62 ? "#202024" : "#f4f3ef";
       }
 
       function mobileSwitchGradient(channel) {
@@ -5028,24 +6130,17 @@
           return "conic-gradient(#ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)";
         }
         if (channel === "sat") {
-          const low = colorStop(hsvToRgb({ h: hsv.h, s: 0, v: hsv.v }));
-          const high = colorStop(hsvToRgb({ h: hsv.h, s: 1, v: hsv.v }));
-          return `conic-gradient(${low}, ${high}, ${low})`;
+          return "linear-gradient(135deg, #f4f3ef 0%, #050506 100%)";
         }
         const dark = colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 0 }));
         const bright = colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 1 }));
-        return `conic-gradient(${dark}, ${bright}, ${dark})`;
+        return `linear-gradient(135deg, ${dark}, ${bright})`;
       }
 
       function mobileCurrentMark() {
         return `
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <g fill="currentColor">
-              <rect x="28" y="4" width="8" height="56"/>
-              <rect x="28" y="4" width="8" height="56" transform="rotate(45 32 32)"/>
-              <rect x="28" y="4" width="8" height="56" transform="rotate(90 32 32)"/>
-              <rect x="28" y="4" width="8" height="56" transform="rotate(135 32 32)"/>
-            </g>
+          <svg viewBox="0 0 54 54" aria-hidden="true">
+            <path d="M32.375 1V14.0234L41.5879 4.81055L49.1895 12.4121L39.9766 21.625H53V32.375H39.9766L49.1895 41.5879L41.5879 49.1895L32.375 39.9766V53H21.625V39.9766L12.4121 49.1895L4.81055 41.5879L14.0234 32.375H1V21.625H14.0234L4.81055 12.4121L12.4121 4.81055L21.625 14.0234V1H32.375Z" fill="currentColor" stroke="#050506" stroke-width="2" />
           </svg>
         `;
       }
@@ -5060,15 +6155,21 @@
         const channel = mobileColorPanel.querySelector("[data-mobile-channel-label]");
         const hex = mobileColorPanel.querySelector("[data-mobile-hex]");
         const mark = mobileColorPanel.querySelector(".mobile-current-mark");
+        const pointer = mobileColorPanel.querySelector(".mobile-wheel-pointer");
 
         mobileColorPanel.querySelectorAll("[data-mobile-color-target]").forEach((card) => {
           const target = card.dataset.mobileColorTarget;
           const alpha = getMobileColorAlpha(target);
           const value = getMobileColor(target).replace("#", "").toUpperCase();
-          card.classList.toggle("active", target === state.mobileColorTarget);
+          card.classList.toggle("active", target === state.mobileColorTarget && state.mobileColorOpen);
           card.classList.toggle("transparent", alpha <= 0);
           const readout = card.querySelector("[data-mobile-color-value]");
           const alphaButton = card.querySelector("[data-mobile-alpha]");
+          const label = card.querySelector(".mobile-color-label");
+          if (label) {
+            label.style.backgroundColor = getMobileColor(target);
+            label.style.color = mobileColorTextColor(getMobileColor(target));
+          }
           if (readout) readout.textContent = value;
           if (alphaButton) alphaButton.classList.toggle("active", alpha <= 0);
         });
@@ -5080,13 +6181,17 @@
         });
 
         if (wheel) wheel.classList.toggle("open", state.mobileColorOpen);
-        if (ring) ring.style.setProperty("--ring-gradient", mobileRingGradient(hsv, state.mobileColorChannel));
+        if (ring) {
+          ring.style.setProperty("--ring-gradient", mobileRingGradient(hsv, state.mobileColorChannel));
+          ring.style.setProperty("--ring-rotation", `${mobileRingRotation(hsv, state.mobileColorChannel)}deg`);
+        }
         if (channel) channel.textContent = channelLabel();
         if (hex && document.activeElement !== hex) hex.value = currentHex;
         if (mark) {
           mark.style.setProperty("--current-color", currentColor);
           mark.style.color = currentColor;
         }
+        if (pointer) pointer.style.setProperty("--pointer-color", currentColor);
       }
 
       function scrollMobileWheelIntoView() {
@@ -5098,7 +6203,7 @@
         });
       }
 
-      function setMobileColorFromHsv(next) {
+      function setMobileColorFromHsv(next, shouldRenderOutput = false) {
         const hsv = mobileColorHsv();
         const updated = {
           h: Number(next.h ?? hsv.h),
@@ -5108,7 +6213,28 @@
         updated.h = ((updated.h % 360) + 360) % 360;
         setMobileColor(state.mobileColorTarget, rgbToHex(hsvToRgb(updated)));
         syncMobileColorUi();
-        scheduleColorRenderOutput();
+        if (shouldRenderOutput) scheduleColorRenderOutput();
+      }
+
+      function queueMobileWheelHsv(next) {
+        pendingMobileWheelHsv = next;
+        if (mobileWheelFrame) return;
+        mobileWheelFrame = requestAnimationFrame(() => {
+          mobileWheelFrame = 0;
+          const update = pendingMobileWheelHsv;
+          pendingMobileWheelHsv = null;
+          if (update) setMobileColorFromHsv(update, false);
+        });
+      }
+
+      function commitMobileWheelHsv() {
+        if (mobileWheelFrame) {
+          cancelAnimationFrame(mobileWheelFrame);
+          mobileWheelFrame = 0;
+        }
+        const update = pendingMobileWheelHsv;
+        pendingMobileWheelHsv = null;
+        if (update) setMobileColorFromHsv(update, false);
       }
 
       function angleFromEvent(event, element) {
@@ -5162,18 +6288,26 @@
 
         const ring = mobileColorPanel.querySelector("[data-mobile-wheel-ring]");
         if (ring) {
+          const wheel = ring.closest(".mobile-color-wheel");
           const updateFromDrag = (event) => {
             const startAngle = Number(ring.dataset.startAngle || 0);
             const startValue = Number(ring.dataset.startValue || 0);
             const angle = angleFromEvent(event, ring);
             const delta = ((angle - startAngle + 540) % 360) - 180;
             if (state.mobileColorChannel === "hue") {
-              setMobileColorFromHsv({ h: startValue + delta });
+              queueMobileWheelHsv({ h: startValue - delta });
             } else if (state.mobileColorChannel === "sat") {
-              setMobileColorFromHsv({ s: startValue + delta / 360 });
+              queueMobileWheelHsv({ s: startValue - delta / 360 });
             } else {
-              setMobileColorFromHsv({ v: startValue + delta / 360 });
+              queueMobileWheelHsv({ v: startValue - delta / 360 });
             }
+          };
+
+          const finishDrag = () => {
+            commitMobileWheelHsv();
+            delete ring.dataset.dragging;
+            wheel?.classList.remove("dragging");
+            flushRenderOutput();
           };
 
           ring.addEventListener("pointerdown", (event) => {
@@ -5184,16 +6318,21 @@
             ring.dataset.startValue = String(
               state.mobileColorChannel === "hue" ? hsv.h : state.mobileColorChannel === "sat" ? hsv.s : hsv.v
             );
+            ring.dataset.dragging = "true";
+            wheel?.classList.add("dragging");
           });
           ring.addEventListener("pointermove", (event) => {
-            if (event.buttons) updateFromDrag(event);
+            if (ring.dataset.dragging === "true") updateFromDrag(event);
           });
-          ring.addEventListener("pointerup", flushColorRenderOutput);
-          ring.addEventListener("pointercancel", flushColorRenderOutput);
+          ring.addEventListener("pointerup", finishDrag);
+          ring.addEventListener("pointercancel", finishDrag);
         }
 
         const hex = mobileColorPanel.querySelector("[data-mobile-hex]");
         if (hex) {
+          const hexWrap = hex.closest(".mobile-wheel-hex-wrap");
+          hex.addEventListener("focus", () => hexWrap?.classList.add("hex-editing"));
+          hex.addEventListener("blur", () => hexWrap?.classList.remove("hex-editing"));
           hex.addEventListener("input", () => {
             const clean = hex.value.replace(/[^0-9a-fA-F]/g, "").slice(0, 6).toUpperCase();
             hex.value = clean;
@@ -5217,7 +6356,7 @@
               const descriptor = mobileColorDescriptor(target);
               const alpha = getMobileColorAlpha(target);
               return `
-                <div class="mobile-color-card${target === state.mobileColorTarget ? " active" : ""}${alpha <= 0 ? " transparent" : ""}" data-mobile-color-target="${target}" role="button" tabindex="0">
+                <div class="mobile-color-card${target === state.mobileColorTarget && state.mobileColorOpen ? " active" : ""}${alpha <= 0 ? " transparent" : ""}" data-mobile-color-target="${target}" role="button" tabindex="0">
                   <span class="mobile-color-label">${descriptor.label}</span>
                   <span class="mobile-color-hash">#</span>
                   <span class="mobile-color-value" data-mobile-color-value>${getMobileColor(target).replace("#", "").toUpperCase()}</span>
@@ -5225,10 +6364,7 @@
                 </div>
               `;
             }).join("")}
-            <button class="mobile-re-card${state.outputReverse ? " active" : ""}" type="button" data-mobile-re aria-pressed="${state.outputReverse}">
-              <span class="mobile-re-icon" aria-hidden="true"></span>
-              <span>RE</span>
-            </button>
+            <button class="mobile-re-card${state.outputReverse ? " active" : ""}" type="button" data-mobile-re aria-label="Reverse mask" aria-pressed="${state.outputReverse}"></button>
           </div>
           <div class="mobile-color-wheel${state.mobileColorOpen ? " open" : ""}">
             <div class="mobile-wheel-switches">
@@ -5237,7 +6373,9 @@
               <button class="mobile-wheel-switch" type="button" data-mobile-channel="${otherChannels[1]}">${channelLabel(otherChannels[1]).slice(0, 1)}</button>
             </div>
             <div class="mobile-wheel-wrap">
-              <div class="mobile-wheel-ring" data-mobile-wheel-ring></div>
+              <div class="mobile-wheel-ring-clip">
+                <div class="mobile-wheel-ring" data-mobile-wheel-ring></div>
+              </div>
               <div class="mobile-wheel-pointer" aria-hidden="true"></div>
               <div class="mobile-wheel-center">
                 <div class="mobile-wheel-channel" data-mobile-channel-label>${channelLabel()}</div>
@@ -5246,7 +6384,11 @@
                 </div>
                 <div class="mobile-current-mark">${mobileCurrentMark()}</div>
                 <label class="mobile-wheel-hex-wrap">
-                  <span class="mobile-wheel-hex-prefix">#</span>
+                  <span class="mobile-wheel-hex-prefix" aria-hidden="true">
+                    <svg viewBox="0 0 12 12">
+                      <path d="M8.49047 3.51947L4.971 0L1.45153 3.51947C0.477216 4.49379 0 5.76636 0 7.03894V11.662L3.04225 8.61972C3.74814 7.91384 3.34051 6.56172 3.91715 5.98509C4.50373 5.39851 5.44822 5.39851 6.02486 5.98509C6.61143 6.57167 6.61143 7.51616 6.02486 8.09279C5.43828 8.67937 4.09611 8.27175 3.39022 8.96769L0.34797 12H4.971C6.24358 12 7.51616 11.5128 8.49047 10.5485L12.0099 7.029L8.49047 3.50953V3.51947Z" fill="currentColor" />
+                    </svg>
+                  </span>
                   <input class="mobile-wheel-hex" data-mobile-hex inputmode="text" autocapitalize="characters" spellcheck="false" value="${getMobileColor().replace("#", "").toUpperCase()}" aria-label="Hex color" />
                 </label>
               </div>
@@ -5358,14 +6500,18 @@
         const previousHidden = popover.classList.contains("hidden");
         if (previousHidden) popover.classList.remove("hidden");
 
-        const gap = 12;
+        const desktopAnchor = window.innerWidth > 640 ? nodeList : null;
+        const desktopAnchorRect = desktopAnchor?.getBoundingClientRect();
+        const gap = desktopAnchorRect ? 35 : 12;
         const edge = 12;
         const toggleRect = toggle.getBoundingClientRect();
         const popRect = popover.getBoundingClientRect();
-        const leftSpace = toggleRect.left - gap - edge;
-        const rightSpace = window.innerWidth - toggleRect.right - gap - edge;
-        const preferLeft = leftSpace >= Math.min(popRect.width, 260) || leftSpace >= rightSpace;
-        let left = preferLeft ? toggleRect.left - popRect.width - gap : toggleRect.right + gap;
+        const anchorLeft = desktopAnchorRect ? desktopAnchorRect.left : toggleRect.left;
+        const anchorRight = desktopAnchorRect ? desktopAnchorRect.right : toggleRect.right;
+        const leftSpace = anchorLeft - gap - edge;
+        const rightSpace = window.innerWidth - anchorRight - gap - edge;
+        const preferLeft = desktopAnchorRect || leftSpace >= Math.min(popRect.width, 260) || leftSpace >= rightSpace;
+        let left = preferLeft ? anchorLeft - popRect.width - gap : anchorRight + gap;
         let top = toggleRect.top + toggleRect.height * 0.5 - popRect.height * 0.5;
 
         left = clamp(left, edge, window.innerWidth - popRect.width - edge);
@@ -5378,7 +6524,10 @@
 
       function attachColorPickers(root = document) {
         if (!colorOutsideHandlerBound) {
-          document.addEventListener("click", () => closeColorPopovers());
+          document.addEventListener("click", (event) => {
+            closeColorPopovers();
+            if (!paramFlyout.contains(event.target) && !nodeList.contains(event.target)) closeParamFlyout();
+          });
           window.addEventListener("resize", () => closeColorPopovers());
           colorOutsideHandlerBound = true;
         }
@@ -5403,6 +6552,7 @@
             const shouldOpen = popover.classList.contains("hidden");
             closeColorPopovers(popover);
             if (shouldOpen) {
+              closeParamFlyout();
               positionColorPopover(picker);
               popover.classList.remove("hidden");
             } else {
@@ -5413,6 +6563,7 @@
           alpha.addEventListener("click", (event) => {
             event.stopPropagation();
             closeColorPopovers();
+            closeParamFlyout();
             toggleUiColorAlpha(nodeId, key);
           });
 
@@ -5447,8 +6598,7 @@
         });
       }
 
-      function buildSourceImage() {
-        const maxSide = state.size;
+      function buildSourceImage(maxSide = state.size) {
         const aspect = Math.max(0.01, state.sourceAspect || 1);
         const width = aspect >= 1 ? maxSide : Math.max(1, Math.round(maxSide * aspect));
         const height = aspect >= 1 ? Math.max(1, Math.round(maxSide / aspect)) : maxSide;
@@ -6075,9 +7225,9 @@
         return reversed;
       }
 
-      function renderOutput() {
+      function renderOutput(renderSize = state.size) {
         if (!state.source) return;
-        const source = buildSourceImage();
+        const source = buildSourceImage(renderSize);
         const { data, width: w, height: h } = source;
         const baseMask = createMask(source);
         const roughMask = createRoughEdgeMask(baseMask, w, h, state.nodes.edge);
@@ -6236,12 +7386,12 @@
       }
 
       function renderAll(shouldRenderOutput = true) {
-        if (renderOutputTimer) {
-          window.clearTimeout(renderOutputTimer);
-          renderOutputTimer = 0;
-          renderFrameQueued = false;
-        }
+        cancelScheduledRenderOutput();
         app.classList.toggle("has-source", Boolean(state.source));
+        document.querySelectorAll("[data-export-png]").forEach((button) => {
+          button.disabled = !state.source;
+          button.setAttribute("aria-disabled", String(!state.source));
+        });
         renderPresets();
         renderNodeList();
         renderColorPanel();
@@ -6295,6 +7445,7 @@
         state.sourceType = type;
         state.sourceAspect = aspect || 1;
         state.sourceHasTransparency = type !== "pdf" && sourceHasTransparency(source, state.sourceAspect);
+        window.scrollTo(0, 0);
         invalidateSourceImageCache();
         sidePreviews.classList.add("has-preview");
         setInputStatus(state.sourceHasTransparency ? `${status} · 已识别透明轮廓` : status);
@@ -6337,13 +7488,14 @@
 
       fileInput.addEventListener("change", (event) => loadFile(event.target.files[0]));
       cameraFile.addEventListener("change", (event) => loadFile(event.target.files[0]));
+      mobileGalleryFile?.addEventListener("change", (event) => loadFile(event.target.files[0]));
       cameraButton.addEventListener("click", () => {
         cameraFile.value = "";
         cameraFile.click();
       });
       mobileInputButton?.addEventListener("click", () => {
-        fileInput.value = "";
-        fileInput.click();
+        mobileGalleryFile.value = "";
+        mobileGalleryFile.click();
       });
       mobileCameraButton?.addEventListener("click", () => {
         cameraFile.value = "";
@@ -6366,6 +7518,7 @@
       });
       function exportPng() {
         if (!state.source) return;
+        flushRenderOutput();
         const a = document.createElement("a");
         a.href = result.toDataURL("image/png");
         a.download = `graphic-texture-chain-${state.preset}.png`;
@@ -6390,7 +7543,9 @@
         positionParamFlyout();
         syncResultFit();
         syncMobileTopOffset();
+        scheduleMobileScrollSync();
       });
+      window.addEventListener("scroll", scheduleMobileScrollSync, { passive: true });
 
       renderAll(false);
     </script>
