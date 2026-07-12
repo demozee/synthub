@@ -3400,44 +3400,6 @@
           background: var(--mobile-bg);
         }
 
-        .mobile-preview-strip {
-          display: none;
-          grid-template-columns: 1fr 1fr;
-          margin: 0 -21px 28px;
-          background: #101014;
-        }
-
-        .app.has-source .mobile-preview-strip {
-          display: grid;
-        }
-
-        .mobile-mini {
-          position: relative;
-          min-height: 118px;
-          background: #151519;
-          overflow: hidden;
-        }
-
-        .mobile-mini h3 {
-          position: absolute;
-          left: 21px;
-          top: 10px;
-          z-index: 1;
-          margin: 0;
-          color: #f4f3ef;
-          font-size: 18px;
-          font-weight: 300;
-          line-height: 22px;
-          letter-spacing: -0.9px;
-        }
-
-        .mobile-mini canvas {
-          display: block;
-          width: 100%;
-          height: 118px;
-          object-fit: cover;
-        }
-
         .mobile-section {
           margin-top: 20px;
         }
@@ -3664,229 +3626,6 @@
           color: #f4f3ef;
         }
 
-        .mobile-color-wheel {
-          display: none;
-          margin: 22px -5px 0;
-          padding: 8px 0 0;
-        }
-
-        .mobile-color-wheel.open {
-          display: block;
-        }
-
-        .mobile-wheel-switches {
-          display: grid;
-          grid-template-columns: 48px minmax(0, 1fr) 48px;
-          align-items: center;
-          margin: 0 0 -22px;
-          pointer-events: none;
-        }
-
-        .mobile-wheel-switch {
-          position: relative;
-          z-index: 2;
-          display: grid;
-          place-items: center;
-          width: 48px;
-          height: 48px;
-          border: 0;
-          border-radius: 50%;
-          background: #202024;
-          color: #f4f3ef;
-          cursor: pointer;
-          font-family: var(--font-mono);
-          font-size: 16px;
-          font-weight: 600;
-          line-height: 1;
-          pointer-events: auto;
-        }
-
-        .mobile-wheel-switch::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          border-radius: 50%;
-          background: var(--switch-gradient);
-          z-index: -1;
-        }
-
-        .mobile-wheel-switch::after {
-          content: "";
-          position: absolute;
-          inset: 11px;
-          border-radius: 50%;
-          background: #202024;
-          z-index: -1;
-        }
-
-        .mobile-wheel-switch.active {
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        .mobile-wheel-wrap {
-          position: relative;
-          display: grid;
-          place-items: center;
-          width: min(320px, calc(100vw - 54px));
-          aspect-ratio: 1 / 1;
-          margin: 0 auto;
-        }
-
-        .mobile-wheel-ring {
-          position: absolute;
-          inset: 0;
-          border: 0;
-          border-radius: 50%;
-          background: var(--ring-gradient);
-          cursor: grab;
-          touch-action: none;
-        }
-
-        .mobile-wheel-ring:active {
-          cursor: grabbing;
-        }
-
-        .mobile-wheel-ring::after {
-          content: "";
-          position: absolute;
-          inset: 80px;
-          border-radius: 50%;
-          background: var(--mobile-bg);
-        }
-
-        .mobile-wheel-center {
-          position: relative;
-          z-index: 1;
-          display: grid;
-          place-items: center;
-          width: 152px;
-          height: 152px;
-          border-radius: 50%;
-          background: var(--mobile-bg);
-          color: var(--mobile-red);
-        }
-
-        .mobile-wheel-pointer {
-          position: absolute;
-          left: 50%;
-          top: 8px;
-          z-index: 3;
-          width: 5px;
-          height: 128px;
-          border-radius: 999px;
-          background: var(--mobile-red);
-          transform: translateX(-50%);
-          pointer-events: none;
-        }
-
-        .mobile-wheel-pointer::after {
-          content: "";
-          position: absolute;
-          left: 50%;
-          bottom: -12px;
-          width: 0;
-          height: 0;
-          border-left: 6px solid transparent;
-          border-right: 6px solid transparent;
-          border-bottom: 11px solid var(--mobile-acid);
-          transform: translateX(-50%);
-        }
-
-        .mobile-wheel-channel {
-          position: absolute;
-          top: 38px;
-          left: 0;
-          right: 0;
-          color: #f4f3ef;
-          font-family: var(--font-mono);
-          font-size: 14px;
-          font-weight: 600;
-          line-height: 18px;
-          text-align: center;
-        }
-
-        .mobile-current-mark {
-          width: 54px;
-          height: 58px;
-          margin-top: 10px;
-          color: var(--current-color);
-          filter: drop-shadow(0 3px 0 #050506);
-        }
-
-        .mobile-wheel-hex-wrap {
-          position: absolute;
-          left: 26px;
-          right: 26px;
-          bottom: 37px;
-          display: grid;
-          grid-template-columns: 16px minmax(0, 1fr);
-          align-items: center;
-          justify-content: center;
-          color: #f4f3ef;
-        }
-
-        .mobile-wheel-hex-wrap::after {
-          content: "";
-          position: absolute;
-          left: 40px;
-          right: 40px;
-          bottom: -14px;
-          height: 3px;
-          background: #050506;
-        }
-
-        .mobile-wheel-hex-prefix {
-          color: #77777f;
-          font-size: 16px;
-          line-height: 20px;
-          text-align: right;
-        }
-
-        .mobile-wheel-hex {
-          width: 88px;
-          height: 28px;
-          margin: 0 auto;
-          padding: 0;
-          border: 0;
-          border-radius: 0;
-          background: transparent;
-          color: #f4f3ef;
-          font-family: var(--font-mono);
-          font-size: 18px;
-          font-weight: 300;
-          line-height: 24px;
-          letter-spacing: -0.9px;
-          text-transform: uppercase;
-          text-align: left;
-          outline: 0;
-        }
-
-        .mobile-wheel-ticks {
-          position: absolute;
-          inset: 46px;
-          border-radius: 50%;
-          pointer-events: none;
-        }
-
-        .mobile-wheel-ticks span {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          width: 10px;
-          height: 2px;
-          background: #050506;
-          transform-origin: -32px 1px;
-        }
-
-        .mobile-wheel-ticks span:nth-child(1) { transform: rotate(0deg) translateX(68px); }
-        .mobile-wheel-ticks span:nth-child(2) { transform: rotate(45deg) translateX(68px); }
-        .mobile-wheel-ticks span:nth-child(3) { transform: rotate(90deg) translateX(68px); }
-        .mobile-wheel-ticks span:nth-child(4) { transform: rotate(135deg) translateX(68px); }
-        .mobile-wheel-ticks span:nth-child(5) { transform: rotate(180deg) translateX(68px); }
-        .mobile-wheel-ticks span:nth-child(6) { transform: rotate(225deg) translateX(68px); }
-        .mobile-wheel-ticks span:nth-child(7) { transform: rotate(270deg) translateX(68px); }
-        .mobile-wheel-ticks span:nth-child(8) { transform: rotate(315deg) translateX(68px); }
 
         .mobile-bottom-dock {
           position: fixed;
@@ -4044,7 +3783,7 @@
           --mobile-bg-chip: #b8cfdb;
           --mobile-page-width: min(390px, 100%);
           --mobile-preview-size: min(390px, 100vw);
-          --mobile-preview-height: var(--mobile-preview-size);
+          --mobile-preview-height: 520px;
         }
 
         html,
@@ -4321,7 +4060,7 @@
           height: var(--mobile-preview-height);
           margin: 0;
           overflow: hidden;
-          background: #f4f3ef;
+          background: var(--mobile-bg);
           place-items: center;
         }
 
@@ -4330,9 +4069,12 @@
         }
 
         #mobileResult {
+          position: absolute;
+          inset: 0;
           display: block;
           width: 100%;
           height: 100%;
+          object-fit: contain;
           background: transparent;
         }
 
@@ -4342,42 +4084,12 @@
           width: var(--mobile-page-width);
           max-width: 390px;
           margin: 0 auto;
-          padding: 10px 16px 22px;
+          padding: 15px 16px 22px;
           background: var(--mobile-bg);
         }
 
         .app.has-source .mobile-scroll {
-          padding-top: 8px;
-        }
-
-        .mobile-preview-strip {
-          grid-template-columns: 1fr 1fr;
-          align-items: start;
-          gap: 8px;
-          height: auto;
-          margin: 0 -16px 16px;
-          background: #0d0d11;
-        }
-
-        .mobile-mini {
-          min-width: 0;
-          min-height: 0;
-          background: #1d1d20;
-        }
-
-        .mobile-mini h3 {
-          left: 16px;
-          top: 10px;
-          font-size: 16px;
-          font-weight: 400;
-          line-height: 16px;
-          letter-spacing: -0.8px;
-        }
-
-        .mobile-mini canvas {
-          width: 100%;
-          height: auto;
-          object-fit: contain;
+          padding-top: 15px;
         }
 
         .mobile-section,
@@ -4385,8 +4097,9 @@
           margin-top: 0;
         }
 
-        .mobile-section + .mobile-section {
-          margin-top: 20px;
+        .mobile-section + .mobile-section,
+        .app.has-source .mobile-section + .mobile-section {
+          margin-top: 15px;
         }
 
         .mobile-section-title {
@@ -4462,11 +4175,15 @@
 
         .mobile-color-card {
           position: relative;
-          display: block;
+          display: grid;
+          grid-template-columns: 40px minmax(0, 1fr) 40px;
+          grid-template-rows: 17px 21px;
           height: 40px;
+          min-width: 0;
           overflow: hidden;
           border: 1px solid #050506;
           background: var(--mobile-card-dark);
+          cursor: default;
         }
 
         .mobile-color-card.active {
@@ -4474,56 +4191,65 @@
         }
 
         .mobile-color-label {
-          position: absolute;
-          top: 0;
-          left: 0;
-          display: block;
+          position: static;
+          grid-column: 1;
+          grid-row: 1 / 3;
+          align-self: stretch;
+          display: grid;
+          place-items: center;
           width: 40px;
-          height: 40px;
+          height: 38px;
           font-size: 20px;
           font-weight: 400;
-          line-height: 40px;
+          line-height: 38px;
           letter-spacing: -1px;
           text-align: center;
         }
 
         .mobile-color-hash {
-          position: absolute;
-          top: 3px;
-          left: 44px;
-          width: 8px;
+          position: static;
+          grid-column: 2;
+          grid-row: 1;
+          align-self: end;
+          min-width: 0;
+          padding-left: 4px;
           color: #515257;
           font-size: 12px;
           font-weight: 500;
-          line-height: 16px;
+          line-height: 14px;
           letter-spacing: -0.6px;
         }
 
         .mobile-color-value {
-          position: absolute;
-          top: 18px;
-          left: 44px;
+          position: static;
+          grid-column: 2;
+          grid-row: 2;
+          align-self: start;
           overflow: hidden;
-          width: 58px;
+          min-width: 0;
+          padding-left: 4px;
           color: #f4f3ef;
           font-size: 16px;
           font-weight: 400;
           line-height: 20px;
           letter-spacing: -0.8px;
+          white-space: nowrap;
         }
 
         .mobile-alpha-toggle {
-          position: absolute;
-          top: 0;
-          right: 0;
+          position: static;
+          grid-column: 3;
+          grid-row: 1 / 3;
+          align-self: stretch;
           width: 40px;
-          height: 40px;
+          height: 38px;
+          padding: 0;
           border: 0;
-          background: url("../assets/png-alpha-icon-figma.svg") center / 40px 40px no-repeat;
+          background: url("../assets/png-alpha-icon-figma.svg") center / 20px 20px no-repeat;
         }
 
         .mobile-alpha-toggle.active {
-          background: url("../assets/png-alpha-icon-figma.svg") center / 40px 40px no-repeat;
+          background: url("../assets/png-alpha-icon-figma.svg") center / 20px 20px no-repeat;
           filter: brightness(0) saturate(100%) invert(92%) sepia(30%) saturate(633%) hue-rotate(31deg) brightness(103%) contrast(102%);
         }
 
@@ -4568,239 +4294,6 @@
           display: none;
         }
 
-        .mobile-color-wheel {
-          position: relative;
-          display: none;
-          margin: 25px 0 0;
-          padding: 0;
-        }
-
-        .mobile-color-wheel.open {
-          display: block;
-        }
-
-        .mobile-wheel-switches {
-          position: absolute;
-          top: 5px;
-          left: 0;
-          right: 0;
-          z-index: 5;
-          display: flex;
-          justify-content: space-between;
-          margin: 0;
-          padding: 0;
-          pointer-events: none;
-        }
-
-        .mobile-wheel-switch {
-          width: 40px;
-          height: 40px;
-          font-size: 16px;
-          font-weight: 500;
-        }
-
-        .mobile-wheel-switch::after {
-          inset: 9px;
-          background: var(--mobile-bg);
-        }
-
-        .mobile-wheel-wrap {
-          width: min(350px, calc(100% - 8px));
-          height: auto;
-          aspect-ratio: 1 / 1;
-          margin: 0 auto;
-        }
-
-        .mobile-wheel-ring-clip {
-          position: absolute;
-          inset: 0;
-          overflow: hidden;
-          border-radius: 50%;
-        }
-
-        .mobile-wheel-ring {
-          --ring-rotation: 0deg;
-          transform: rotate(var(--ring-rotation));
-          transition: none;
-        }
-
-        .mobile-wheel-ring::before {
-          content: "";
-          position: absolute;
-          inset: 10px;
-          border-radius: 0;
-          background: url("../assets/mobile-wheel-hold-lines.svg") center / contain no-repeat;
-          opacity: 0;
-          pointer-events: none;
-          -webkit-mask: none;
-          mask: none;
-        }
-
-        .mobile-color-wheel.dragging .mobile-wheel-ring::before {
-          opacity: 1;
-        }
-
-        .mobile-wheel-ring::after {
-          inset: 80px;
-          background: var(--mobile-bg);
-        }
-
-        .mobile-wheel-center {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          display: block;
-          width: 190px;
-          height: 190px;
-          background: var(--mobile-bg);
-          transform: translate(-50%, -50%);
-        }
-
-        .mobile-wheel-pointer {
-          --pointer-height: min(110px, 28.205vw);
-          --pointer-overhang: min(10px, 2.564vw);
-          top: calc(-1 * var(--pointer-overhang));
-          box-sizing: border-box;
-          width: 4px;
-          height: var(--pointer-height);
-          border: 1px solid var(--mobile-red);
-          border-radius: 2px;
-          background: var(--pointer-color, var(--mobile-red));
-          box-shadow: 0 0 0 3px var(--mobile-bg);
-          opacity: 1;
-        }
-
-        .mobile-wheel-pointer::after {
-          width: 10px;
-          height: 10px;
-          top: calc(100% + 6px);
-          bottom: auto;
-          border: 0;
-          background: url("../assets/mobile-wheel-pointer.svg") center top / 8.66px 7.5px no-repeat;
-        }
-
-        .mobile-wheel-channel {
-          top: 38px;
-          font-size: 16px;
-          font-weight: 500;
-          line-height: 21px;
-        }
-
-        .mobile-current-mark {
-          position: absolute;
-          top: 70px;
-          left: 50%;
-          width: 50px;
-          height: 50px;
-          margin: 0;
-          color: var(--current-color);
-          transform: translateX(-50%);
-        }
-
-        .mobile-current-mark svg {
-          display: block;
-          width: 100%;
-          height: 100%;
-        }
-
-        .mobile-wheel-hex-wrap {
-          left: 0;
-          right: 0;
-          bottom: 33px;
-          display: block;
-          width: 190px;
-          height: 21px;
-        }
-
-        .mobile-wheel-hex-wrap::after {
-          left: 50%;
-          right: auto;
-          bottom: -11px;
-          width: 40px;
-          height: 2px;
-          transform: translateX(-50%);
-        }
-
-        .mobile-wheel-hex-wrap.hex-editing::after,
-        .mobile-wheel-hex-wrap:focus-within::after {
-          background: var(--mobile-acid);
-        }
-
-        .mobile-wheel-hex-prefix {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 12px;
-          height: 12px;
-          color: #515257;
-          font-size: 0;
-          line-height: 0;
-          transform: translate(-45px, -50%);
-        }
-
-        .mobile-wheel-hex-prefix svg {
-          display: block;
-          width: 12px;
-          height: 12px;
-        }
-
-        .mobile-wheel-hex-wrap.hex-editing .mobile-wheel-hex-prefix,
-        .mobile-wheel-hex-wrap:focus-within .mobile-wheel-hex-prefix {
-          color: var(--mobile-acid);
-        }
-
-        .mobile-wheel-hex {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          width: 58px;
-          height: 21px;
-          padding: 0;
-          border: 0 !important;
-          border-radius: 0 !important;
-          outline: 0 !important;
-          box-shadow: none !important;
-          background: transparent !important;
-          appearance: none;
-          -webkit-appearance: none;
-          caret-color: var(--mobile-acid);
-          font-size: 16px;
-          font-weight: 500;
-          line-height: 21px;
-          letter-spacing: 0;
-          text-align: center;
-          transform: translateX(-50%);
-          -webkit-user-select: text;
-          user-select: text;
-        }
-
-        .mobile-wheel-hex:focus,
-        .mobile-wheel-hex:focus-visible {
-          border: 0 !important;
-          outline: 0 !important;
-          box-shadow: none !important;
-        }
-
-        .mobile-wheel-ticks {
-          inset: 0;
-        }
-
-        .mobile-wheel-ticks span {
-          left: 50%;
-          top: 50%;
-          width: 1.5px;
-          height: 7px;
-          transform-origin: 50% 50%;
-        }
-
-        .mobile-wheel-ticks span:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg) translateY(-55px); }
-        .mobile-wheel-ticks span:nth-child(2) { transform: translate(-50%, -50%) rotate(45deg) translateY(-55px); }
-        .mobile-wheel-ticks span:nth-child(3) { transform: translate(-50%, -50%) rotate(90deg) translateY(-55px); }
-        .mobile-wheel-ticks span:nth-child(4) { transform: translate(-50%, -50%) rotate(135deg) translateY(-55px); }
-        .mobile-wheel-ticks span:nth-child(5) { transform: translate(-50%, -50%) rotate(180deg) translateY(-55px); }
-        .mobile-wheel-ticks span:nth-child(6) { transform: translate(-50%, -50%) rotate(225deg) translateY(-55px); }
-        .mobile-wheel-ticks span:nth-child(7) { transform: translate(-50%, -50%) rotate(270deg) translateY(-55px); }
-        .mobile-wheel-ticks span:nth-child(8) { transform: translate(-50%, -50%) rotate(315deg) translateY(-55px); }
 
         .mobile-bottom-dock {
           left: 50%;
@@ -4890,6 +4383,16 @@
             grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 62px;
           }
 
+          .mobile-color-value {
+            padding-left: 2px;
+            font-size: 14px;
+            letter-spacing: -0.7px;
+          }
+
+          .mobile-color-hash {
+            padding-left: 2px;
+          }
+
           .mobile-bottom-dock {
             grid-template-columns: minmax(0, 190fr) minmax(0, 160fr);
           }
@@ -4941,7 +4444,6 @@
       .mobile-color-card,
       .mobile-re-card,
       .mobile-alpha-toggle,
-      .mobile-wheel-switch,
       .mobile-dock-button {
         -webkit-tap-highlight-color: transparent;
         transition:
@@ -5017,10 +4519,8 @@
       .mobile-input-button:active,
       .mobile-camera-button:active,
       .mobile-preset:active,
-      .mobile-color-card:active,
       .mobile-re-card:active,
       .mobile-alpha-toggle:active,
-      .mobile-wheel-switch:active,
       .mobile-dock-button:not(:disabled):active {
         transform: translateY(1px) scale(0.99);
         transition-duration: var(--motion-fast);
@@ -5188,17 +4688,6 @@
         </div>
 
         <div class="mobile-scroll">
-          <div class="mobile-preview-strip" id="mobilePreviewStrip">
-            <div class="mobile-mini">
-              <h3>source</h3>
-              <canvas id="mobileSourceMini" width="320" height="320"></canvas>
-            </div>
-            <div class="mobile-mini">
-              <h3>mask</h3>
-              <canvas id="mobileMaskMini" width="320" height="320"></canvas>
-            </div>
-          </div>
-
           <section class="mobile-section">
             <h2 class="mobile-section-title">Presets <span>预设</span></h2>
             <div class="mobile-preset-grid" id="mobilePresetGrid"></div>
@@ -5314,9 +4803,6 @@
         nodes: clone(presets.thermalMap.nodes),
         outputReverse: false,
         flyoutOpen: false,
-        mobileColorTarget: "fg",
-        mobileColorChannel: "hue",
-        mobileColorOpen: false,
       };
 
       const fileInput = document.getElementById("file");
@@ -5350,10 +4836,6 @@
       const mobileStatus = document.getElementById("mobileStatus");
       const mobileResult = document.getElementById("mobileResult");
       const mobileResultCtx = mobileResult.getContext("2d", { willReadFrequently: true });
-      const mobileSourceMini = document.getElementById("mobileSourceMini");
-      const mobileSourceMiniCtx = mobileSourceMini.getContext("2d", { willReadFrequently: true });
-      const mobileMaskMini = document.getElementById("mobileMaskMini");
-      const mobileMaskMiniCtx = mobileMaskMini.getContext("2d", { willReadFrequently: true });
       const mobilePresetGrid = document.getElementById("mobilePresetGrid");
       const mobileColorPanel = document.getElementById("mobileColorPanel");
       const mobileRandomize = document.getElementById("mobileRandomize");
@@ -5367,8 +4849,6 @@
       let colorOutsideHandlerBound = false;
       let sourceImageCache = null;
       let mobileScrollFrame = 0;
-      let mobileWheelFrame = 0;
-      let pendingMobileWheelHsv = null;
 
       if (window.pdfjsLib) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -5453,10 +4933,7 @@
         if (!mobileFixedTop) return;
         requestAnimationFrame(() => {
           const previewSize = Math.ceil(mobileFixedTop.getBoundingClientRect().width);
-          const resultAspect = result.width && result.height
-            ? result.width / result.height
-            : Math.max(0.01, state.sourceAspect || 1);
-          const previewHeight = Math.ceil(previewSize / Math.max(1, resultAspect));
+          const previewHeight = 520;
           app.style.setProperty("--mobile-preview-size", `${previewSize}px`);
           app.style.setProperty("--mobile-preview-height", `${previewHeight}px`);
           const topHeight = Math.ceil(mobileFixedTop.getBoundingClientRect().height);
@@ -5509,16 +4986,7 @@
 
       function syncMobileResult() {
         if (!mobileResult || !mobileResultCtx || !result.width || !result.height) return;
-        const aspect = result.width / result.height;
-        if (aspect >= 1) {
-          copyCanvas(result, mobileResult, mobileResultCtx);
-          return;
-        }
-        const side = result.height;
-        if (mobileResult.width !== side) mobileResult.width = side;
-        if (mobileResult.height !== side) mobileResult.height = side;
-        mobileResultCtx.clearRect(0, 0, side, side);
-        mobileResultCtx.drawImage(result, (side - result.width) / 2, 0);
+        copyCanvas(result, mobileResult, mobileResultCtx);
       }
 
       function lerp(a, b, t) {
@@ -6062,60 +5530,20 @@
         syncReverseToggle();
       }
 
-      function mobileColorDescriptor(target = state.mobileColorTarget) {
+      function mobileColorDescriptor(target) {
         return target === "bg"
           ? { nodeId: "color", key: "bg", label: "BG", alphaLabel: "背景透明" }
           : { nodeId: "ink", key: "color", label: "FG", alphaLabel: "图形透明" };
       }
 
-      function getMobileColor(target = state.mobileColorTarget) {
+      function getMobileColor(target) {
         const { nodeId, key } = mobileColorDescriptor(target);
         return state.nodes[nodeId][key];
-      }
-
-      function setMobileColor(target, value) {
-        const { nodeId, key } = mobileColorDescriptor(target);
-        const clean = value.startsWith("#") ? value : `#${value}`;
-        state.nodes[nodeId][key] = clean;
-        if (nodeId === "ink" && key === "color") syncGraphicColor(clean);
       }
 
       function getMobileColorAlpha(target) {
         const { nodeId, key } = mobileColorDescriptor(target);
         return getUiColorAlpha(nodeId, key);
-      }
-
-      function channelLabel(channel = state.mobileColorChannel) {
-        if (channel === "sat") return "SAT";
-        if (channel === "val") return "VAL";
-        return "HUE";
-      }
-
-      function mobileColorHsv() {
-        return rgbToHsv(hexToRgb(getMobileColor()));
-      }
-
-      function colorStop(rgb) {
-        return rgbToHex(rgb);
-      }
-
-      function mobileRingGradient(hsv, channel) {
-        if (channel === "hue") {
-          return "conic-gradient(from 0deg, #ff2102 0deg, #f5ff01 65.7692deg, #02ff02 122.885deg, #00eeff 183.462deg, #0015ff 247.5deg, #ff02fb 308.077deg, #ff0010 360deg)";
-        }
-        const low = channel === "sat"
-          ? colorStop(hsvToRgb({ h: hsv.h, s: 0, v: hsv.v }))
-          : colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 0 }));
-        const high = channel === "sat"
-          ? colorStop(hsvToRgb({ h: hsv.h, s: 1, v: hsv.v }))
-          : colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 1 }));
-        return `linear-gradient(135deg, ${low} 0%, ${high} 100%)`;
-      }
-
-      function mobileRingRotation(hsv, channel) {
-        if (channel === "hue") return -hsv.h;
-        const value = channel === "sat" ? hsv.s : hsv.v;
-        return -value * 360;
       }
 
       function mobileColorTextColor(hex) {
@@ -6124,149 +5552,10 @@
         return luminance > 0.62 ? "#202024" : "#f4f3ef";
       }
 
-      function mobileSwitchGradient(channel) {
-        const hsv = mobileColorHsv();
-        if (channel === "hue") {
-          return "conic-gradient(#ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)";
-        }
-        if (channel === "sat") {
-          return "linear-gradient(135deg, #f4f3ef 0%, #050506 100%)";
-        }
-        const dark = colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 0 }));
-        const bright = colorStop(hsvToRgb({ h: hsv.h, s: hsv.s, v: 1 }));
-        return `linear-gradient(135deg, ${dark}, ${bright})`;
-      }
-
-      function mobileCurrentMark() {
-        return `
-          <svg viewBox="0 0 54 54" aria-hidden="true">
-            <path d="M32.375 1V14.0234L41.5879 4.81055L49.1895 12.4121L39.9766 21.625H53V32.375H39.9766L49.1895 41.5879L41.5879 49.1895L32.375 39.9766V53H21.625V39.9766L12.4121 49.1895L4.81055 41.5879L14.0234 32.375H1V21.625H14.0234L4.81055 12.4121L12.4121 4.81055L21.625 14.0234V1H32.375Z" fill="currentColor" stroke="#050506" stroke-width="2" />
-          </svg>
-        `;
-      }
-
-      function syncMobileColorUi() {
-        if (!mobileColorPanel) return;
-        const hsv = mobileColorHsv();
-        const currentHex = rgbToHex(hsvToRgb(hsv)).replace("#", "").toUpperCase();
-        const currentColor = `#${currentHex}`;
-        const ring = mobileColorPanel.querySelector("[data-mobile-wheel-ring]");
-        const wheel = mobileColorPanel.querySelector(".mobile-color-wheel");
-        const channel = mobileColorPanel.querySelector("[data-mobile-channel-label]");
-        const hex = mobileColorPanel.querySelector("[data-mobile-hex]");
-        const mark = mobileColorPanel.querySelector(".mobile-current-mark");
-        const pointer = mobileColorPanel.querySelector(".mobile-wheel-pointer");
-
-        mobileColorPanel.querySelectorAll("[data-mobile-color-target]").forEach((card) => {
-          const target = card.dataset.mobileColorTarget;
-          const alpha = getMobileColorAlpha(target);
-          const value = getMobileColor(target).replace("#", "").toUpperCase();
-          card.classList.toggle("active", target === state.mobileColorTarget && state.mobileColorOpen);
-          card.classList.toggle("transparent", alpha <= 0);
-          const readout = card.querySelector("[data-mobile-color-value]");
-          const alphaButton = card.querySelector("[data-mobile-alpha]");
-          const label = card.querySelector(".mobile-color-label");
-          if (label) {
-            label.style.backgroundColor = getMobileColor(target);
-            label.style.color = mobileColorTextColor(getMobileColor(target));
-          }
-          if (readout) readout.textContent = value;
-          if (alphaButton) alphaButton.classList.toggle("active", alpha <= 0);
-        });
-
-        mobileColorPanel.querySelectorAll("[data-mobile-channel]").forEach((button) => {
-          const itemChannel = button.dataset.mobileChannel;
-          button.classList.toggle("active", itemChannel === state.mobileColorChannel);
-          button.style.setProperty("--switch-gradient", mobileSwitchGradient(itemChannel));
-        });
-
-        if (wheel) wheel.classList.toggle("open", state.mobileColorOpen);
-        if (ring) {
-          ring.style.setProperty("--ring-gradient", mobileRingGradient(hsv, state.mobileColorChannel));
-          ring.style.setProperty("--ring-rotation", `${mobileRingRotation(hsv, state.mobileColorChannel)}deg`);
-        }
-        if (channel) channel.textContent = channelLabel();
-        if (hex && document.activeElement !== hex) hex.value = currentHex;
-        if (mark) {
-          mark.style.setProperty("--current-color", currentColor);
-          mark.style.color = currentColor;
-        }
-        if (pointer) pointer.style.setProperty("--pointer-color", currentColor);
-      }
-
-      function scrollMobileWheelIntoView() {
-        if (!mobileColorPanel || window.innerWidth > 640) return;
-        const wheel = mobileColorPanel.querySelector(".mobile-color-wheel");
-        if (!wheel || !wheel.classList.contains("open")) return;
-        requestAnimationFrame(() => {
-          wheel.scrollIntoView({ block: "center", inline: "nearest", behavior: "smooth" });
-        });
-      }
-
-      function setMobileColorFromHsv(next, shouldRenderOutput = false) {
-        const hsv = mobileColorHsv();
-        const updated = {
-          h: Number(next.h ?? hsv.h),
-          s: clamp(Number(next.s ?? hsv.s), 0, 1),
-          v: clamp(Number(next.v ?? hsv.v), 0, 1),
-        };
-        updated.h = ((updated.h % 360) + 360) % 360;
-        setMobileColor(state.mobileColorTarget, rgbToHex(hsvToRgb(updated)));
-        syncMobileColorUi();
-        if (shouldRenderOutput) scheduleColorRenderOutput();
-      }
-
-      function queueMobileWheelHsv(next) {
-        pendingMobileWheelHsv = next;
-        if (mobileWheelFrame) return;
-        mobileWheelFrame = requestAnimationFrame(() => {
-          mobileWheelFrame = 0;
-          const update = pendingMobileWheelHsv;
-          pendingMobileWheelHsv = null;
-          if (update) setMobileColorFromHsv(update, false);
-        });
-      }
-
-      function commitMobileWheelHsv() {
-        if (mobileWheelFrame) {
-          cancelAnimationFrame(mobileWheelFrame);
-          mobileWheelFrame = 0;
-        }
-        const update = pendingMobileWheelHsv;
-        pendingMobileWheelHsv = null;
-        if (update) setMobileColorFromHsv(update, false);
-      }
-
-      function angleFromEvent(event, element) {
-        const rect = element.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = event.clientX - cx;
-        const dy = event.clientY - cy;
-        return (Math.atan2(dx, -dy) * 180 / Math.PI + 360) % 360;
-      }
-
       function bindMobileColorPanel() {
         if (!mobileColorPanel) return;
-        mobileColorPanel.querySelectorAll("[data-mobile-color-target]").forEach((card) => {
-          const activate = () => {
-            state.mobileColorTarget = card.dataset.mobileColorTarget;
-            state.mobileColorOpen = true;
-            syncMobileColorUi();
-            scrollMobileWheelIntoView();
-          };
-          card.addEventListener("click", activate);
-          card.addEventListener("keydown", (event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              activate();
-            }
-          });
-        });
-
         mobileColorPanel.querySelectorAll("[data-mobile-alpha]").forEach((button) => {
-          button.addEventListener("click", (event) => {
-            event.stopPropagation();
+          button.addEventListener("click", () => {
             const { nodeId, key } = mobileColorDescriptor(button.dataset.mobileAlpha);
             toggleUiColorAlpha(nodeId, key);
           });
@@ -6276,127 +5565,29 @@
           state.outputReverse = !state.outputReverse;
           renderAll();
         });
-
-        mobileColorPanel.querySelectorAll("[data-mobile-channel]").forEach((button) => {
-          button.addEventListener("click", () => {
-            state.mobileColorChannel = button.dataset.mobileChannel;
-            state.mobileColorOpen = true;
-            renderMobileColorPanel();
-            scrollMobileWheelIntoView();
-          });
-        });
-
-        const ring = mobileColorPanel.querySelector("[data-mobile-wheel-ring]");
-        if (ring) {
-          const wheel = ring.closest(".mobile-color-wheel");
-          const updateFromDrag = (event) => {
-            const startAngle = Number(ring.dataset.startAngle || 0);
-            const startValue = Number(ring.dataset.startValue || 0);
-            const angle = angleFromEvent(event, ring);
-            const delta = ((angle - startAngle + 540) % 360) - 180;
-            if (state.mobileColorChannel === "hue") {
-              queueMobileWheelHsv({ h: startValue - delta });
-            } else if (state.mobileColorChannel === "sat") {
-              queueMobileWheelHsv({ s: startValue - delta / 360 });
-            } else {
-              queueMobileWheelHsv({ v: startValue - delta / 360 });
-            }
-          };
-
-          const finishDrag = () => {
-            commitMobileWheelHsv();
-            delete ring.dataset.dragging;
-            wheel?.classList.remove("dragging");
-            flushRenderOutput();
-          };
-
-          ring.addEventListener("pointerdown", (event) => {
-            event.preventDefault();
-            const hsv = mobileColorHsv();
-            ring.setPointerCapture(event.pointerId);
-            ring.dataset.startAngle = String(angleFromEvent(event, ring));
-            ring.dataset.startValue = String(
-              state.mobileColorChannel === "hue" ? hsv.h : state.mobileColorChannel === "sat" ? hsv.s : hsv.v
-            );
-            ring.dataset.dragging = "true";
-            wheel?.classList.add("dragging");
-          });
-          ring.addEventListener("pointermove", (event) => {
-            if (ring.dataset.dragging === "true") updateFromDrag(event);
-          });
-          ring.addEventListener("pointerup", finishDrag);
-          ring.addEventListener("pointercancel", finishDrag);
-        }
-
-        const hex = mobileColorPanel.querySelector("[data-mobile-hex]");
-        if (hex) {
-          const hexWrap = hex.closest(".mobile-wheel-hex-wrap");
-          hex.addEventListener("focus", () => hexWrap?.classList.add("hex-editing"));
-          hex.addEventListener("blur", () => hexWrap?.classList.remove("hex-editing"));
-          hex.addEventListener("input", () => {
-            const clean = hex.value.replace(/[^0-9a-fA-F]/g, "").slice(0, 6).toUpperCase();
-            hex.value = clean;
-            if (clean.length === 3 || clean.length === 6) {
-              setMobileColor(state.mobileColorTarget, `#${clean}`);
-              syncMobileColorUi();
-              scheduleColorRenderOutput();
-            }
-          });
-          hex.addEventListener("change", flushColorRenderOutput);
-        }
       }
 
       function renderMobileColorPanel() {
         if (!mobileColorPanel) return;
-        const channels = ["hue", "sat", "val"];
-        const otherChannels = channels.filter((item) => item !== state.mobileColorChannel);
         mobileColorPanel.innerHTML = `
           <div class="mobile-color-row">
             ${["fg", "bg"].map((target) => {
               const descriptor = mobileColorDescriptor(target);
               const alpha = getMobileColorAlpha(target);
+              const color = getMobileColor(target);
               return `
-                <div class="mobile-color-card${target === state.mobileColorTarget && state.mobileColorOpen ? " active" : ""}${alpha <= 0 ? " transparent" : ""}" data-mobile-color-target="${target}" role="button" tabindex="0">
-                  <span class="mobile-color-label">${descriptor.label}</span>
+                <div class="mobile-color-card${alpha <= 0 ? " transparent" : ""}" data-mobile-color-target="${target}">
+                  <span class="mobile-color-label" style="background-color:${color};color:${mobileColorTextColor(color)}">${descriptor.label}</span>
                   <span class="mobile-color-hash">#</span>
-                  <span class="mobile-color-value" data-mobile-color-value>${getMobileColor(target).replace("#", "").toUpperCase()}</span>
+                  <span class="mobile-color-value">${color.replace("#", "").toUpperCase()}</span>
                   <button class="mobile-alpha-toggle${alpha <= 0 ? " active" : ""}" type="button" data-mobile-alpha="${target}" aria-label="${descriptor.alphaLabel}"></button>
                 </div>
               `;
             }).join("")}
             <button class="mobile-re-card${state.outputReverse ? " active" : ""}" type="button" data-mobile-re aria-label="Reverse mask" aria-pressed="${state.outputReverse}"></button>
           </div>
-          <div class="mobile-color-wheel${state.mobileColorOpen ? " open" : ""}">
-            <div class="mobile-wheel-switches">
-              <button class="mobile-wheel-switch" type="button" data-mobile-channel="${otherChannels[0]}">${channelLabel(otherChannels[0]).slice(0, 1)}</button>
-              <span></span>
-              <button class="mobile-wheel-switch" type="button" data-mobile-channel="${otherChannels[1]}">${channelLabel(otherChannels[1]).slice(0, 1)}</button>
-            </div>
-            <div class="mobile-wheel-wrap">
-              <div class="mobile-wheel-ring-clip">
-                <div class="mobile-wheel-ring" data-mobile-wheel-ring></div>
-              </div>
-              <div class="mobile-wheel-pointer" aria-hidden="true"></div>
-              <div class="mobile-wheel-center">
-                <div class="mobile-wheel-channel" data-mobile-channel-label>${channelLabel()}</div>
-                <div class="mobile-wheel-ticks" aria-hidden="true">
-                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <div class="mobile-current-mark">${mobileCurrentMark()}</div>
-                <label class="mobile-wheel-hex-wrap">
-                  <span class="mobile-wheel-hex-prefix" aria-hidden="true">
-                    <svg viewBox="0 0 12 12">
-                      <path d="M8.49047 3.51947L4.971 0L1.45153 3.51947C0.477216 4.49379 0 5.76636 0 7.03894V11.662L3.04225 8.61972C3.74814 7.91384 3.34051 6.56172 3.91715 5.98509C4.50373 5.39851 5.44822 5.39851 6.02486 5.98509C6.61143 6.57167 6.61143 7.51616 6.02486 8.09279C5.43828 8.67937 4.09611 8.27175 3.39022 8.96769L0.34797 12H4.971C6.24358 12 7.51616 11.5128 8.49047 10.5485L12.0099 7.029L8.49047 3.50953V3.51947Z" fill="currentColor" />
-                    </svg>
-                  </span>
-                  <input class="mobile-wheel-hex" data-mobile-hex inputmode="text" autocapitalize="characters" spellcheck="false" value="${getMobileColor().replace("#", "").toUpperCase()}" aria-label="Hex color" />
-                </label>
-              </div>
-            </div>
-          </div>
         `;
         bindMobileColorPanel();
-        syncMobileColorUi();
       }
 
       function renderMobileEffects() {
@@ -6631,7 +5822,6 @@
         } else {
           drawContain(sourceMiniCtx, state.source, aspect, miniWidth, miniHeight, "#ffffff");
         }
-        copyCanvas(sourceMini, mobileSourceMini, mobileSourceMiniCtx);
         const imageData = workCtx.getImageData(0, 0, width, height);
         sourceImageCache = {
           source: state.source,
@@ -6826,7 +6016,6 @@
           }
         }
         maskMiniCtx.putImageData(image, 0, 0);
-        copyCanvas(maskMini, mobileMaskMini, mobileMaskMiniCtx);
       }
 
       function lumaAt(data, w, h, x, y) {
