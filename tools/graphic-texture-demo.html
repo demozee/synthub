@@ -428,6 +428,12 @@
         line-height: 1.6;
       }
 
+      @media (min-width: 641px) {
+        .app.has-source .note {
+          display: none;
+        }
+      }
+
       .workspace {
         display: block;
         min-height: 0;
@@ -456,6 +462,335 @@
         max-height: 100%;
         object-fit: contain;
         background: transparent;
+      }
+
+      .processed-video {
+        display: none;
+        width: var(--fit-width, auto);
+        height: var(--fit-height, auto);
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        background: transparent;
+      }
+
+      .app.video-cache-ready .processed-video {
+        display: block;
+      }
+
+      .app.video-cache-ready .result {
+        display: none;
+      }
+
+      .video-metrics {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        z-index: 6;
+        display: none;
+        width: 140px;
+      }
+
+      .app.has-video .video-metrics {
+        display: grid;
+        gap: 10px;
+      }
+
+      .video-metric {
+        position: relative;
+        width: 140px;
+        height: 50px;
+        border: 1px solid #daddE7;
+        border-radius: 8px;
+        background: #f5f5f5;
+        color: #27272d;
+        font-family: var(--font-mono);
+      }
+
+      .video-metric-value {
+        position: absolute;
+        top: 3px;
+        right: 30px;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 26px;
+        letter-spacing: 0;
+      }
+
+      .video-metric-unit {
+        position: absolute;
+        top: 14px;
+        right: 8px;
+        color: #9296a0;
+        font-size: 10px;
+        font-weight: 300;
+        line-height: 13px;
+        letter-spacing: 0;
+      }
+
+      .video-metric-label {
+        position: absolute;
+        right: 8px;
+        bottom: 4px;
+        color: #9296a0;
+        font-size: 10px;
+        font-weight: 300;
+        line-height: 13px;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .video-metric.resolution .video-metric-value {
+        right: 30px;
+      }
+
+      .video-metric.resolution .video-metric-unit {
+        right: 8px;
+      }
+
+      .video-process-button {
+        position: relative;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 304px;
+        height: 60px;
+        margin-top: 32px;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid var(--yellow);
+        border-radius: 0;
+        background: #1a1a1d;
+        color: var(--yellow);
+        font-family: var(--font-mono);
+        font-size: 30px;
+        font-weight: 300;
+        line-height: 39px;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          transform var(--motion-standard, 180ms) var(--motion-ease, ease),
+          background-color var(--motion-standard, 180ms) var(--motion-ease, ease),
+          border-color var(--motion-standard, 180ms) var(--motion-ease, ease),
+          color var(--motion-standard, 180ms) var(--motion-ease, ease);
+        isolation: isolate;
+      }
+
+      .app.has-video .video-process-button {
+        display: flex;
+      }
+
+      .video-process-value {
+        position: relative;
+        z-index: 1;
+        display: none;
+        flex: 0 0 41px;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 31px;
+        text-align: left;
+      }
+
+      .video-process-label {
+        position: relative;
+        z-index: 1;
+        display: block;
+      }
+
+      .video-process-button.has-progress {
+        justify-content: flex-start;
+        gap: 12px;
+        padding-left: 23px;
+      }
+
+      .video-process-button.has-progress .video-process-value {
+        display: block;
+      }
+
+      .video-process-button::before {
+        position: absolute;
+        inset: 0;
+        width: var(--render-progress, 0%);
+        background: rgba(237, 255, 135, 0.16);
+        content: "";
+        pointer-events: none;
+        transition: width 160ms linear;
+        z-index: 0;
+      }
+
+      .video-process-button:disabled {
+        cursor: default;
+      }
+
+      .video-process-button.is-ready {
+        border-color: var(--yellow);
+        background: #222227;
+        color: var(--yellow);
+      }
+
+      .video-process-button.is-processing {
+        border-color: var(--yellow);
+        background: #1a1a1d;
+        color: var(--yellow);
+      }
+
+      .video-process-button.is-error {
+        border-color: #87e3ff;
+        background: #222227;
+        color: #87e3ff;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .video-process-button:not(:disabled):hover {
+          transform: translateY(-1px);
+        }
+      }
+
+      .video-process-button:not(:disabled):active {
+        transform: translateY(1px) scale(0.99);
+      }
+
+      .video-timeline {
+        position: absolute;
+        left: 50%;
+        bottom: 20px;
+        display: none;
+        grid-template-columns: 60px minmax(0, 570px) 140px;
+        width: min(770px, calc(100% - 80px));
+        height: 50px;
+        background: #1a1a1d;
+        color: var(--paper);
+        transform: translateX(-50%);
+        z-index: 4;
+      }
+
+      .app.has-video .video-timeline {
+        display: grid;
+      }
+
+      .video-play-toggle {
+        position: relative;
+        width: 60px;
+        height: 50px;
+        padding: 0;
+        border: 0;
+        background: #1a1a1d;
+        color: var(--paper);
+        cursor: pointer;
+      }
+
+      .video-play-toggle::before,
+      .video-play-toggle::after {
+        content: "";
+        position: absolute;
+        top: 13px;
+        width: 5px;
+        height: 24px;
+        background: currentColor;
+        transition: transform var(--motion-standard, 180ms) var(--motion-ease, ease), opacity 100ms linear;
+      }
+
+      .video-play-toggle::before {
+        left: 20px;
+      }
+
+      .video-play-toggle::after {
+        right: 20px;
+      }
+
+      .video-play-toggle.is-paused::before {
+        top: 14px;
+        left: 23px;
+        width: 0;
+        height: 0;
+        border-top: 11px solid transparent;
+        border-bottom: 11px solid transparent;
+        border-left: 18px solid currentColor;
+        background: transparent;
+      }
+
+      .video-play-toggle.is-paused::after {
+        opacity: 0;
+      }
+
+      .video-progress-wrap {
+        display: grid;
+        align-items: center;
+        min-width: 0;
+        padding: 0 20px;
+        background: #27272a;
+      }
+
+      #videoProgress {
+        --video-progress: 0%;
+        display: block;
+        width: 100%;
+        height: 30px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        appearance: none;
+        background: transparent;
+        cursor: ew-resize;
+      }
+
+      #videoProgress::-webkit-slider-runnable-track {
+        height: 6px;
+        border: 0;
+        background: linear-gradient(to right, var(--yellow) 0 var(--video-progress), #555 0 100%);
+      }
+
+      #videoProgress::-webkit-slider-thumb {
+        width: 12px;
+        height: 30px;
+        margin-top: -12px;
+        border: 0;
+        border-radius: 6px;
+        appearance: none;
+        background: radial-gradient(circle, var(--yellow) 0 3px, #fff 3.5px 100%);
+      }
+
+      #videoProgress::-moz-range-track {
+        height: 6px;
+        border: 0;
+        background: #555;
+      }
+
+      #videoProgress::-moz-range-progress {
+        height: 6px;
+        background: var(--yellow);
+      }
+
+      #videoProgress::-moz-range-thumb {
+        width: 12px;
+        height: 30px;
+        border: 0;
+        border-radius: 6px;
+        background: radial-gradient(circle, var(--yellow) 0 3px, #fff 3.5px 100%);
+      }
+
+      .video-time {
+        display: grid;
+        place-items: center;
+        min-width: 0;
+        background: #1a1a1d;
+        color: var(--paper);
+        font-family: var(--font-mono);
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 21px;
+        letter-spacing: -0.05em;
+        white-space: nowrap;
+      }
+
+      .video-source {
+        position: fixed;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
       }
 
       .node-list {
@@ -2574,6 +2909,10 @@
           border-left-color: #27272d;
         }
 
+        .side-scroll {
+          display: block;
+        }
+
         .brand {
           min-height: 140px;
           padding: 36px 35px 36px 36px;
@@ -2588,6 +2927,14 @@
 
         .panel {
           padding: 23px 28px 24px;
+        }
+
+        .side-scroll > .panel:first-child {
+          padding-bottom: 0;
+        }
+
+        .side-scroll > .panel + .panel {
+          padding-top: 32px;
         }
 
         .right .panel {
@@ -2660,20 +3007,26 @@
           margin-top: 23px;
           padding-left: 17px;
           color: #e5e5e5;
-          font-size: 15px;
+          font-size: 13px;
           font-weight: 300;
-          line-height: 19px;
-          letter-spacing: -0.75px;
+          line-height: 18px;
+          letter-spacing: -0.65px;
         }
 
         #inputStatus.drop-sub span {
           color: #e5e5e5;
+          flex-basis: 10px;
+          width: 10px;
+          margin-right: 11px;
+          font-size: 16px;
+          line-height: 18px;
         }
 
         .side-previews {
           grid-template-columns: 148px 148px;
+          align-items: start;
           gap: 8px;
-          margin-top: 34px;
+          margin-top: 32px;
         }
 
         .side-preview {
@@ -2692,12 +3045,14 @@
 
         .side-preview canvas {
           display: none;
-          height: 128px;
+          width: 100%;
+          height: auto;
+          object-fit: contain;
           background: var(--panel-card);
         }
 
         .side-previews.has-preview .side-preview {
-          grid-template-rows: 40px 128px;
+          grid-template-rows: 40px auto;
         }
 
         .side-previews.has-preview .side-preview canvas {
@@ -2710,20 +3065,18 @@
         }
 
         .preset {
-          display: grid;
-          grid-template-columns: 20px minmax(0, 1fr);
-          align-items: start;
-          column-gap: 8px;
+          position: relative;
+          display: block;
           width: 148px;
           min-height: 60px;
           height: 60px;
-          padding: 13px 8px 8px;
+          padding: 10px 8px 8px 40px;
           background: var(--panel-card);
           color: #f4f3ef;
-          font-size: 13px;
+          font-size: 16px;
           font-weight: 300;
-          line-height: 16px;
-          letter-spacing: -0.65px;
+          line-height: 20px;
+          letter-spacing: -0.8px;
         }
 
         .preset:hover {
@@ -2738,17 +3091,30 @@
         }
 
         .preset-icon {
-          display: block;
+          position: absolute;
+          left: 10px;
+          top: 15px;
+          display: grid;
+          place-items: center;
           width: 20px;
           height: 20px;
-          margin-top: 1px;
+          margin: 0;
+          overflow: visible;
         }
 
         .preset-icon img {
           display: block;
+          max-width: 20px;
+          max-height: 20px;
           width: 20px;
           height: 20px;
           object-fit: contain;
+          object-position: center;
+          transform: none;
+        }
+
+        .preset:nth-child(4) .preset-icon {
+          left: 8px;
         }
 
         .preset-label {
@@ -2758,10 +3124,10 @@
         }
 
         .preset small {
-          margin-top: 2px;
+          margin-top: 4px;
           color: var(--muted);
           font-size: 12px;
-          line-height: 16px;
+          line-height: 18px;
           letter-spacing: 0.04em;
           opacity: 1;
           white-space: nowrap;
@@ -2779,14 +3145,14 @@
           justify-content: center;
           width: 304px;
           height: 60px;
-          margin-top: 20px;
+          margin-top: 8px;
           border: 1px solid #000;
           background: var(--panel-card);
           color: #f4f3ef;
-          font-size: 26px;
+          font-size: 30px;
           font-weight: 300;
-          line-height: 34px;
-          letter-spacing: -1.3px;
+          line-height: 39px;
+          letter-spacing: -1.5px;
         }
 
         #randomize.randomize-button::before {
@@ -2804,17 +3170,20 @@
         }
 
         .powered-by {
-          min-height: 150px;
-          margin-top: 330px;
-          padding: 31px 30px;
+          box-sizing: border-box;
+          min-height: 100px;
+          height: 100px;
+          margin-top: 96px;
+          padding: 19px 28px;
           background: #1b1b1f;
         }
 
         .powered-by img {
           display: block;
-          width: 300px;
-          height: 88px;
+          width: 210px;
+          height: 62px;
           object-fit: contain;
+          object-position: left center;
         }
 
         .main {
@@ -4399,6 +4768,412 @@
         }
       }
 
+      /* Mobile live camera flow: Figma nodes 4395:2657, 4659:107, 4659:3,
+         4395:3843, 4759:742, 4602:3991 and 4805:50. */
+      @media (max-width: 640px) {
+        .mobile-camera-layer {
+          position: absolute;
+          inset: 0;
+          z-index: 4;
+          display: none;
+          overflow: hidden;
+          pointer-events: none;
+        }
+
+        .app[class*="mobile-capture-"] .mobile-camera-layer {
+          display: block;
+        }
+
+        .app.mobile-camera-session .mobile-hero,
+        .app.mobile-camera-session .mobile-input-section {
+          display: none;
+        }
+
+        .app.mobile-camera-session .mobile-fixed-top {
+          --mobile-collapse-offset: 0px !important;
+          height: var(--mobile-preview-height);
+          transform: translate3d(-50%, 0, 0);
+        }
+
+        .app.mobile-camera-session .mobile-preview-fixed {
+          top: 0;
+          display: grid;
+        }
+
+        .app[class*="mobile-capture-"] #mobileResult {
+          position: static;
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
+        }
+
+        .app.mobile-camera-session .mobile-shell {
+          padding-top: var(--mobile-preview-height);
+        }
+
+        .app.mobile-camera-session.mobile-capture-requesting .mobile-preview-fixed,
+        .app.mobile-camera-session.mobile-capture-finalizing .mobile-preview-fixed,
+        .app.mobile-camera-session.mobile-capture-error .mobile-preview-fixed {
+          background: #1d1d20;
+        }
+
+        .mobile-camera-layer::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.2);
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .app.mobile-capture-recording .mobile-camera-layer::before,
+        .app.mobile-capture-reviewing .mobile-camera-layer::before,
+        .app.mobile-capture-ready .mobile-camera-layer::before {
+          opacity: 1;
+        }
+
+        .mobile-camera-loading,
+        .mobile-camera-error,
+        .mobile-record-control,
+        .mobile-review-controls,
+        .mobile-playback-controls {
+          display: none;
+        }
+
+        .app.mobile-capture-requesting .mobile-camera-loading,
+        .app.mobile-capture-finalizing .mobile-camera-loading {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          background: #1d1d20;
+        }
+
+        .mobile-camera-loading img {
+          display: block;
+          width: 150px;
+          height: 150px;
+        }
+
+        .mobile-record-control {
+          position: absolute;
+          left: 50%;
+          bottom: 30px;
+          width: 80px;
+          height: 80px;
+          padding: 0;
+          border: 0;
+          border-radius: 50%;
+          background: transparent;
+          color: #f4f3ef;
+          transform: translateX(-50%);
+          touch-action: none;
+          pointer-events: auto;
+        }
+
+        .app.mobile-capture-previewing .mobile-record-control,
+        .app.mobile-capture-recording .mobile-record-control {
+          display: block;
+        }
+
+        .mobile-record-control::before {
+          content: "";
+          position: absolute;
+          inset: 5px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.3);
+        }
+
+        .mobile-record-ring {
+          position: absolute;
+          inset: 0;
+          display: block;
+          width: 80px;
+          height: 80px;
+          transform: rotate(-90deg);
+        }
+
+        .mobile-record-ring-track,
+        .mobile-record-ring-progress {
+          fill: none;
+          stroke-width: 2;
+        }
+
+        .mobile-record-ring-track {
+          stroke: rgba(255, 255, 255, 0.3);
+        }
+
+        .mobile-record-ring-progress {
+          stroke: #87e3ff;
+          stroke-dasharray: 245.05;
+          stroke-dashoffset: calc(245.05 * (1 - var(--mobile-record-progress, 0)));
+          stroke-linecap: butt;
+          opacity: 0;
+        }
+
+        .app.mobile-capture-recording .mobile-record-ring-progress {
+          opacity: 1;
+        }
+
+        .mobile-record-countdown {
+          position: absolute;
+          inset: 0;
+          display: none;
+          place-items: center;
+          font-family: var(--font-mono);
+          font-size: 28px;
+          font-weight: 300;
+          line-height: 36px;
+          letter-spacing: -1.4px;
+        }
+
+        .app.mobile-capture-recording .mobile-record-countdown {
+          display: grid;
+        }
+
+        .mobile-review-controls {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+        }
+
+        .app.mobile-capture-reviewing .mobile-review-controls {
+          display: block;
+        }
+
+        .mobile-review-button {
+          position: absolute;
+          bottom: 91px;
+          width: 44px;
+          height: 44px;
+          padding: 9px;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          pointer-events: auto;
+        }
+
+        .mobile-review-button img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+
+        .mobile-review-button.return {
+          left: 10px;
+        }
+
+        .mobile-review-button.confirm {
+          right: 10px;
+        }
+
+        .mobile-review-line {
+          position: absolute;
+          left: 50%;
+          bottom: 30px;
+          width: 134px;
+          height: 3px;
+          background: rgba(255, 255, 255, 0.3);
+          transform: translateX(-50%);
+        }
+
+        .mobile-playback-controls {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+        }
+
+        .app.mobile-capture-ready .mobile-playback-controls {
+          display: block;
+        }
+
+        .mobile-playback-toggle {
+          position: absolute;
+          top: 238px;
+          left: 50%;
+          width: 52px;
+          height: 52px;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          transform: translateX(-50%);
+          pointer-events: auto;
+        }
+
+        .mobile-playback-toggle::before,
+        .mobile-playback-toggle::after {
+          content: "";
+          position: absolute;
+          top: 14px;
+          width: 5px;
+          height: 24px;
+          background: #fff;
+        }
+
+        .mobile-playback-toggle::before {
+          left: 18px;
+        }
+
+        .mobile-playback-toggle::after {
+          right: 18px;
+        }
+
+        .mobile-playback-toggle.is-paused::before {
+          top: 13px;
+          left: 19px;
+          width: 0;
+          height: 0;
+          border-top: 13px solid transparent;
+          border-bottom: 13px solid transparent;
+          border-left: 20px solid #fff;
+          background: transparent;
+        }
+
+        .mobile-playback-toggle.is-paused::after {
+          display: none;
+        }
+
+        .mobile-playback-time {
+          position: absolute;
+          right: 16px;
+          bottom: 45px;
+          left: 16px;
+          display: flex;
+          justify-content: space-between;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+        }
+
+        input.mobile-playback-progress {
+          position: absolute;
+          right: 16px;
+          bottom: 27px;
+          left: 16px;
+          width: calc(100% - 32px);
+          height: 14px;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          pointer-events: auto;
+          -webkit-appearance: none;
+          appearance: none;
+        }
+
+        input.mobile-playback-progress::-webkit-slider-runnable-track {
+          height: 3px;
+          background: linear-gradient(to right, #87e3ff 0 var(--mobile-playback-progress, 0%), rgba(255, 255, 255, 0.65) var(--mobile-playback-progress, 0%) 100%);
+        }
+
+        input.mobile-playback-progress::-webkit-slider-thumb {
+          width: 12px;
+          height: 24px;
+          margin-top: -10px;
+          border: 0;
+          border-radius: 6px;
+          background: #fff;
+          -webkit-appearance: none;
+        }
+
+        input.mobile-playback-progress::-moz-range-track {
+          height: 3px;
+          background: rgba(255, 255, 255, 0.65);
+        }
+
+        input.mobile-playback-progress::-moz-range-progress {
+          height: 3px;
+          background: #87e3ff;
+        }
+
+        input.mobile-playback-progress::-moz-range-thumb {
+          width: 12px;
+          height: 24px;
+          border: 0;
+          border-radius: 6px;
+          background: #fff;
+        }
+
+        .app.mobile-capture-error .mobile-camera-error {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-content: center;
+          gap: 16px;
+          padding: 32px;
+          background: #1d1d20;
+          color: #f4f3ef;
+          text-align: center;
+          pointer-events: auto;
+        }
+
+        .mobile-camera-error p {
+          margin: 0;
+          color: #9296a0;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 22px;
+        }
+
+        .mobile-camera-error button {
+          width: 160px;
+          height: 44px;
+          margin: 0 auto;
+          border: 1px solid #87e3ff;
+          border-radius: 0;
+          background: #1d1d20;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 18px;
+        }
+
+        .app.mobile-capture-recording .mobile-scroll,
+        .app.mobile-capture-finalizing .mobile-scroll,
+        .app.mobile-capture-requesting .mobile-scroll {
+          pointer-events: none;
+        }
+
+        .app.mobile-capture-requesting .mobile-dock-button,
+        .app.mobile-capture-recording .mobile-dock-button,
+        .app.mobile-capture-finalizing .mobile-dock-button,
+        .app.mobile-capture-error .mobile-dock-button {
+          pointer-events: none;
+          color: #555;
+        }
+
+        .app.mobile-capture-previewing .mobile-dock-button.output,
+        .app.mobile-capture-recording .mobile-dock-button.output,
+        .app.mobile-capture-reviewing .mobile-dock-button.output,
+        .app.mobile-capture-finalizing .mobile-dock-button.output {
+          background: var(--mobile-card-dark);
+          color: #555;
+          pointer-events: none;
+        }
+
+        .app.mobile-capture-previewing .mobile-dock-button.output .mobile-dock-icon,
+        .app.mobile-capture-recording .mobile-dock-button.output .mobile-dock-icon,
+        .app.mobile-capture-reviewing .mobile-dock-button.output .mobile-dock-icon,
+        .app.mobile-capture-finalizing .mobile-dock-button.output .mobile-dock-icon {
+          color: #555;
+        }
+
+        .app.mobile-capture-ready .mobile-dock-button.output {
+          background: var(--mobile-acid);
+          color: #08080a;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .mobile-camera-loading img {
+            animation: none;
+          }
+        }
+      }
+
       /* Interaction system: flat, precise, and shared across desktop and mobile. */
       :root {
         --motion-fast: 100ms;
@@ -4457,6 +5232,14 @@
           opacity var(--motion-fast) linear;
       }
 
+      .video-play-toggle {
+        -webkit-tap-highlight-color: transparent;
+        transition:
+          transform var(--motion-standard) var(--motion-ease),
+          background-color var(--motion-standard) var(--motion-ease),
+          color var(--motion-standard) var(--motion-ease);
+      }
+
       :where(button, input, .node, .mobile-color-card):focus-visible {
         outline: 1px solid var(--yellow);
         outline-offset: 3px;
@@ -4467,6 +5250,125 @@
       }
 
       @media (min-width: 641px) {
+        .side-scroll > .input-panel {
+          position: relative;
+          min-height: 240px;
+        }
+
+        .side-scroll > .input-panel .side-previews {
+          display: none;
+        }
+
+        .side-scroll > .input-panel .side-previews.has-preview {
+          display: grid;
+        }
+
+        .app:not(.has-source) .side-scroll > .input-panel + .panel {
+          padding-top: 49px;
+        }
+
+        .input-panel .input-drop-hint {
+          display: none;
+        }
+
+        #inputStatus[data-mode="guidance"] {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+          width: 304px;
+          min-height: 62px;
+          margin-top: 9px;
+          padding: 0;
+          color: #f4f3ef;
+          text-align: center;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+
+        #inputStatus[data-mode="guidance"] .input-guidance-or,
+        #inputStatus[data-mode="guidance"] .input-guidance-copy {
+          display: block;
+          flex: none;
+          width: auto;
+          margin: 0;
+          color: inherit;
+          font-weight: 300;
+          text-align: center;
+        }
+
+        #inputStatus[data-mode="guidance"] .input-guidance-or {
+          color: #9296a0;
+          font-family: var(--font-mono);
+          font-size: 15px;
+          line-height: 19px;
+          letter-spacing: -0.75px;
+        }
+
+        #inputStatus[data-mode="guidance"] .input-guidance-copy {
+          margin-top: 7px;
+          font-family: var(--font-mono);
+          font-size: 16px;
+          line-height: 21px;
+          letter-spacing: -0.8px;
+        }
+
+        #inputStatus[data-mode="guidance"][data-language="zh"] .input-guidance-copy {
+          font-family: var(--font-cn);
+          font-weight: 300;
+          letter-spacing: 0;
+        }
+
+        .input-panel.is-dragging {
+          width: 344px;
+          min-height: 224px;
+          height: 224px;
+          margin: 8px;
+          padding: 20px;
+          border: 1px dashed #87e3ff;
+          border-radius: 4px;
+          background: #222227;
+        }
+
+        .input-panel.is-dragging h2 {
+          position: relative;
+          z-index: 2;
+          margin: 0;
+          pointer-events: none;
+        }
+
+        .input-panel.is-dragging #drop.drop {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          width: 100%;
+          height: 100%;
+          border: 0;
+          background: transparent;
+          transform: none;
+        }
+
+        .input-panel.is-dragging #drop .drop-content,
+        .input-panel.is-dragging #inputStatus,
+        .input-panel.is-dragging .side-previews {
+          display: none;
+        }
+
+        .input-panel.is-dragging .input-drop-hint {
+          position: absolute;
+          inset: 0;
+          z-index: 3;
+          display: grid;
+          place-items: center;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 20px;
+          font-weight: 300;
+          line-height: 26px;
+          letter-spacing: -1px;
+          pointer-events: none;
+        }
+
         .color-popover {
           padding: 20px;
           border: 0;
@@ -4494,6 +5396,10 @@
         .color-swatch:hover,
         .alpha-mini-toggle:hover {
           transform: translateY(-1px);
+        }
+
+        .video-play-toggle:hover {
+          background: #222227;
         }
 
         .preset:not(.active):hover,
@@ -4527,6 +5433,12 @@
         transition-timing-function: var(--motion-press);
       }
 
+      .video-play-toggle:not(:disabled):active {
+        transform: translateY(1px) scale(0.98);
+        transition-duration: var(--motion-fast);
+        transition-timing-function: var(--motion-press);
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -4535,6 +5447,13 @@
           transition-duration: 1ms !important;
           animation-duration: 1ms !important;
           animation-iteration-count: 1 !important;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .app.has-video .video-timeline,
+        .app.has-video .video-metrics {
+          display: none;
         }
       }
     </style>
@@ -4546,10 +5465,10 @@
           <img src="../assets/synthub-logo.svg" alt="synthub" />
         </div>
         <div class="side-scroll">
-          <section class="panel">
+          <section class="panel input-panel" id="inputPanel">
             <h2 data-cn="输入">Input</h2>
             <label class="drop" id="drop">
-              <input id="file" type="file" accept="image/*,.svg,image/svg+xml,.pdf,application/pdf" />
+              <input id="file" type="file" accept=".png,.jpg,.jpeg,.svg,.pdf,.mp4,.m4v,.mov,.webm,.ogv,image/png,image/jpeg,image/svg+xml,application/pdf,video/mp4,video/webm,video/quicktime" />
               <div class="drop-content">
                 <img class="input-icon" src="../assets/input-logo-figma.svg" alt="" />
                 <div class="drop-title">
@@ -4559,9 +5478,21 @@
               </div>
             </label>
             <input id="cameraFile" class="camera-input" type="file" accept="image/*" capture="environment" />
-            <input id="mobileGalleryFile" class="camera-input" type="file" accept="image/*" />
+            <input id="mobileGalleryFile" class="camera-input" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" />
             <button class="camera-button" id="cameraButton" type="button">Camera</button>
-            <div class="drop-sub" id="inputStatus"><span>*</span> PNG / JPG / WebP / SVG / PDF</div>
+            <div
+              class="drop-sub"
+              id="inputStatus"
+              data-mode="guidance"
+              data-language="en"
+              role="button"
+              tabindex="0"
+              aria-label="切换拖拽提示语言"
+            >
+              <span class="input-guidance-or">or</span>
+              <span class="input-guidance-copy" aria-live="polite">Drag &amp; Drop Copy &amp; Paste</span>
+            </div>
+            <div class="input-drop-hint" id="inputDropHint" aria-hidden="true">Drop here</div>
             <div id="sidePreviews" class="side-previews">
               <div class="side-preview">
                 <h3>source</h3>
@@ -4577,13 +5508,16 @@
           <section class="panel">
             <h2 data-cn="预设">Presets</h2>
             <div class="preset-grid" id="presetGrid"></div>
+            <button class="video-process-button" id="videoProcessButton" type="button">
+              <span class="video-process-value" id="videoProcessValue" aria-hidden="true"></span>
+              <span class="video-process-label" id="videoProcessLabel">RENDER</span>
+            </button>
             <button class="randomize-button" id="randomize">NICE TRY</button>
             <button class="mobile-export" data-export-png>
               <span class="export-icon"><img src="../assets/download-icon-figma.svg" alt="" /></span>
               <span class="export-label">OUTPUT</span>
             </button>
           </section>
-          <div class="powered-by"><img src="../assets/powered-by-expression.svg" alt="Powered by Expression" /></div>
         </div>
       </aside>
 
@@ -4595,9 +5529,29 @@
             <span class="note-cn">上传素材，选择风格，生成带有印刷感、颗粒感和手工痕迹的图形纹理。</span>
           </div>
         </div>
+        <div class="video-metrics" id="videoMetrics" aria-label="Video data">
+          <div class="video-metric">
+            <strong class="video-metric-value" id="videoMetricFps">12</strong>
+            <span class="video-metric-unit">fps</span>
+            <span class="video-metric-label">target FPS</span>
+          </div>
+          <div class="video-metric resolution">
+            <strong class="video-metric-value" id="videoMetricResolution">1920</strong>
+            <span class="video-metric-unit">PX</span>
+            <span class="video-metric-label">max side resolution</span>
+          </div>
+        </div>
         <div class="workspace">
           <div class="stage">
             <canvas id="result" class="result" width="1000" height="1000"></canvas>
+            <video id="processedVideo" class="processed-video" muted playsinline preload="auto"></video>
+            <div class="video-timeline" id="videoTimeline" aria-label="Video playback">
+              <button class="video-play-toggle is-paused" id="videoPlayToggle" type="button" aria-label="播放" aria-pressed="false"></button>
+              <div class="video-progress-wrap">
+                <input class="video-progress" id="videoProgress" type="range" min="0" max="0" step="0.001" value="0" aria-label="视频进度" />
+              </div>
+              <output class="video-time" id="videoTime">00/00</output>
+            </div>
           </div>
         </div>
         <div class="mobile-effects" id="mobileEffects" aria-label="Effects"></div>
@@ -4680,10 +5634,47 @@
                 <span>REC</span>
               </button>
             </div>
-            <div class="mobile-status" id="mobileStatus">* PNG / JPG / WebP / SVG / PDF</div>
+            <div class="mobile-status" id="mobileStatus">* PNG / JPG / SVG / PDF</div>
           </div>
           <div class="mobile-preview-fixed" aria-label="Result preview">
             <canvas id="mobileResult" width="1000" height="1000"></canvas>
+            <div class="mobile-camera-layer" id="mobileCameraLayer" aria-live="polite">
+              <div class="mobile-camera-loading" aria-label="正在连接摄像头">
+                <img src="../assets/mobile-camera-loading.svg" alt="" />
+              </div>
+
+              <button class="mobile-record-control" id="mobileRecordControl" type="button" aria-label="按住录制，最长 5 秒">
+                <svg class="mobile-record-ring" viewBox="0 0 80 80" aria-hidden="true">
+                  <circle class="mobile-record-ring-track" cx="40" cy="40" r="39"></circle>
+                  <circle class="mobile-record-ring-progress" cx="40" cy="40" r="39"></circle>
+                </svg>
+                <span class="mobile-record-countdown" id="mobileRecordCountdown">5</span>
+              </button>
+
+              <div class="mobile-review-controls" aria-label="确认录制效果">
+                <button class="mobile-review-button return" id="mobileRecordReturn" type="button" aria-label="返回重新录制">
+                  <img src="../assets/mobile-record-return.svg" alt="" />
+                </button>
+                <button class="mobile-review-button confirm" id="mobileRecordConfirm" type="button" aria-label="确认效果">
+                  <img src="../assets/mobile-record-confirm.svg" alt="" />
+                </button>
+                <span class="mobile-review-line" aria-hidden="true"></span>
+              </div>
+
+              <div class="mobile-playback-controls" aria-label="录制回放控制">
+                <button class="mobile-playback-toggle" id="mobilePlaybackToggle" type="button" aria-label="暂停"></button>
+                <div class="mobile-playback-time" aria-hidden="true">
+                  <span id="mobilePlaybackCurrent">00</span>
+                  <span id="mobilePlaybackDuration">05</span>
+                </div>
+                <input class="mobile-playback-progress" id="mobilePlaybackProgress" type="range" min="0" max="5" value="0" step="0.01" aria-label="回放进度" />
+              </div>
+
+              <div class="mobile-camera-error">
+                <p id="mobileCameraErrorText">无法使用摄像头，请检查浏览器权限后重试。</p>
+                <button id="mobileCameraRetry" type="button">RETRY</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -4713,6 +5704,8 @@
     </main>
 
     <canvas id="work" width="1000" height="1000" class="hidden"></canvas>
+    <video id="videoSource" class="video-source" muted playsinline preload="auto"></video>
+    <video id="mobileCameraSource" class="video-source" muted playsinline autoplay preload="auto"></video>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
@@ -4800,6 +5793,12 @@
         sourceHasTransparency: false,
         size: 1000,
         previewSize: 720,
+        videoRenderShortSide: 1080,
+        videoRenderLongSide: 1920,
+        videoTuneSize: 720,
+        videoFps: 12,
+        videoDuration: 0,
+        videoExporting: false,
         nodes: clone(presets.thermalMap.nodes),
         outputReverse: false,
         flyoutOpen: false,
@@ -4811,6 +5810,7 @@
       const mobileGalleryFile = document.getElementById("mobileGalleryFile");
       const cameraButton = document.getElementById("cameraButton");
       const drop = document.getElementById("drop");
+      const inputPanel = document.getElementById("inputPanel");
       const inputStatus = document.getElementById("inputStatus");
       const work = document.getElementById("work");
       const workCtx = work.getContext("2d", { willReadFrequently: true });
@@ -4842,6 +5842,29 @@
       const mobileFixedTop = document.querySelector(".mobile-fixed-top");
       const mobileBrandMark = document.getElementById("mobileBrandMark");
       const mobileTitle = document.getElementById("mobileTitle");
+      const mobileCameraLayer = document.getElementById("mobileCameraLayer");
+      const mobileCameraSource = document.getElementById("mobileCameraSource");
+      const mobileRecordControl = document.getElementById("mobileRecordControl");
+      const mobileRecordCountdown = document.getElementById("mobileRecordCountdown");
+      const mobileRecordReturn = document.getElementById("mobileRecordReturn");
+      const mobileRecordConfirm = document.getElementById("mobileRecordConfirm");
+      const mobilePlaybackToggle = document.getElementById("mobilePlaybackToggle");
+      const mobilePlaybackProgress = document.getElementById("mobilePlaybackProgress");
+      const mobilePlaybackCurrent = document.getElementById("mobilePlaybackCurrent");
+      const mobilePlaybackDuration = document.getElementById("mobilePlaybackDuration");
+      const mobileCameraRetry = document.getElementById("mobileCameraRetry");
+      const mobileCameraErrorText = document.getElementById("mobileCameraErrorText");
+      const videoSource = document.getElementById("videoSource");
+      const processedVideo = document.getElementById("processedVideo");
+      const videoTimeline = document.getElementById("videoTimeline");
+      const videoPlayToggle = document.getElementById("videoPlayToggle");
+      const videoProgress = document.getElementById("videoProgress");
+      const videoTime = document.getElementById("videoTime");
+      const videoMetricFps = document.getElementById("videoMetricFps");
+      const videoMetricResolution = document.getElementById("videoMetricResolution");
+      const videoProcessButton = document.getElementById("videoProcessButton");
+      const videoProcessValue = document.getElementById("videoProcessValue");
+      const videoProcessLabel = document.getElementById("videoProcessLabel");
       let renderFrameQueued = false;
       let renderOutputTimer = 0;
       let renderOutputFrame = 0;
@@ -4849,6 +5872,54 @@
       let colorOutsideHandlerBound = false;
       let sourceImageCache = null;
       let mobileScrollFrame = 0;
+      let videoObjectUrl = "";
+      let videoFrameRequest = 0;
+      let videoFallbackFrame = 0;
+      let lastRenderedVideoTime = -Infinity;
+      let resumeVideoAfterSeek = false;
+      let processedVideoBlob = null;
+      let processedVideoUrl = "";
+      let processedVideoSignature = "";
+      let processedBuildPromise = null;
+      let videoRefineTimer = 0;
+      let videoProcessProgress = 0;
+      let videoProcessPhase = "idle";
+      let renderingVideoBatch = false;
+      let mp4MuxerModulePromise = null;
+      let renderBufferCache = null;
+      let paperToneCache = { signature: "", maps: new Map() };
+      let videoRenderProfile = null;
+      const mobileCapture = {
+        state: "idle",
+        stream: null,
+        rawRecorder: null,
+        renderedRecorder: null,
+        rawChunks: [],
+        renderedChunks: [],
+        rawBlob: null,
+        renderedBlob: null,
+        rawUrl: "",
+        renderedUrl: "",
+        recordedSettings: "",
+        renderedSettings: "",
+        startedAt: 0,
+        duration: 0,
+        maxDuration: 5,
+        fps: 10,
+        renderSize: 540,
+        renderRequest: 0,
+        fallbackRequest: 0,
+        lastRenderAt: 0,
+        stopTimer: 0,
+        countdownTimer: 0,
+        pointerId: null,
+        stopPromise: null,
+        resolveStop: null,
+        seeking: false,
+        frameSamples: 0,
+        frameCost: 0,
+      };
+      const renderDebugEnabled = new URLSearchParams(window.location.search).has("debugRender");
 
       if (window.pdfjsLib) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -4858,7 +5929,585 @@
         return Math.max(min, Math.min(max, value));
       }
 
+      function getRenderBuffers(width, height) {
+        if (renderBufferCache?.width === width && renderBufferCache?.height === height) return renderBufferCache;
+        const pixelCount = width * height;
+        const maskNoise = new Float64Array(pixelCount);
+        for (let blockY = 0; blockY < height; blockY += 3) {
+          const noiseY = Math.floor(blockY / 3);
+          for (let blockX = 0; blockX < width; blockX += 3) {
+            const noise = hash(Math.floor(blockX / 3), noiseY, 2);
+            const maxY = Math.min(height, blockY + 3);
+            const maxX = Math.min(width, blockX + 3);
+            for (let y = blockY; y < maxY; y++) {
+              const row = y * width;
+              for (let x = blockX; x < maxX; x++) maskNoise[row + x] = noise;
+            }
+          }
+        }
+        renderBufferCache = {
+          width,
+          height,
+          maskNoise,
+          baseMask: new Float32Array(pixelCount),
+          roughMask: new Float32Array(pixelCount),
+          reverseMask: new Float32Array(pixelCount),
+          edgeBinary: new Uint8Array(pixelCount),
+          edgeIntegral: new Uint32Array((width + 1) * (height + 1)),
+          edgeMap: new Uint8Array(pixelCount),
+          output: resultCtx.createImageData(width, height),
+        };
+        return renderBufferCache;
+      }
+
+      function resetVideoRenderProfile() {
+        videoRenderProfile = { frames: 0, seekMs: 0, sourceMs: 0, maskMs: 0, effectMs: 0 };
+      }
+
+      function recordVideoSeekTime(milliseconds) {
+        if (videoRenderProfile) videoRenderProfile.seekMs += milliseconds;
+      }
+
+      function recordVideoRenderFrame(sourceMs, maskMs, effectMs) {
+        if (!videoRenderProfile) return;
+        videoRenderProfile.frames += 1;
+        videoRenderProfile.sourceMs += sourceMs;
+        videoRenderProfile.maskMs += maskMs;
+        videoRenderProfile.effectMs += effectMs;
+      }
+
+      function reportVideoRenderProfile(totalMs) {
+        if (!videoRenderProfile) return;
+        const frames = Math.max(1, videoRenderProfile.frames);
+        const summary = {
+          frames: videoRenderProfile.frames,
+          totalMs: Math.round(totalMs),
+          averageFrameMs: Math.round((videoRenderProfile.sourceMs + videoRenderProfile.maskMs + videoRenderProfile.effectMs) / frames),
+          averageSeekMs: Math.round(videoRenderProfile.seekMs / frames),
+          averageSourceMs: Math.round(videoRenderProfile.sourceMs / frames),
+          averageMaskMs: Math.round(videoRenderProfile.maskMs / frames),
+          averageEffectMs: Math.round(videoRenderProfile.effectMs / frames),
+        };
+        window.__graphicTextureVideoPerformance = summary;
+        console.info("[Graphic Texture] video render profile", summary);
+        videoRenderProfile = null;
+      }
+
+      function isVideoSource() {
+        return state.sourceType === "video" && state.source === videoSource;
+      }
+
+      function isMobileCaptureSource() {
+        return state.source === mobileCameraSource && (state.sourceType === "mobile-live" || state.sourceType === "mobile-review");
+      }
+
+      function isMotionSource() {
+        return isVideoSource() || isMobileCaptureSource();
+      }
+
+      function mobileCaptureSettingsSignature() {
+        return JSON.stringify({
+          preset: state.preset,
+          nodes: state.nodes,
+          outputReverse: state.outputReverse,
+          fps: mobileCapture.fps,
+          renderSize: mobileCapture.renderSize,
+        });
+      }
+
+      function mobileCaptureClassName(name) {
+        return `mobile-capture-${name}`;
+      }
+
+      function syncMobileCaptureUi() {
+        const captureStates = ["requesting", "previewing", "recording", "finalizing", "reviewing", "ready", "error"];
+        captureStates.forEach((name) => app.classList.remove(mobileCaptureClassName(name)));
+        app.classList.toggle("mobile-camera-session", ["requesting", "previewing", "recording", "finalizing", "reviewing", "error"].includes(mobileCapture.state));
+        if (mobileCapture.state !== "idle") app.classList.add(mobileCaptureClassName(mobileCapture.state));
+
+        const outputEnabled = mobileCapture.state === "ready" && Boolean(mobileCapture.renderedBlob);
+        const niceEnabled = ["previewing", "reviewing", "ready"].includes(mobileCapture.state);
+        mobileRandomize.disabled = !niceEnabled && mobileCapture.state !== "idle";
+        mobileRandomize.setAttribute("aria-disabled", String(mobileRandomize.disabled));
+        document.querySelectorAll(".mobile-bottom-dock [data-export-png]").forEach((button) => {
+          button.disabled = mobileCapture.state !== "idle" && !outputEnabled;
+          button.setAttribute("aria-disabled", String(button.disabled));
+        });
+
+        if (mobileRecordControl) {
+          mobileRecordControl.setAttribute("aria-pressed", String(mobileCapture.state === "recording"));
+        }
+        syncMobilePlaybackUi();
+        syncMobileTopOffset();
+      }
+
+      function setMobileCaptureState(next) {
+        mobileCapture.state = next;
+        syncMobileCaptureUi();
+      }
+
+      function revokeMobileCaptureUrl(key) {
+        const value = mobileCapture[key];
+        if (value) URL.revokeObjectURL(value);
+        mobileCapture[key] = "";
+      }
+
+      function clearMobileCaptureMedia({ keepRendered = false } = {}) {
+        revokeMobileCaptureUrl("rawUrl");
+        if (!keepRendered) {
+          revokeMobileCaptureUrl("renderedUrl");
+          mobileCapture.renderedBlob = null;
+          mobileCapture.renderedSettings = "";
+        }
+        mobileCapture.rawBlob = null;
+        mobileCapture.rawChunks = [];
+        mobileCapture.renderedChunks = [];
+        mobileCapture.recordedSettings = "";
+        mobileCapture.duration = 0;
+      }
+
+      function stopMobileCameraTracks() {
+        if (mobileCapture.stream) {
+          mobileCapture.stream.getTracks().forEach((track) => track.stop());
+          mobileCapture.stream = null;
+        }
+      }
+
+      function cancelMobileCaptureRenderLoop() {
+        if (mobileCapture.renderRequest && mobileCameraSource.cancelVideoFrameCallback) {
+          mobileCameraSource.cancelVideoFrameCallback(mobileCapture.renderRequest);
+        }
+        if (mobileCapture.fallbackRequest) cancelAnimationFrame(mobileCapture.fallbackRequest);
+        mobileCapture.renderRequest = 0;
+        mobileCapture.fallbackRequest = 0;
+      }
+
+      function renderMobileCaptureFrame() {
+        if (!isMobileCaptureSource() || mobileCameraSource.readyState < 2) return;
+        const startedAt = performance.now();
+        invalidateSourceImageCache();
+        renderOutput(mobileCapture.renderSize);
+        const cost = performance.now() - startedAt;
+        mobileCapture.frameCost = mobileCapture.frameCost ? lerp(mobileCapture.frameCost, cost, 0.18) : cost;
+        mobileCapture.frameSamples += 1;
+        if (
+          mobileCapture.state === "previewing" &&
+          mobileCapture.frameSamples > 8 &&
+          mobileCapture.frameCost > 78 &&
+          mobileCapture.renderSize > 420
+        ) {
+          mobileCapture.renderSize = 420;
+          mobileCapture.fps = 8;
+          mobileCapture.frameSamples = 0;
+          mobileCapture.frameCost = 0;
+        }
+        syncMobilePlaybackUi();
+      }
+
+      function scheduleMobileCaptureRenderLoop() {
+        cancelMobileCaptureRenderLoop();
+        if (!isMobileCaptureSource() || mobileCameraSource.paused || mobileCameraSource.ended) return;
+
+        const handleFrame = (now) => {
+          mobileCapture.renderRequest = 0;
+          mobileCapture.fallbackRequest = 0;
+          const interval = 1000 / Math.max(1, mobileCapture.fps);
+          if (!mobileCapture.lastRenderAt || now - mobileCapture.lastRenderAt >= interval - 3) {
+            mobileCapture.lastRenderAt = now;
+            renderMobileCaptureFrame();
+          }
+          scheduleMobileCaptureRenderLoop();
+        };
+
+        if (mobileCameraSource.requestVideoFrameCallback) {
+          mobileCapture.renderRequest = mobileCameraSource.requestVideoFrameCallback((now) => handleFrame(now));
+        } else {
+          mobileCapture.fallbackRequest = requestAnimationFrame(handleFrame);
+        }
+      }
+
+      function waitForMobileVideoEvent(name) {
+        return new Promise((resolve, reject) => {
+          const cleanup = () => {
+            mobileCameraSource.removeEventListener(name, onReady);
+            mobileCameraSource.removeEventListener("error", onError);
+          };
+          const onReady = () => {
+            cleanup();
+            resolve();
+          };
+          const onError = () => {
+            cleanup();
+            reject(new Error("视频流无法读取"));
+          };
+          mobileCameraSource.addEventListener(name, onReady, { once: true });
+          mobileCameraSource.addEventListener("error", onError, { once: true });
+        });
+      }
+
+      function applyMobileCaptureSource(type) {
+        state.source = mobileCameraSource;
+        state.sourceType = type;
+        state.sourceAspect = mobileCameraSource.videoWidth / Math.max(1, mobileCameraSource.videoHeight);
+        state.sourceHasTransparency = false;
+        window.scrollTo(0, 0);
+        invalidateSourceImageCache();
+        sidePreviews.classList.add("has-preview");
+        renderAll(false);
+        renderMobileCaptureFrame();
+        mobileCapture.lastRenderAt = 0;
+        scheduleMobileCaptureRenderLoop();
+      }
+
+      async function openMobileCamera() {
+        if (window.innerWidth > 640) {
+          cameraFile.value = "";
+          cameraFile.click();
+          return;
+        }
+
+        if (isVideoSource()) resetVideoSource();
+        await closeMobileCapture({ resetSource: true, keepUiIdle: true });
+        state.source = null;
+        state.sourceType = "empty";
+        state.sourceAspect = 1;
+        state.sourceHasTransparency = false;
+        invalidateSourceImageCache();
+        renderAll(false);
+        setMobileCaptureState("requesting");
+        setInputStatus("正在连接摄像头...");
+
+        try {
+          if (!window.isSecureContext) {
+            throw new Error("实时摄像头需要 HTTPS；手机通过局域网 HTTP 打开时无法授权摄像头");
+          }
+          if (!navigator.mediaDevices?.getUserMedia) throw new Error("当前浏览器不支持实时摄像头");
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+              facingMode: { ideal: "environment" },
+              width: { ideal: 720 },
+              height: { ideal: 960 },
+              aspectRatio: { ideal: 0.75 },
+            },
+          });
+          mobileCapture.stream = stream;
+          mobileCameraSource.pause();
+          mobileCameraSource.removeAttribute("src");
+          mobileCameraSource.srcObject = stream;
+          mobileCameraSource.loop = false;
+          mobileCameraSource.muted = true;
+          mobileCameraSource.load();
+          if (mobileCameraSource.readyState < 1) await waitForMobileVideoEvent("loadedmetadata");
+          await mobileCameraSource.play();
+          mobileCapture.renderSize = 540;
+          mobileCapture.fps = 10;
+          mobileCapture.frameSamples = 0;
+          mobileCapture.frameCost = 0;
+          applyMobileCaptureSource("mobile-live");
+          setMobileCaptureState("previewing");
+          setInputStatus("实时预览中 · 按住圆形按钮录制，最长 5 秒");
+        } catch (error) {
+          stopMobileCameraTracks();
+          mobileCameraErrorText.textContent = error?.name === "NotAllowedError"
+            ? "摄像头权限未开启，请在浏览器设置中允许访问后重试。"
+            : `无法使用摄像头：${error.message || "未知错误"}`;
+          setMobileCaptureState("error");
+          setInputStatus("摄像头无法使用");
+        }
+      }
+
+      function createMobileRecorder(stream, chunks) {
+        if (!window.MediaRecorder) throw new Error("当前浏览器不支持网页录制");
+        const mimeType = getVideoRecorderMimeType();
+        const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+        recorder.addEventListener("dataavailable", (event) => {
+          if (event.data?.size) chunks.push(event.data);
+        });
+        return recorder;
+      }
+
+      function stopMobileRecorder(recorder) {
+        if (!recorder) return Promise.resolve();
+        const stopTracks = () => recorder.stream?.getTracks().forEach((track) => track.stop());
+        if (recorder.state === "inactive") {
+          stopTracks();
+          return Promise.resolve();
+        }
+        return new Promise((resolve) => {
+          recorder.addEventListener("stop", () => {
+            stopTracks();
+            resolve();
+          }, { once: true });
+          recorder.stop();
+        });
+      }
+
+      function updateMobileRecordProgress() {
+        if (mobileCapture.state !== "recording") return;
+        const elapsed = Math.min(mobileCapture.maxDuration, (performance.now() - mobileCapture.startedAt) / 1000);
+        const progress = elapsed / mobileCapture.maxDuration;
+        mobileCameraLayer.style.setProperty("--mobile-record-progress", String(progress));
+        mobileRecordCountdown.textContent = String(Math.max(1, Math.ceil(mobileCapture.maxDuration - elapsed)));
+      }
+
+      function startMobileRecordTimers() {
+        window.clearInterval(mobileCapture.countdownTimer);
+        window.clearTimeout(mobileCapture.stopTimer);
+        mobileCapture.countdownTimer = window.setInterval(updateMobileRecordProgress, 50);
+        mobileCapture.stopTimer = window.setTimeout(() => finishMobileRecording("limit"), mobileCapture.maxDuration * 1000);
+        updateMobileRecordProgress();
+      }
+
+      async function startMobileRecording(pointerId = null) {
+        if (mobileCapture.state !== "previewing" || !mobileCapture.stream) return;
+        if (!result.captureStream) {
+          mobileCameraErrorText.textContent = "当前浏览器可以实时预览，但不支持录制特效画布。";
+          setMobileCaptureState("error");
+          return;
+        }
+
+        try {
+          renderMobileCaptureFrame();
+          clearMobileCaptureMedia();
+          mobileCapture.rawChunks = [];
+          mobileCapture.renderedChunks = [];
+          const rawStream = new MediaStream(mobileCapture.stream.getVideoTracks().map((track) => track.clone()));
+          const renderedStream = result.captureStream(mobileCapture.fps);
+          mobileCapture.rawRecorder = createMobileRecorder(rawStream, mobileCapture.rawChunks);
+          mobileCapture.renderedRecorder = createMobileRecorder(renderedStream, mobileCapture.renderedChunks);
+          mobileCapture.pointerId = pointerId;
+          mobileCapture.startedAt = performance.now();
+          mobileCapture.rawRecorder.start(250);
+          mobileCapture.renderedRecorder.start(250);
+          setMobileCaptureState("recording");
+          startMobileRecordTimers();
+        } catch (error) {
+          mobileCameraErrorText.textContent = `无法开始录制：${error.message}`;
+          setMobileCaptureState("error");
+        }
+      }
+
+      async function installMobileReview() {
+        revokeMobileCaptureUrl("rawUrl");
+        mobileCapture.rawUrl = URL.createObjectURL(mobileCapture.rawBlob);
+        mobileCameraSource.pause();
+        mobileCameraSource.srcObject = null;
+        mobileCameraSource.src = mobileCapture.rawUrl;
+        mobileCameraSource.loop = true;
+        mobileCameraSource.muted = true;
+        mobileCameraSource.load();
+        if (mobileCameraSource.readyState < 1) await waitForMobileVideoEvent("loadedmetadata");
+        if (mobileCameraSource.readyState < 2) await waitForMobileVideoEvent("loadeddata");
+        mobileCapture.duration = Math.min(
+          mobileCapture.maxDuration,
+          Number.isFinite(mobileCameraSource.duration) ? mobileCameraSource.duration : mobileCapture.duration,
+        );
+        applyMobileCaptureSource("mobile-review");
+        setMobileCaptureState("reviewing");
+        await mobileCameraSource.play().catch(() => {});
+        scheduleMobileCaptureRenderLoop();
+        setInputStatus("录制完成：可切换效果，返回重录或确认");
+      }
+
+      async function finishMobileRecording() {
+        if (mobileCapture.state !== "recording") return mobileCapture.stopPromise;
+        if (mobileCapture.stopPromise) return mobileCapture.stopPromise;
+        window.clearInterval(mobileCapture.countdownTimer);
+        window.clearTimeout(mobileCapture.stopTimer);
+        mobileCapture.countdownTimer = 0;
+        mobileCapture.stopTimer = 0;
+        mobileCapture.duration = Math.min(mobileCapture.maxDuration, (performance.now() - mobileCapture.startedAt) / 1000);
+        mobileCapture.pointerId = null;
+        setMobileCaptureState("finalizing");
+
+        mobileCapture.stopPromise = (async () => {
+          try {
+            await Promise.all([
+              stopMobileRecorder(mobileCapture.rawRecorder),
+              stopMobileRecorder(mobileCapture.renderedRecorder),
+            ]);
+            const rawType = mobileCapture.rawRecorder?.mimeType || mobileCapture.rawChunks[0]?.type || "video/webm";
+            const renderedType = mobileCapture.renderedRecorder?.mimeType || mobileCapture.renderedChunks[0]?.type || "video/webm";
+            mobileCapture.rawBlob = new Blob(mobileCapture.rawChunks, { type: rawType });
+            mobileCapture.renderedBlob = new Blob(mobileCapture.renderedChunks, { type: renderedType });
+            if (!mobileCapture.rawBlob.size || !mobileCapture.renderedBlob.size) throw new Error("浏览器没有生成有效的视频数据");
+            mobileCapture.recordedSettings = mobileCaptureSettingsSignature();
+            mobileCapture.renderedSettings = mobileCapture.recordedSettings;
+            stopMobileCameraTracks();
+            await installMobileReview();
+          } catch (error) {
+            mobileCameraErrorText.textContent = `录制失败：${error.message}`;
+            setMobileCaptureState("error");
+          } finally {
+            mobileCapture.rawRecorder = null;
+            mobileCapture.renderedRecorder = null;
+            mobileCapture.stopPromise = null;
+          }
+        })();
+        return mobileCapture.stopPromise;
+      }
+
+      function seekMobileReview(time) {
+        const duration = mobileCapture.duration || mobileCameraSource.duration || 0;
+        const target = Math.min(Math.max(0, time), duration || 0);
+        if (Math.abs((mobileCameraSource.currentTime || 0) - target) < 0.005) return Promise.resolve();
+        return new Promise((resolve) => {
+          mobileCameraSource.addEventListener("seeked", resolve, { once: true });
+          mobileCameraSource.currentTime = target;
+        });
+      }
+
+      async function renderMobileReviewToBlob() {
+        if (!mobileCapture.rawBlob || !result.captureStream) throw new Error("没有可处理的录制片段");
+        const chunks = [];
+        mobileCameraSource.pause();
+        mobileCameraSource.loop = false;
+        await seekMobileReview(0);
+        renderMobileCaptureFrame();
+        const recorder = createMobileRecorder(result.captureStream(mobileCapture.fps), chunks);
+        const ended = new Promise((resolve) => mobileCameraSource.addEventListener("ended", resolve, { once: true }));
+        recorder.start(250);
+        mobileCapture.lastRenderAt = 0;
+        await mobileCameraSource.play();
+        scheduleMobileCaptureRenderLoop();
+        await Promise.race([
+          ended,
+          new Promise((resolve) => window.setTimeout(resolve, (mobileCapture.duration + 1) * 1000)),
+        ]);
+        await stopMobileRecorder(recorder);
+        const type = recorder.mimeType || chunks[0]?.type || "video/webm";
+        const blob = new Blob(chunks, { type });
+        if (!blob.size) throw new Error("效果视频生成失败");
+        mobileCapture.renderedBlob = blob;
+        mobileCapture.renderedSettings = mobileCaptureSettingsSignature();
+        mobileCameraSource.loop = true;
+        await seekMobileReview(0);
+        await mobileCameraSource.play().catch(() => {});
+        scheduleMobileCaptureRenderLoop();
+      }
+
+      async function confirmMobileRecording() {
+        if (mobileCapture.state !== "reviewing") return;
+        try {
+          if (mobileCapture.renderedSettings !== mobileCaptureSettingsSignature()) {
+            setMobileCaptureState("finalizing");
+            setInputStatus("正在确认实时效果...");
+            await renderMobileReviewToBlob();
+          }
+          setMobileCaptureState("ready");
+          renderAll(false);
+          syncMobilePlaybackUi();
+          setInputStatus("效果已确认：可回放或输出");
+          mobileStatus.textContent = "Drag & Drop Copy & Paste";
+        } catch (error) {
+          mobileCameraErrorText.textContent = `确认失败：${error.message}`;
+          setMobileCaptureState("error");
+        }
+      }
+
+      async function restartMobileRecording() {
+        if (!["reviewing", "ready", "error"].includes(mobileCapture.state)) return;
+        await openMobileCamera();
+      }
+
+      function syncMobilePlaybackUi() {
+        if (!mobilePlaybackProgress || !mobileCameraSource) return;
+        const duration = mobileCapture.duration || (Number.isFinite(mobileCameraSource.duration) ? mobileCameraSource.duration : 0) || 0;
+        const current = Math.min(mobileCameraSource.currentTime || 0, duration || 0);
+        const progress = duration > 0 ? current / duration * 100 : 0;
+        mobilePlaybackProgress.max = String(duration || mobileCapture.maxDuration);
+        if (!mobileCapture.seeking) mobilePlaybackProgress.value = String(current);
+        mobilePlaybackProgress.style.setProperty("--mobile-playback-progress", `${progress}%`);
+        mobilePlaybackCurrent.textContent = String(Math.floor(current)).padStart(2, "0");
+        mobilePlaybackDuration.textContent = String(Math.max(1, Math.ceil(duration || mobileCapture.maxDuration))).padStart(2, "0");
+        const paused = mobileCameraSource.paused || mobileCameraSource.ended;
+        mobilePlaybackToggle.classList.toggle("is-paused", paused);
+        mobilePlaybackToggle.setAttribute("aria-label", paused ? "播放" : "暂停");
+      }
+
+      async function ensureMobileRenderedBlob() {
+        if (!mobileCapture.rawBlob) return false;
+        if (mobileCapture.renderedBlob && mobileCapture.renderedSettings === mobileCaptureSettingsSignature()) return true;
+        setMobileCaptureState("finalizing");
+        setInputStatus("正在生成当前效果视频...");
+        await renderMobileReviewToBlob();
+        setMobileCaptureState("ready");
+        renderAll(false);
+        return true;
+      }
+
+      async function downloadMobileRecording() {
+        try {
+          if (!await ensureMobileRenderedBlob()) return;
+          revokeMobileCaptureUrl("renderedUrl");
+          mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
+          const type = mobileCapture.renderedBlob.type || "video/webm";
+          const extension = type.includes("mp4") ? "mp4" : "webm";
+          const a = document.createElement("a");
+          a.href = mobileCapture.renderedUrl;
+          a.download = `graphic-texture-mobile-${state.preset}.${extension}`;
+          a.click();
+          setInputStatus("视频已输出");
+        } catch (error) {
+          mobileCameraErrorText.textContent = `输出失败：${error.message}`;
+          setMobileCaptureState("error");
+        }
+      }
+
+      async function closeMobileCapture({ resetSource = true, keepUiIdle = false } = {}) {
+        window.clearInterval(mobileCapture.countdownTimer);
+        window.clearTimeout(mobileCapture.stopTimer);
+        mobileCapture.countdownTimer = 0;
+        mobileCapture.stopTimer = 0;
+        cancelMobileCaptureRenderLoop();
+        await Promise.all([
+          stopMobileRecorder(mobileCapture.rawRecorder),
+          stopMobileRecorder(mobileCapture.renderedRecorder),
+        ]).catch(() => {});
+        mobileCapture.rawRecorder = null;
+        mobileCapture.renderedRecorder = null;
+        stopMobileCameraTracks();
+        mobileCameraSource.pause();
+        mobileCameraSource.srcObject = null;
+        mobileCameraSource.removeAttribute("src");
+        mobileCameraSource.load();
+        clearMobileCaptureMedia();
+        if (resetSource && isMobileCaptureSource()) {
+          state.source = null;
+          state.sourceType = "empty";
+          state.sourceAspect = 1;
+          state.sourceHasTransparency = false;
+          invalidateSourceImageCache();
+        }
+        mobileCapture.pointerId = null;
+        mobileCapture.stopPromise = null;
+        mobileCameraLayer.style.setProperty("--mobile-record-progress", "0");
+        setMobileCaptureState("idle");
+        if (!keepUiIdle) renderAll(false);
+      }
+
+      function videoRenderSize() {
+        const aspect = Math.max(0.01, state.sourceAspect || 1);
+        const requiredLongSide = aspect >= 1
+          ? Math.round(state.videoRenderShortSide * aspect)
+          : Math.round(state.videoRenderShortSide / aspect);
+        const target = Math.min(state.videoRenderLongSide, Math.max(state.videoRenderShortSide, requiredLongSide));
+        return Math.max(2, Math.round(target / 2) * 2);
+      }
+
+      function interactiveRenderSize() {
+        if (isMobileCaptureSource()) return mobileCapture.renderSize;
+        return isVideoSource() ? state.videoTuneSize : state.previewSize;
+      }
+
+      function finalRenderSize() {
+        if (isMobileCaptureSource()) return mobileCapture.renderSize;
+        return isVideoSource() ? videoRenderSize() : state.size;
+      }
+
       function scheduleRenderOutput() {
+        if (isVideoSource()) markProcessedVideoDirty();
         if (renderFrameQueued) return;
         renderFrameQueued = true;
         renderOutputTimer = window.setTimeout(() => {
@@ -4866,9 +6515,10 @@
           renderOutputFrame = requestAnimationFrame(() => {
             renderOutputFrame = 0;
             renderFrameQueued = false;
-            renderOutput(state.previewSize);
+            renderOutput(interactiveRenderSize());
+            if (isVideoSource()) scheduleVideoFrameRefine();
           });
-        }, 80);
+        }, isVideoSource() ? 320 : 80);
       }
 
       function cancelScheduledRenderOutput() {
@@ -4885,7 +6535,18 @@
 
       function flushRenderOutput() {
         cancelScheduledRenderOutput();
-        renderOutput(state.size);
+        if (isVideoSource()) markProcessedVideoDirty();
+        renderOutput(isVideoSource() ? interactiveRenderSize() : finalRenderSize());
+        if (isVideoSource()) scheduleVideoFrameRefine();
+      }
+
+      function scheduleVideoFrameRefine(delay = 700) {
+        if (videoRefineTimer) window.clearTimeout(videoRefineTimer);
+        if (!isVideoSource() || state.videoExporting || hasProcessedVideo()) return;
+        videoRefineTimer = window.setTimeout(() => {
+          videoRefineTimer = 0;
+          renderCurrentVideoFrame(videoRenderSize());
+        }, delay);
       }
 
       function scheduleColorRenderOutput() {
@@ -4914,6 +6575,11 @@
 
       function syncMobileScrollPosition() {
         if (!mobileFixedTop || window.innerWidth > 640) return;
+        if (app.classList.contains("mobile-camera-session")) {
+          mobileFixedTop.style.setProperty("--mobile-collapse-offset", "0px");
+          app.classList.remove("mobile-header-collapsed");
+          return;
+        }
         const preview = mobileFixedTop.querySelector(".mobile-preview-fixed");
         const collapseHeight = state.source && preview ? preview.offsetTop : 0;
         const offset = Math.min(Math.max(0, window.scrollY || 0), collapseHeight);
@@ -4943,6 +6609,170 @@
         });
       }
 
+      function formatVideoTime(seconds, showMinutes = true) {
+        const safe = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
+        const wholeSeconds = Math.floor(safe);
+        if (!showMinutes) return String(wholeSeconds).padStart(2, "0");
+        const minutes = Math.floor(wholeSeconds / 60);
+        const remainder = wholeSeconds % 60;
+        return `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
+      }
+
+      function hasProcessedVideo() {
+        return Boolean(processedVideoBlob && processedVideoUrl && processedVideoSignature === videoSettingsSignature());
+      }
+
+      function playbackVideo() {
+        return hasProcessedVideo() ? processedVideo : videoSource;
+      }
+
+      function videoSettingsSignature() {
+        if (!isVideoSource()) return "";
+        return JSON.stringify({
+          source: videoObjectUrl,
+          preset: state.preset,
+          nodes: state.nodes,
+          outputReverse: state.outputReverse,
+          fps: state.videoFps,
+          renderSize: videoRenderSize(),
+        });
+      }
+
+      function syncVideoMetrics() {
+        videoMetricFps.textContent = String(state.videoFps);
+        videoMetricResolution.textContent = String(videoRenderSize());
+      }
+
+      function syncVideoProcessUi() {
+        const isVideo = isVideoSource();
+        const ready = isVideo && hasProcessedVideo();
+        const processing = isVideo && state.videoExporting;
+        const failed = isVideo && videoProcessPhase === "error";
+        videoProcessButton.classList.toggle("is-ready", ready);
+        videoProcessButton.classList.toggle("is-processing", processing);
+        videoProcessButton.classList.toggle("is-error", failed);
+        videoProcessButton.classList.toggle("has-progress", processing);
+        videoProcessButton.disabled = !isVideo || ready || processing;
+        videoProcessButton.style.setProperty("--render-progress", `${processing ? videoProcessProgress : 0}%`);
+        videoProcessValue.textContent = processing ? `${videoProcessProgress}%` : "";
+        videoProcessLabel.textContent = processing
+          ? (videoProcessPhase === "encoding" ? "ENCODING" : "RENDERING")
+          : (ready ? "READY" : failed ? "RETRY" : "RENDER");
+        videoPlayToggle.disabled = !ready || processing;
+        videoProgress.disabled = processing;
+        document.querySelectorAll("[data-export-png]").forEach((button) => {
+          const disabled = !state.source || processing || (isVideo && !ready);
+          button.disabled = disabled;
+          button.setAttribute("aria-disabled", String(disabled));
+        });
+      }
+
+      function clearProcessedVideo({ revoke = true } = {}) {
+        const previousTime = processedVideo.currentTime || 0;
+        processedVideo.pause();
+        if (isVideoSource() && Number.isFinite(previousTime)) videoSource.currentTime = previousTime;
+        app.classList.remove("video-cache-ready");
+        processedVideoSignature = "";
+        processedVideoBlob = null;
+        if (processedVideoUrl && revoke) URL.revokeObjectURL(processedVideoUrl);
+        processedVideoUrl = "";
+        processedVideo.removeAttribute("src");
+        processedVideo.load();
+      }
+
+      function markProcessedVideoDirty() {
+        if (!isVideoSource()) return;
+        if (processedVideoSignature && processedVideoSignature !== videoSettingsSignature()) {
+          clearProcessedVideo();
+          syncVideoProcessUi();
+        }
+      }
+
+      function syncVideoTimeline(time = playbackVideo().currentTime || 0) {
+        const media = playbackVideo();
+        const duration = state.videoDuration || media.duration || 0;
+        const current = Math.min(Math.max(0, time), duration || 0);
+        videoProgress.max = String(duration || 0);
+        if (!videoProgress.matches(":active")) videoProgress.value = String(current);
+        const pct = duration > 0 ? current / duration * 100 : 0;
+        videoProgress.style.setProperty("--video-progress", `${pct}%`);
+        const showMinutes = duration >= 60;
+        videoTime.textContent = `${formatVideoTime(current, showMinutes)}/${formatVideoTime(duration, showMinutes)}`;
+        const paused = media.paused || media.ended;
+        videoPlayToggle.classList.toggle("is-paused", paused);
+        videoPlayToggle.setAttribute("aria-label", paused ? "播放" : "暂停");
+        videoPlayToggle.setAttribute("aria-pressed", String(!paused));
+      }
+
+      function cancelVideoFrameLoop() {
+        if (videoFrameRequest && videoSource.cancelVideoFrameCallback) {
+          videoSource.cancelVideoFrameCallback(videoFrameRequest);
+        }
+        if (videoFallbackFrame) cancelAnimationFrame(videoFallbackFrame);
+        videoFrameRequest = 0;
+        videoFallbackFrame = 0;
+      }
+
+      function renderCurrentVideoFrame(renderSize = videoRenderSize()) {
+        if (!isVideoSource() || videoSource.readyState < 2) return;
+        invalidateSourceImageCache();
+        renderOutput(renderSize);
+        syncVideoTimeline();
+      }
+
+      function scheduleNextVideoFrame() {
+        cancelVideoFrameLoop();
+        if (!isVideoSource() || videoSource.paused || videoSource.ended) return;
+
+        const handleFrame = (mediaTime) => {
+          videoFrameRequest = 0;
+          videoFallbackFrame = 0;
+          const fps = state.videoFps;
+          const renderSize = videoRenderSize();
+          const minInterval = 1 / Math.max(1, fps);
+          syncVideoTimeline(mediaTime);
+          if (mediaTime - lastRenderedVideoTime >= minInterval - 0.004 || mediaTime < lastRenderedVideoTime) {
+            lastRenderedVideoTime = mediaTime;
+            renderCurrentVideoFrame(renderSize);
+          }
+          scheduleNextVideoFrame();
+        };
+
+        if (videoSource.requestVideoFrameCallback) {
+          videoFrameRequest = videoSource.requestVideoFrameCallback((now, metadata) => handleFrame(metadata.mediaTime));
+        } else {
+          videoFallbackFrame = requestAnimationFrame(() => handleFrame(videoSource.currentTime || 0));
+        }
+      }
+
+      function waitForVideoEvent(name) {
+        return new Promise((resolve, reject) => {
+          const onEvent = () => {
+            cleanup();
+            resolve();
+          };
+          const onError = () => {
+            cleanup();
+            reject(new Error("视频读取失败"));
+          };
+          const cleanup = () => {
+            videoSource.removeEventListener(name, onEvent);
+            videoSource.removeEventListener("error", onError);
+          };
+          videoSource.addEventListener(name, onEvent, { once: true });
+          videoSource.addEventListener("error", onError, { once: true });
+        });
+      }
+
+      async function seekVideo(time) {
+        const duration = state.videoDuration || videoSource.duration || 0;
+        const target = Math.min(Math.max(0, time), duration || 0);
+        if (Math.abs(videoSource.currentTime - target) < 0.001) return;
+        const ready = waitForVideoEvent("seeked");
+        videoSource.currentTime = target;
+        await ready;
+      }
+
       function isTransparentOutput() {
         const color = state.nodes.color;
         return Boolean(color.transparent) || getColorAlpha(color, "bg") <= 0;
@@ -4956,7 +6786,8 @@
         return outputMask;
       }
 
-      function syncResultFit() {
+      function syncResultFit(force = false) {
+        if (renderingVideoBatch && !force) return;
         const stage = result.parentElement;
         if (!stage) return;
         const stageW = stage.clientWidth;
@@ -4973,6 +6804,8 @@
         const height = Math.max(1, Math.floor(canvasH * scale));
         result.style.setProperty("--fit-width", `${width}px`);
         result.style.setProperty("--fit-height", `${height}px`);
+        processedVideo.style.setProperty("--fit-width", `${width}px`);
+        processedVideo.style.setProperty("--fit-height", `${height}px`);
         syncMobileResult();
       }
 
@@ -5040,6 +6873,27 @@
         const fiberY = fractalNoise(x * 0.006, y * 0.032 + seed * 1.7, seed + 67, 3) - 0.5;
         const scanLine = Math.sin(y * (0.022 + scan * 0.018) + fractalNoise(0, y * 0.018, seed + 83, 2) * 2) * scan;
         return clipStrength * (cloud * 8.5 * fabric + fiberX * 3.8 * fabric + fiberY * 2.4 * fabric + scanLine * 2.4);
+      }
+
+      function getPaperToneMap(width, height, texture, seed, offsetX = 0) {
+        if (!texture.enabled) return null;
+        const signature = `${width}x${height}:${texture.fabric}:${texture.scan}`;
+        if (paperToneCache.signature !== signature) {
+          paperToneCache = { signature, maps: new Map() };
+        }
+        const key = `${seed}:${offsetX}`;
+        const cached = paperToneCache.maps.get(key);
+        if (cached) return cached;
+
+        const tones = new Float64Array(width * height);
+        for (let y = 0; y < height; y++) {
+          const row = y * width;
+          for (let x = 0; x < width; x++) {
+            tones[row + x] = paperTextureTone(x + offsetX, y, texture, 1, seed);
+          }
+        }
+        paperToneCache.maps.set(key, tones);
+        return tones;
       }
 
       function printGrainTone(x, y, amount = 1, seed = 1) {
@@ -5791,8 +7645,12 @@
 
       function buildSourceImage(maxSide = state.size) {
         const aspect = Math.max(0.01, state.sourceAspect || 1);
-        const width = aspect >= 1 ? maxSide : Math.max(1, Math.round(maxSide * aspect));
-        const height = aspect >= 1 ? Math.max(1, Math.round(maxSide / aspect)) : maxSide;
+        const normalizeDimension = (value) => {
+          const rounded = Math.max(1, Math.round(value));
+          return isMotionSource() ? Math.max(2, Math.round(rounded / 2) * 2) : rounded;
+        };
+        const width = normalizeDimension(aspect >= 1 ? maxSide : maxSide * aspect);
+        const height = normalizeDimension(aspect >= 1 ? maxSide / aspect : maxSide);
 
         if (
           sourceImageCache &&
@@ -5810,17 +7668,19 @@
         workCtx.clearRect(0, 0, width, height);
         drawContain(workCtx, state.source, aspect, width, height, state.sourceHasTransparency ? null : "#ffffff");
 
-        const miniMax = 320;
-        const miniWidth = aspect >= 1 ? miniMax : Math.max(1, Math.round(miniMax * aspect));
-        const miniHeight = aspect >= 1 ? Math.max(1, Math.round(miniMax / aspect)) : miniMax;
-        sourceMini.width = miniWidth;
-        sourceMini.height = miniHeight;
-        sourceMiniCtx.clearRect(0, 0, miniWidth, miniHeight);
-        if (state.sourceHasTransparency) {
-          drawTransparencyGrid(sourceMiniCtx, miniWidth, miniHeight);
-          drawContain(sourceMiniCtx, state.source, aspect, miniWidth, miniHeight, null);
-        } else {
-          drawContain(sourceMiniCtx, state.source, aspect, miniWidth, miniHeight, "#ffffff");
+        if (!renderingVideoBatch && !isMobileCaptureSource()) {
+          const miniMax = 320;
+          const miniWidth = aspect >= 1 ? miniMax : Math.max(1, Math.round(miniMax * aspect));
+          const miniHeight = aspect >= 1 ? Math.max(1, Math.round(miniMax / aspect)) : miniMax;
+          sourceMini.width = miniWidth;
+          sourceMini.height = miniHeight;
+          sourceMiniCtx.clearRect(0, 0, miniWidth, miniHeight);
+          if (state.sourceHasTransparency) {
+            drawTransparencyGrid(sourceMiniCtx, miniWidth, miniHeight);
+            drawContain(sourceMiniCtx, state.source, aspect, miniWidth, miniHeight, null);
+          } else {
+            drawContain(sourceMiniCtx, state.source, aspect, miniWidth, miniHeight, "#ffffff");
+          }
         }
         const imageData = workCtx.getImageData(0, 0, width, height);
         sourceImageCache = {
@@ -5837,7 +7697,9 @@
       function createMask(source) {
         const { data, width: w, height: h } = source;
         const extract = state.nodes.extract;
-        const mask = new Float32Array(w * h);
+        const buffers = getRenderBuffers(w, h);
+        const mask = buffers.baseMask;
+        const maskNoise = buffers.maskNoise;
         const contrast = 1 + (extract.enabled ? extract.contrast : 20) / 32;
         const threshold = extract.enabled ? extract.threshold : 128;
         const grayKeep = extract.enabled ? clamp(extract.grayKeep || 0, 0, 100) / 100 : 0;
@@ -5852,7 +7714,7 @@
             }
             let luma = clamp((getLuma(data, i) - 128) * contrast + 128);
             if (extract.invert) luma = 255 - luma;
-            const noisy = luma + (hash(Math.floor(x / 3), Math.floor(y / 3), 2) - 0.5) * 22;
+            const noisy = luma + (maskNoise[y * w + x] - 0.5) * 22;
             if (grayKeep <= 0) {
               mask[y * w + x] = noisy < threshold ? 1 : 0;
             } else {
@@ -5878,9 +7740,10 @@
       function createEdgeMap(mask, w, h, radius, threshold = 0.08) {
         if (radius <= 0) return null;
         const stride = w + 1;
-        const binary = new Uint8Array(w * h);
-        const integral = new Uint32Array((w + 1) * (h + 1));
-        const edgeMap = new Uint8Array(w * h);
+        const buffers = getRenderBuffers(w, h);
+        const binary = buffers.edgeBinary;
+        const integral = buffers.edgeIntegral;
+        const edgeMap = buffers.edgeMap;
 
         for (let y = 0; y < h; y++) {
           let rowSum = 0;
@@ -5924,7 +7787,8 @@
         const rough = edge.rough / 100;
         const radius = Math.max(1, Math.min(8, Math.round(edge.width + 1 + rough * 4)));
         const cell = Math.max(2, Math.round(9 - rough * 6));
-        const out = new Float32Array(mask);
+        const out = getRenderBuffers(w, h).roughMask;
+        out.set(mask);
         const edgeMap = createEdgeMap(mask, w, h, radius);
 
         for (let y = 0; y < h; y++) {
@@ -6077,7 +7941,7 @@
       }
 
       function renderPenTrace(source, mask, w, h, textureMask = mask) {
-        const out = resultCtx.createImageData(w, h);
+        const out = getRenderBuffers(w, h).output;
         const d = out.data;
         const ink = state.nodes.ink;
         const edge = state.nodes.edge;
@@ -6094,6 +7958,10 @@
         const clipDecor = shouldClipDecorToMask();
         const textureActive = texture.enabled;
         const distressActive = distress.enabled;
+        const grainCell = Math.max(1, distress.size);
+        const distressThreshold = distress.amount / 360;
+        const inkStrength = ink.strength / 100 * inkAlpha;
+        const paperToneMap = textureActive ? getPaperToneMap(w, h, texture, 81) : null;
         const edgeMap = edge.enabled && edge.width > 0
           ? createEdgeMap(mask, w, h, Math.max(1, Math.round(edge.width)))
           : null;
@@ -6104,7 +7972,7 @@
             const i = p * 4;
             const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
             const textureStrength = textureActive ? textureClip : 0;
-            const paperTone = paperTextureTone(x, y, texture, textureStrength, 81);
+            const paperTone = paperToneMap ? paperToneMap[p] * textureStrength : 0;
 
             let r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + paperTone);
             let g = clamp(lerp(255, bgRgb.g, bgCompositeAlpha) + paperTone);
@@ -6116,13 +7984,12 @@
               line = Math.max(line, 0.92);
             }
 
-            const grainCell = Math.max(1, distress.size);
-            const broken = distressActive && hash(Math.floor(x / grainCell), Math.floor(y / grainCell), distress.seed) < distress.amount / 360;
+            const broken = distressActive && hash(Math.floor(x / grainCell), Math.floor(y / grainCell), distress.seed) < distressThreshold;
             if (broken) line *= 0.18;
 
             if (line > 0.05 && ink.enabled) {
               const scratch = 0.78 + hash(x, y, 91) * 0.32;
-              const mix = clamp(line * ink.strength / 100 * inkAlpha * scratch, 0, 1);
+              const mix = clamp(line * inkStrength * scratch, 0, 1);
               const lineR = lerp(inkRgb.r, edgeRgb.r, line * 0.35);
               const lineG = lerp(inkRgb.g, edgeRgb.g, line * 0.35);
               const lineB = lerp(inkRgb.b, edgeRgb.b, line * 0.35);
@@ -6145,13 +8012,11 @@
         syncResultFit();
       }
 
-      function getBlurredMaskData(mask, w, h, blurPx) {
+      function createMaskAlphaCanvas(mask, w, h) {
         const maskCanvas = document.createElement("canvas");
-        const blurCanvas = document.createElement("canvas");
-        maskCanvas.width = blurCanvas.width = w;
-        maskCanvas.height = blurCanvas.height = h;
+        maskCanvas.width = w;
+        maskCanvas.height = h;
         const maskCtx = maskCanvas.getContext("2d", { willReadFrequently: true });
-        const blurCtx = blurCanvas.getContext("2d", { willReadFrequently: true });
         const image = maskCtx.createImageData(w, h);
         const d = image.data;
         for (let p = 0; p < mask.length; p++) {
@@ -6162,21 +8027,24 @@
           d[i + 3] = clamp(mask[p], 0, 1) * 255;
         }
         maskCtx.putImageData(image, 0, 0);
+        return maskCanvas;
+      }
+
+      function getBlurredMaskData(mask, w, h, blurPx, maskCanvas = null) {
+        const sourceCanvas = maskCanvas || createMaskAlphaCanvas(mask, w, h);
+        const blurCanvas = document.createElement("canvas");
+        blurCanvas.width = w;
+        blurCanvas.height = h;
+        const blurCtx = blurCanvas.getContext("2d", { willReadFrequently: true });
         blurCtx.filter = `blur(${Math.max(0, blurPx)}px)`;
-        blurCtx.drawImage(maskCanvas, 0, 0);
+        blurCtx.drawImage(sourceCanvas, 0, 0);
         blurCtx.filter = "none";
         return blurCtx.getImageData(0, 0, w, h).data;
       }
 
-      function alphaAt(data, w, h, x, y) {
-        const xx = Math.max(0, Math.min(w - 1, x));
-        const yy = Math.max(0, Math.min(h - 1, y));
-        return data[(yy * w + xx) * 4 + 3] / 255;
-      }
-
       function renderThermalMap(source, mask, w, h, textureMask = mask) {
         const { data } = source;
-        const out = resultCtx.createImageData(w, h);
+        const out = getRenderBuffers(w, h).output;
         const d = out.data;
         const ink = state.nodes.ink;
         const edge = state.nodes.edge;
@@ -6203,31 +8071,44 @@
         const decorParticles = decorActive ? decor.particles : 0;
         const distress = state.nodes.distress;
         const distressActive = distress.enabled;
-        const soft = getBlurredMaskData(mask, w, h, 8 + decorBlur * 0.28 + textureBleed * 0.08);
-        const body = getBlurredMaskData(mask, w, h, 2 + edge.width * 1.6);
-        const glow = getBlurredMaskData(mask, w, h, 18 + decorBlur * 0.42 + textureBleed * 0.16);
+        const maskCanvas = createMaskAlphaCanvas(mask, w, h);
+        const soft = getBlurredMaskData(mask, w, h, 8 + decorBlur * 0.28 + textureBleed * 0.08, maskCanvas);
+        const body = getBlurredMaskData(mask, w, h, 2 + edge.width * 1.6, maskCanvas);
+        const glow = getBlurredMaskData(mask, w, h, 18 + decorBlur * 0.42 + textureBleed * 0.16, maskCanvas);
+        const distressCell = Math.max(1, distress.size || 1);
+        const distressAmount = distressActive ? distress.amount / 100 : 0;
+        const fuzzyEdgeScale = 4 + edge.rough * 0.045;
+        const bodyMixScale = ink.strength / 100 * inkAlpha;
+        const edgeMixScale = (0.26 + edge.width * 0.08) * edgeAlpha;
+        const materialNoiseScale = textureFabric * 0.82 + decorParticles * 0.12;
+        const scanScale = textureScan / 100;
+        const paperToneMap = textureActive ? getPaperToneMap(w, h, texture, 121) : null;
+        const scanToneMap = textureActive ? getPaperToneMap(w, h, texture, 123, 173) : null;
 
         for (let y = 0; y < h; y++) {
+          const row = y * w;
+          const rowUp = Math.max(0, y - 1) * w;
+          const rowDown = Math.min(h - 1, y + 1) * w;
           for (let x = 0; x < w; x++) {
-            const p = y * w + x;
+            const p = row + x;
             const i = p * 4;
             const luma = getLuma(data, i);
             const tone = clamp((255 - luma) / 255, 0, 1);
-            const softA = alphaAt(soft, w, h, x, y);
-            const bodyA = alphaAt(body, w, h, x, y);
-            const glowA = alphaAt(glow, w, h, x, y);
-            const sx1 = alphaAt(soft, w, h, x + 1, y);
-            const sx0 = alphaAt(soft, w, h, x - 1, y);
-            const sy1 = alphaAt(soft, w, h, x, y + 1);
-            const sy0 = alphaAt(soft, w, h, x, y - 1);
-            const fuzzyEdge = clamp((Math.abs(sx1 - sx0) + Math.abs(sy1 - sy0)) * (4 + edge.rough * 0.045), 0, 1);
+            const softA = soft[i + 3] / 255;
+            const bodyA = body[i + 3] / 255;
+            const glowA = glow[i + 3] / 255;
+            const left = row + Math.max(0, x - 1);
+            const right = row + Math.min(w - 1, x + 1);
+            const sx1 = soft[right * 4 + 3] / 255;
+            const sx0 = soft[left * 4 + 3] / 255;
+            const sy1 = soft[(rowDown + x) * 4 + 3] / 255;
+            const sy0 = soft[(rowUp + x) * 4 + 3] / 255;
+            const fuzzyEdge = clamp((Math.abs(sx1 - sx0) + Math.abs(sy1 - sy0)) * fuzzyEdgeScale, 0, 1);
             const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
             const textureStrength = textureActive ? textureClip : 0;
-            const paperTone = paperTextureTone(x, y, texture, textureStrength, 121);
+            const paperTone = paperToneMap ? paperToneMap[p] * textureStrength : 0;
             const materialArea = Math.max(softA, bodyA, fuzzyEdge);
-            const materialNoise = textureStrength * materialArea * (hash(x, y, 122) - 0.5) * (textureFabric * 0.82 + decorParticles * 0.12);
-            const distressCell = Math.max(1, distress.size || 1);
-            const distressAmount = distressActive ? distress.amount / 100 : 0;
+            const materialNoise = textureStrength * materialArea * (hash(x, y, 122) - 0.5) * materialNoiseScale;
             const grain = distressActive ? hash(Math.floor(x / distressCell), Math.floor(y / distressCell), distress.seed) : 1;
             const fineGrain = distressActive ? hash(x, y, distress.seed + 127) : 1;
             const coarseDrop = distressActive && grain < distressAmount * 0.52;
@@ -6246,18 +8127,18 @@
             g = lerp(g, hiRgb.g, haloMix);
             b = lerp(b, hiRgb.b, haloMix);
 
-            const bodyMix = clamp((softA * 0.38 + bodyA * 0.52) * (0.42 + tone * 0.58) * ink.strength / 100 * inkAlpha * distressDrop, 0, 0.96);
+            const bodyMix = clamp((softA * 0.38 + bodyA * 0.52) * (0.42 + tone * 0.58) * bodyMixScale * distressDrop, 0, 0.96);
             r = lerp(r, inkRgb.r, bodyMix);
             g = lerp(g, inkRgb.g, bodyMix);
             b = lerp(b, inkRgb.b, bodyMix);
 
-            const edgeMix = clamp(fuzzyEdge * (0.26 + edge.width * 0.08) * edgeAlpha, 0, 0.58);
+            const edgeMix = clamp(fuzzyEdge * edgeMixScale, 0, 0.58);
             r = lerp(r, edgeRgb.r, edgeMix);
             g = lerp(g, edgeRgb.g, edgeMix);
             b = lerp(b, edgeRgb.b, edgeMix);
 
             const paintedArea = Math.max(haloMix, bodyMix, edgeMix);
-            const scanTone = paperTextureTone(x + 173, y, texture, textureStrength * 0.34, 123) * (textureScan / 100);
+            const scanTone = scanToneMap ? scanToneMap[p] * textureStrength * 0.34 * scanScale : 0;
             d[i] = clamp(r + materialNoise + scanTone + distressNoise);
             d[i + 1] = clamp(g + materialNoise + scanTone + distressNoise);
             d[i + 2] = clamp(b + materialNoise + scanTone + distressNoise);
@@ -6405,33 +8286,61 @@
         resultCtx.putImageData(image, 0, 0);
       }
 
-      function applyOutputReverseMask(mask) {
+      function applyOutputReverseMask(mask, w, h) {
         if (!state.outputReverse) return mask;
-        const reversed = new Float32Array(mask.length);
+        const reversed = getRenderBuffers(w, h).reverseMask;
         for (let i = 0; i < mask.length; i++) {
           reversed[i] = 1 - clamp(mask[i], 0, 1);
         }
         return reversed;
       }
 
-      function renderOutput(renderSize = state.size) {
+      function renderOutput(renderSize = finalRenderSize()) {
         if (!state.source) return;
+        const profiling = renderingVideoBatch && Boolean(videoRenderProfile);
+        const measuring = profiling || renderDebugEnabled;
+        const renderStarted = measuring ? performance.now() : 0;
         const source = buildSourceImage(renderSize);
+        const sourceReady = measuring ? performance.now() : 0;
         const { data, width: w, height: h } = source;
         const baseMask = createMask(source);
         const roughMask = createRoughEdgeMask(baseMask, w, h, state.nodes.edge);
-        const outputMask = applyOutputReverseMask(roughMask);
+        const outputMask = applyOutputReverseMask(roughMask, w, h);
         const textureMask = getTextureMask(outputMask);
-        renderMaskMini(outputMask, w, h);
+        const maskReady = measuring ? performance.now() : 0;
+        const finishProfile = () => {
+          if (!measuring) return;
+          const effectReady = performance.now();
+          const sourceMs = sourceReady - renderStarted;
+          const maskMs = maskReady - sourceReady;
+          const effectMs = effectReady - maskReady;
+          if (profiling) recordVideoRenderFrame(sourceMs, maskMs, effectMs);
+          if (renderDebugEnabled) {
+            const frameProfile = {
+              preset: state.preset,
+              width: w,
+              height: h,
+              sourceMs: Math.round(sourceMs),
+              maskMs: Math.round(maskMs),
+              effectMs: Math.round(effectMs),
+              totalMs: Math.round(effectReady - renderStarted),
+            };
+            document.documentElement.dataset.renderProfile = JSON.stringify(frameProfile);
+            console.info("[Graphic Texture] frame profile", frameProfile);
+          }
+        };
+        if (!renderingVideoBatch && !isMobileCaptureSource()) renderMaskMini(outputMask, w, h);
         if (state.preset === "penTrace") {
           renderPenTrace(source, outputMask, w, h, textureMask);
+          finishProfile();
           return;
         }
         if (state.preset === "thermalMap") {
           renderThermalMap(source, outputMask, w, h, textureMask);
+          finishProfile();
           return;
         }
-        const out = resultCtx.createImageData(w, h);
+        const out = getRenderBuffers(w, h).output;
         const d = out.data;
 
         const extract = state.nodes.extract;
@@ -6454,6 +8363,22 @@
         const bgCompositeAlpha = transparent ? 1 : bgAlpha;
         const directTransparentForeground = transparent && state.preset === "dotShirt";
         const clipDecor = shouldClipDecorToMask();
+        const screenActive = screen.enabled && screen.strength > 0;
+        const screenAngle = screen.angle * Math.PI / 180;
+        const screenCos = Math.cos(screenAngle);
+        const screenSin = Math.sin(screenAngle);
+        const screenCell = Math.max(3, screen.dot);
+        const screenHalfCell = screenCell * 0.5;
+        const screenStrength = screen.strength / 100;
+        const distressCell = Math.max(1, distress.size);
+        const distressHoleThreshold = distress.amount / 100 * 0.18;
+        const sourceHoleThreshold = (ink.enabled ? ink.holes / 100 : 0) * 0.08;
+        const inkStrength = ink.strength / 100 * inkAlpha;
+        const printNoiseScale = 48 * (texture.enabled ? texture.fabric / 100 : 0);
+        const textureScanScale = texture.scan / 100;
+        const textureBleed = texture.bleed / 100;
+        const paperToneMap = texture.enabled ? getPaperToneMap(w, h, texture, 21) : null;
+        const scanToneMap = texture.enabled ? getPaperToneMap(w, h, texture, 5, 97) : null;
         const edgeMap = edge.enabled && edge.width > 0
           ? createEdgeMap(outputMask, w, h, Math.max(1, Math.round(edge.width)))
           : null;
@@ -6470,32 +8395,25 @@
 
             if (edgeMap) e = edgeMap[p];
 
-            if (screen.enabled && maskStrength > 0.03 && screen.strength > 0) {
-              const angle = screen.angle * Math.PI / 180;
-              const cos = Math.cos(angle);
-              const sin = Math.sin(angle);
+            if (screenActive && maskStrength > 0.03) {
               const cx = x - w * 0.5;
               const cy = y - h * 0.5;
-              const rx = cx * cos - cy * sin;
-              const ry = cx * sin + cy * cos;
-              const cell = Math.max(3, screen.dot);
-              const lx = ((rx % cell) + cell) % cell - cell * 0.5;
-              const ly = ((ry % cell) + cell) % cell - cell * 0.5;
+              const rx = cx * screenCos - cy * screenSin;
+              const ry = cx * screenSin + cy * screenCos;
+              const lx = ((rx % screenCell) + screenCell) % screenCell - screenHalfCell;
+              const ly = ((ry % screenCell) + screenCell) % screenCell - screenHalfCell;
               const tone = clamp((255 - luma) / 255, 0, 1);
-              const radius = cell * (0.12 + tone * 0.52) * (screen.strength / 100) * (0.72 + maskStrength * 0.28);
-              if (Math.hypot(lx, ly) > radius) {
+              const radius = screenCell * (0.12 + tone * 0.52) * screenStrength * (0.72 + maskStrength * 0.28);
+              if (lx * lx + ly * ly > radius * radius) {
                 m = 0;
                 maskStrength = 0;
               }
             }
 
             if (distress.enabled && maskStrength > 0.03 && textureStrength > 0.03) {
-              const cell = Math.max(1, distress.size);
-              const speckle = hash(Math.floor(x / cell), Math.floor(y / cell), distress.seed);
+              const speckle = hash(Math.floor(x / distressCell), Math.floor(y / distressCell), distress.seed);
               const fine = hash(x, y, distress.seed + 9);
-              const holePower = distress.amount / 100;
-              const sourceHole = ink.enabled ? ink.holes / 100 : 0;
-              if (speckle < holePower * 0.18 || fine < sourceHole * 0.08) {
+              if (speckle < distressHoleThreshold || fine < sourceHoleThreshold) {
                 m = 0;
                 maskStrength = 0;
               }
@@ -6507,16 +8425,16 @@
             let a = transparent ? 0 : 255;
 
             if (color.enabled && (!transparent || !directTransparentForeground)) {
-              const fabricTone = texture.enabled ? paperTextureTone(x, y, texture, textureStrength, 21) : 0;
+              const fabricTone = paperToneMap ? paperToneMap[p] * textureStrength : 0;
               r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + fabricTone);
               g = clamp(lerp(255, bgRgb.g, bgCompositeAlpha) + fabricTone);
               b = clamp(lerp(255, bgRgb.b, bgCompositeAlpha) + fabricTone);
             }
 
             if (maskStrength > 0.03 && ink.enabled) {
-              const strength = ink.strength / 100 * inkAlpha * maskStrength;
+              const strength = inkStrength * maskStrength;
               const shade = clamp((255 - luma) / 255, 0, 1);
-              const printNoise = textureStrength * (hash(x, y, 4) - 0.5) * 48 * (texture.enabled ? texture.fabric / 100 : 0);
+              const printNoise = textureStrength * (hash(x, y, 4) - 0.5) * printNoiseScale;
               const inkR = lerp(inkRgb.r, hiRgb.r, shade * 0.18 * hiAlpha);
               const inkG = lerp(inkRgb.g, hiRgb.g, shade * 0.18 * hiAlpha);
               const inkB = lerp(inkRgb.b, hiRgb.b, shade * 0.18 * hiAlpha);
@@ -6548,12 +8466,13 @@
             }
 
             if (texture.enabled) {
-              const scan = transparent && a === 0 ? 0 : paperTextureTone(x + 97, y, texture, textureStrength * 0.28, 5) * (texture.scan / 100);
-              const bleed = texture.bleed / 100;
-              if (maskStrength > 0.03 && textureStrength > 0.03 && bleed > 0) {
-                r = lerp(r, inkRgb.r, bleed * hash(x, y, 33) * 0.16 * maskStrength * textureStrength);
-                g = lerp(g, inkRgb.g, bleed * hash(x, y, 34) * 0.16 * maskStrength * textureStrength);
-                b = lerp(b, inkRgb.b, bleed * hash(x, y, 35) * 0.16 * maskStrength * textureStrength);
+              const scan = transparent && a === 0
+                ? 0
+                : (scanToneMap ? scanToneMap[p] * textureStrength * 0.28 * textureScanScale : 0);
+              if (maskStrength > 0.03 && textureStrength > 0.03 && textureBleed > 0) {
+                r = lerp(r, inkRgb.r, textureBleed * hash(x, y, 33) * 0.16 * maskStrength * textureStrength);
+                g = lerp(g, inkRgb.g, textureBleed * hash(x, y, 34) * 0.16 * maskStrength * textureStrength);
+                b = lerp(b, inkRgb.b, textureBleed * hash(x, y, 35) * 0.16 * maskStrength * textureStrength);
               }
               r = clamp(r + scan);
               g = clamp(g + scan);
@@ -6572,15 +8491,18 @@
         resultCtx.putImageData(out, 0, 0);
         if (decor.enabled) applyGraphicDecor(source, textureMask, w, h, clipDecor);
         syncResultFit();
+        finishProfile();
       }
 
       function renderAll(shouldRenderOutput = true) {
         cancelScheduledRenderOutput();
         app.classList.toggle("has-source", Boolean(state.source));
-        document.querySelectorAll("[data-export-png]").forEach((button) => {
-          button.disabled = !state.source;
-          button.setAttribute("aria-disabled", String(!state.source));
-        });
+        app.classList.toggle("has-video", isVideoSource());
+        if (isVideoSource()) {
+          markProcessedVideoDirty();
+          syncVideoMetrics();
+        }
+        syncVideoProcessUi();
         renderPresets();
         renderNodeList();
         renderColorPanel();
@@ -6588,12 +8510,44 @@
         renderMobileEffects();
         renderMobileParams();
         renderMobileColorPanel();
-        if (shouldRenderOutput) renderOutput();
+        if (shouldRenderOutput) renderOutput(isVideoSource() ? interactiveRenderSize() : finalRenderSize());
+        if (isVideoSource()) syncVideoTimeline();
         syncResultFit();
         syncMobileTopOffset();
+        if (mobileCapture.state !== "idle") syncMobileCaptureUi();
+        if (isVideoSource() && shouldRenderOutput) scheduleVideoFrameRefine();
+      }
+
+      let inputGuidanceTimer = 0;
+
+      function toggleInputGuidanceLanguage() {
+        if (inputStatus.dataset.mode !== "guidance") return;
+        const language = inputStatus.dataset.language === "zh" ? "en" : "zh";
+        const copy = inputStatus.querySelector(".input-guidance-copy");
+        inputStatus.dataset.language = language;
+        if (copy) {
+          copy.textContent = language === "zh"
+            ? "拖入文件 复制粘贴板"
+            : "Drag & Drop Copy & Paste";
+        }
+      }
+
+      function scheduleInputGuidanceRotation() {
+        window.clearTimeout(inputGuidanceTimer);
+        inputGuidanceTimer = window.setTimeout(() => {
+          if (inputStatus.dataset.mode !== "guidance") return;
+          toggleInputGuidanceLanguage();
+          scheduleInputGuidanceRotation();
+        }, 5000);
       }
 
       function setInputStatus(text) {
+        window.clearTimeout(inputGuidanceTimer);
+        inputGuidanceTimer = 0;
+        inputStatus.dataset.mode = "status";
+        inputStatus.removeAttribute("role");
+        inputStatus.removeAttribute("tabindex");
+        inputStatus.removeAttribute("aria-label");
         inputStatus.replaceChildren();
         const mark = document.createElement("span");
         mark.textContent = "*";
@@ -6606,8 +8560,57 @@
         return file.type === "image/svg+xml" || /\.svg$/i.test(file.name);
       }
 
+      function isRasterImageFile(file) {
+        return /^(image\/png|image\/jpeg)$/i.test(file.type) || /\.(png|jpe?g)$/i.test(file.name);
+      }
+
       function isPdfFile(file) {
         return file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+      }
+
+      function isVideoFile(file) {
+        return file.type.startsWith("video/") || /\.(mp4|m4v|mov|webm|ogv)$/i.test(file.name);
+      }
+
+      function isEditablePasteTarget(target) {
+        if (!(target instanceof Element)) return false;
+        if (target.closest("[contenteditable='true']")) return true;
+        return Boolean(target.closest("input:not([type='file']), textarea, select"));
+      }
+
+      function clipboardImageFile(event) {
+        const clipboard = event.clipboardData;
+        if (!clipboard) return null;
+        const file = Array.from(clipboard.files || []).find((item) => item.type.startsWith("image/"));
+        if (file) return file;
+        const imageItem = Array.from(clipboard.items || []).find(
+          (item) => item.kind === "file" && item.type.startsWith("image/"),
+        );
+        return imageItem?.getAsFile() || null;
+      }
+
+      function resetVideoSource() {
+        const wasCurrentSource = isVideoSource();
+        if (videoRefineTimer) window.clearTimeout(videoRefineTimer);
+        videoRefineTimer = 0;
+        videoProcessProgress = 0;
+        videoProcessPhase = "idle";
+        clearProcessedVideo();
+        cancelVideoFrameLoop();
+        videoSource.pause();
+        videoSource.removeAttribute("src");
+        videoSource.load();
+        if (videoObjectUrl) URL.revokeObjectURL(videoObjectUrl);
+        videoObjectUrl = "";
+        state.videoDuration = 0;
+        state.videoExporting = false;
+        lastRenderedVideoTime = -Infinity;
+        if (wasCurrentSource) {
+          state.source = null;
+          state.sourceType = "empty";
+          renderAll(false);
+        }
+        syncVideoTimeline(0);
       }
 
       async function renderPdfFirstPage(file) {
@@ -6633,7 +8636,7 @@
         state.source = source;
         state.sourceType = type;
         state.sourceAspect = aspect || 1;
-        state.sourceHasTransparency = type !== "pdf" && sourceHasTransparency(source, state.sourceAspect);
+        state.sourceHasTransparency = (type === "image" || type === "svg") && sourceHasTransparency(source, state.sourceAspect);
         window.scrollTo(0, 0);
         invalidateSourceImageCache();
         sidePreviews.classList.add("has-preview");
@@ -6641,11 +8644,40 @@
         renderAll();
       }
 
+      async function loadVideoFile(file) {
+        resetVideoSource();
+        videoObjectUrl = URL.createObjectURL(file);
+        const metadataReady = waitForVideoEvent("loadedmetadata");
+        videoSource.src = videoObjectUrl;
+        videoSource.load();
+        await metadataReady;
+        if (videoSource.readyState < 2) await waitForVideoEvent("loadeddata");
+        state.videoDuration = Number.isFinite(videoSource.duration) ? videoSource.duration : 0;
+        applyLoadedSource(
+          videoSource,
+          videoSource.videoWidth / Math.max(1, videoSource.videoHeight),
+          "video",
+          "视频已载入：可继续拖入文件替换",
+        );
+        syncVideoTimeline(0);
+      }
+
       async function loadFile(file) {
         if (!file) return;
+        if (mobileCapture.state !== "idle" || isMobileCaptureSource()) {
+          await closeMobileCapture({ resetSource: true });
+        }
         setInputStatus("正在读取文件...");
 
         try {
+          if (isVideoFile(file)) {
+            setInputStatus("正在读取视频...");
+            await loadVideoFile(file);
+            return;
+          }
+
+          if (isVideoSource()) resetVideoSource();
+
           if (isPdfFile(file)) {
             setInputStatus("正在读取 PDF 首页...");
             const pdfCanvas = await renderPdfFirstPage(file);
@@ -6653,8 +8685,8 @@
             return;
           }
 
-          if (!file.type.startsWith("image/") && !isSvgFile(file)) {
-            setInputStatus("格式不支持：请上传图片、SVG 或 PDF");
+          if (!isRasterImageFile(file) && !isSvgFile(file)) {
+            setInputStatus("格式不支持：请上传 PNG、JPG、视频、SVG 或 PDF");
             return;
           }
 
@@ -6675,38 +8707,569 @@
         }
       }
 
+      function getVideoRecorderMimeType() {
+        if (!window.MediaRecorder) return "";
+        const candidates = [
+          "video/mp4;codecs=avc1.42E01E",
+          "video/mp4",
+          "video/webm;codecs=vp9",
+          "video/webm;codecs=vp8",
+          "video/webm",
+        ];
+        return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+      }
+
+      function setVideoExportBusy(busy) {
+        state.videoExporting = busy;
+        document.querySelectorAll("[data-export-png]").forEach((button) => {
+          button.setAttribute("aria-busy", String(busy));
+        });
+        syncVideoProcessUi();
+      }
+
+      function waitForProcessedVideoReady() {
+        if (processedVideo.readyState >= 2) return Promise.resolve();
+        return new Promise((resolve, reject) => {
+          const cleanup = () => {
+            processedVideo.removeEventListener("loadeddata", onReady);
+            processedVideo.removeEventListener("error", onError);
+          };
+          const onReady = () => {
+            cleanup();
+            resolve();
+          };
+          const onError = () => {
+            cleanup();
+            reject(new Error("处理后的视频无法载入"));
+          };
+          processedVideo.addEventListener("loadeddata", onReady, { once: true });
+          processedVideo.addEventListener("error", onError, { once: true });
+        });
+      }
+
+      function canvasToFrameBlob() {
+        return new Promise((resolve, reject) => {
+          result.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("无法缓存处理帧"));
+          }, "image/webp", 0.92);
+        });
+      }
+
+      async function drawCachedFrame(blob) {
+        if (window.createImageBitmap) {
+          const bitmap = await createImageBitmap(blob);
+          resultCtx.clearRect(0, 0, result.width, result.height);
+          resultCtx.drawImage(bitmap, 0, 0, result.width, result.height);
+          bitmap.close();
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        try {
+          const image = new Image();
+          await new Promise((resolve, reject) => {
+            image.onload = resolve;
+            image.onerror = () => reject(new Error("无法读取缓存帧"));
+            image.src = url;
+          });
+          resultCtx.clearRect(0, 0, result.width, result.height);
+          resultCtx.drawImage(image, 0, 0, result.width, result.height);
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      }
+
+      function updateVideoProcessProgress(frame, frameCount) {
+        const progress = Math.round((frame + 1) / frameCount * 100);
+        if (progress === videoProcessProgress) return;
+        videoProcessProgress = progress;
+        syncVideoProcessUi();
+        setInputStatus(`正在渲染视频 ${progress}%`);
+      }
+
+      function yieldVideoRenderer(frame) {
+        if (frame % 2 === 0) return Promise.resolve();
+        return new Promise((resolve) => window.setTimeout(resolve, 0));
+      }
+
+      async function loadMp4MuxerModule() {
+        if (!mp4MuxerModulePromise) {
+          mp4MuxerModulePromise = import("https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.1/build/mp4-muxer.mjs")
+            .catch((error) => {
+              mp4MuxerModulePromise = null;
+              throw error;
+            });
+        }
+        return mp4MuxerModulePromise;
+      }
+
+      async function getSupportedVideoEncoderConfig(width, height, bitrate) {
+        if (!window.VideoEncoder || !window.VideoFrame || !VideoEncoder.isConfigSupported) return null;
+        const codecs = ["avc1.640028", "avc1.4d4028", "avc1.420028"];
+        for (const codec of codecs) {
+          const config = {
+            codec,
+            width,
+            height,
+            bitrate,
+            framerate: state.videoFps,
+            hardwareAcceleration: "prefer-hardware",
+            latencyMode: "quality",
+          };
+          try {
+            const support = await VideoEncoder.isConfigSupported(config);
+            if (support.supported) return support.config;
+          } catch (error) {
+            // Try the next AVC profile before falling back to MediaRecorder.
+          }
+        }
+        return null;
+      }
+
+      async function waitForEncoderQueue(encoder, maxQueue = 3) {
+        while (encoder.encodeQueueSize > maxQueue) {
+          await new Promise((resolve) => window.setTimeout(resolve, 0));
+        }
+      }
+
+      async function encodeVideoWithWebCodecs(signature, renderSize, duration, frameCount) {
+        if (!window.VideoEncoder || !window.VideoFrame) return null;
+        let muxerModule;
+        try {
+          muxerModule = await loadMp4MuxerModule();
+        } catch (error) {
+          return null;
+        }
+
+        let encoder = null;
+        let muxer = null;
+        let target = null;
+        let encoderError = null;
+        const frameDuration = Math.round(1_000_000 / state.videoFps);
+        const bitrate = renderSize >= 1920 ? 14_000_000 : renderSize >= 1080 ? 10_000_000 : 6_000_000;
+
+        try {
+          for (let frame = 0; frame < frameCount; frame++) {
+            if (signature !== videoSettingsSignature()) return null;
+            const time = Math.min(duration > 0 ? duration - 0.001 : 0, frame / state.videoFps);
+            const seekStarted = performance.now();
+            await seekVideo(Math.max(0, time));
+            recordVideoSeekTime(performance.now() - seekStarted);
+            renderCurrentVideoFrame(renderSize);
+
+            if (!encoder) {
+              const config = await getSupportedVideoEncoderConfig(result.width, result.height, bitrate);
+              if (!config) return null;
+              target = new muxerModule.ArrayBufferTarget();
+              muxer = new muxerModule.Muxer({
+                target,
+                video: { codec: "avc", width: result.width, height: result.height },
+                fastStart: "in-memory",
+                firstTimestampBehavior: "offset",
+              });
+              encoder = new VideoEncoder({
+                output: (chunk, metadata) => muxer.addVideoChunk(chunk, metadata),
+                error: (error) => { encoderError = error; },
+              });
+              encoder.configure(config);
+            }
+
+            const videoFrame = new VideoFrame(result, {
+              timestamp: frame * frameDuration,
+              duration: frameDuration,
+            });
+            encoder.encode(videoFrame, { keyFrame: frame % Math.max(1, state.videoFps * 2) === 0 });
+            videoFrame.close();
+            if (encoderError) throw encoderError;
+            await waitForEncoderQueue(encoder);
+            updateVideoProcessProgress(frame, frameCount);
+            await yieldVideoRenderer(frame);
+          }
+
+          videoProcessPhase = "encoding";
+          syncVideoProcessUi();
+          setInputStatus("正在完成视频编码...");
+          await encoder.flush();
+          if (encoderError) throw encoderError;
+          muxer.finalize();
+          const blob = new Blob([target.buffer], { type: "video/mp4" });
+          if (!blob.size) throw new Error("编码器没有生成有效视频数据");
+          return blob;
+        } finally {
+          if (encoder && encoder.state !== "closed") encoder.close();
+        }
+      }
+
+      async function encodeVideoWithMediaRecorder(signature, renderSize, duration, frameCount) {
+        if (!result.captureStream || !window.MediaRecorder) {
+          throw new Error("当前浏览器不支持本地视频编码，请使用最新版 Chrome 或 Safari");
+        }
+        const mimeType = getVideoRecorderMimeType();
+        const frameDuration = 1000 / state.videoFps;
+        const frameBlobs = [];
+        let stream;
+        let recorder;
+
+        try {
+          videoProcessPhase = "render";
+          for (let frame = 0; frame < frameCount; frame++) {
+            if (signature !== videoSettingsSignature()) return null;
+            const time = Math.min(duration > 0 ? duration - 0.001 : 0, frame / state.videoFps);
+            const seekStarted = performance.now();
+            await seekVideo(Math.max(0, time));
+            recordVideoSeekTime(performance.now() - seekStarted);
+            renderCurrentVideoFrame(renderSize);
+            frameBlobs.push(await canvasToFrameBlob());
+            updateVideoProcessProgress(frame, frameCount);
+            await yieldVideoRenderer(frame);
+          }
+
+          if (signature !== videoSettingsSignature()) return null;
+          await drawCachedFrame(frameBlobs[0]);
+          stream = result.captureStream(0);
+          let videoTrack = stream.getVideoTracks()[0];
+          const manualFrames = Boolean(videoTrack && typeof videoTrack.requestFrame === "function");
+          if (!manualFrames) {
+            stream.getTracks().forEach((track) => track.stop());
+            stream = result.captureStream(state.videoFps);
+            videoTrack = stream.getVideoTracks()[0];
+          }
+          const options = {
+            videoBitsPerSecond: renderSize >= 1920 ? 14_000_000 : renderSize >= 1080 ? 10_000_000 : 6_000_000,
+          };
+          if (mimeType) options.mimeType = mimeType;
+          recorder = new MediaRecorder(stream, options);
+          const chunks = [];
+          recorder.addEventListener("dataavailable", (event) => {
+            if (event.data?.size) chunks.push(event.data);
+          });
+          const stopped = new Promise((resolve, reject) => {
+            recorder.addEventListener("stop", resolve, { once: true });
+            recorder.addEventListener("error", () => reject(new Error("视频编码失败")), { once: true });
+          });
+          recorder.start(500);
+          videoProcessPhase = "encoding";
+          syncVideoProcessUi();
+          setInputStatus("正在整理视频缓存...");
+          if (manualFrames) videoTrack.requestFrame();
+          await new Promise((resolve) => window.setTimeout(resolve, frameDuration));
+          for (let frame = 1; frame < frameBlobs.length; frame++) {
+            const started = performance.now();
+            await drawCachedFrame(frameBlobs[frame]);
+            if (manualFrames) videoTrack.requestFrame();
+            const elapsed = performance.now() - started;
+            await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, frameDuration - elapsed)));
+          }
+          await new Promise((resolve) => window.setTimeout(resolve, frameDuration));
+          recorder.stop();
+          await stopped;
+          const outputType = recorder.mimeType || mimeType || "video/webm";
+          const blob = new Blob(chunks, { type: outputType });
+          if (!blob.size) throw new Error("编码器没有生成有效视频数据");
+          return blob;
+        } finally {
+          if (recorder?.state === "recording") recorder.stop();
+          stream?.getTracks().forEach((track) => track.stop());
+          frameBlobs.length = 0;
+        }
+      }
+
+      async function installProcessedVideo(blob, signature, previousTime, wasPlaying) {
+        if (processedVideoUrl) URL.revokeObjectURL(processedVideoUrl);
+        processedVideoBlob = blob;
+        processedVideoUrl = URL.createObjectURL(blob);
+        processedVideo.src = processedVideoUrl;
+        processedVideo.load();
+        await waitForProcessedVideoReady();
+        processedVideoSignature = signature;
+        processedVideo.currentTime = Math.min(previousTime, processedVideo.duration || state.videoDuration || 0);
+        app.classList.add("video-cache-ready");
+        syncResultFit(true);
+        syncVideoTimeline(processedVideo.currentTime);
+        setInputStatus("视频已载入：可继续拖入文件替换");
+        if (wasPlaying && processedVideo.currentTime < processedVideo.duration) processedVideo.play().catch(() => {});
+      }
+
+      async function buildProcessedVideo() {
+        if (!isVideoSource()) return null;
+        if (hasProcessedVideo()) return processedVideoBlob;
+        if (processedBuildPromise) return processedBuildPromise;
+
+        const signature = videoSettingsSignature();
+        processedBuildPromise = (async () => {
+          const previousTime = playbackVideo().currentTime || 0;
+          const wasPlaying = !playbackVideo().paused;
+          const profileStarted = performance.now();
+
+          try {
+            resetVideoRenderProfile();
+            videoProcessProgress = 0;
+            videoProcessPhase = "render";
+            setVideoExportBusy(true);
+            app.classList.add("video-processing");
+            renderingVideoBatch = true;
+            processedVideo.pause();
+            videoSource.pause();
+            lastRenderedVideoTime = -Infinity;
+            const renderSize = videoRenderSize();
+            const duration = Math.max(0, state.videoDuration || videoSource.duration || 0);
+            const frameCount = Math.max(1, Math.ceil(duration * state.videoFps));
+            let blob = await encodeVideoWithWebCodecs(signature, renderSize, duration, frameCount);
+            if (!blob && signature === videoSettingsSignature()) {
+              videoProcessProgress = 0;
+              blob = await encodeVideoWithMediaRecorder(signature, renderSize, duration, frameCount);
+            }
+            if (!blob || signature !== videoSettingsSignature()) {
+              setInputStatus("视频已载入：可继续拖入文件替换");
+              return null;
+            }
+            renderingVideoBatch = false;
+            await installProcessedVideo(blob, signature, previousTime, wasPlaying);
+            return blob;
+          } finally {
+            reportVideoRenderProfile(performance.now() - profileStarted);
+            renderingVideoBatch = false;
+            videoSource.pause();
+            cancelVideoFrameLoop();
+            app.classList.remove("video-processing");
+            setVideoExportBusy(false);
+            videoProcessPhase = "idle";
+            processedBuildPromise = null;
+          }
+        })();
+
+        return processedBuildPromise;
+      }
+
+      function downloadProcessedVideo() {
+        if (!hasProcessedVideo() || !processedVideoBlob) return false;
+        const type = processedVideoBlob.type || "video/webm";
+        const a = document.createElement("a");
+        a.href = processedVideoUrl;
+        a.download = `graphic-texture-${state.preset}-${state.videoFps}fps.${type.includes("mp4") ? "mp4" : "webm"}`;
+        a.click();
+        return true;
+      }
+
+      async function exportVideo() {
+        if (!isVideoSource()) return;
+        if (!hasProcessedVideo()) await buildProcessedVideo();
+        if (downloadProcessedVideo()) setInputStatus("视频已载入：可继续拖入文件替换");
+      }
+
+      videoProcessButton.addEventListener("click", () => {
+        if (!isVideoSource() || state.videoExporting || hasProcessedVideo()) return;
+        if (videoRefineTimer) window.clearTimeout(videoRefineTimer);
+        videoRefineTimer = 0;
+        videoProcessPhase = "render";
+        buildProcessedVideo().catch((error) => {
+          videoProcessPhase = "error";
+          syncVideoProcessUi();
+          setInputStatus(`视频渲染失败：${error.message}`);
+        });
+      });
+
+      videoPlayToggle.addEventListener("click", () => {
+        if (!isVideoSource() || state.videoExporting) return;
+        const media = playbackVideo();
+        if (media.ended) media.currentTime = 0;
+        if (media.paused) media.play().catch(() => setInputStatus("浏览器阻止了视频播放，请再点击一次"));
+        else media.pause();
+      });
+
+      videoProgress.addEventListener("pointerdown", () => {
+        if (!isVideoSource() || state.videoExporting) return;
+        const media = playbackVideo();
+        resumeVideoAfterSeek = !media.paused;
+        media.pause();
+      });
+
+      videoProgress.addEventListener("input", () => {
+        if (!isVideoSource() || state.videoExporting) return;
+        const time = Number(videoProgress.value) || 0;
+        playbackVideo().currentTime = time;
+        syncVideoTimeline(time);
+      });
+
+      videoProgress.addEventListener("change", () => {
+        if (!isVideoSource() || state.videoExporting) return;
+        const media = playbackVideo();
+        if (!hasProcessedVideo()) {
+          renderCurrentVideoFrame(interactiveRenderSize());
+          scheduleVideoFrameRefine();
+        }
+        if (resumeVideoAfterSeek) media.play().catch(() => {});
+        resumeVideoAfterSeek = false;
+      });
+
+      videoSource.addEventListener("play", () => {
+        lastRenderedVideoTime = -Infinity;
+        syncVideoTimeline();
+        scheduleNextVideoFrame();
+      });
+      videoSource.addEventListener("pause", () => {
+        cancelVideoFrameLoop();
+        syncVideoTimeline();
+      });
+      videoSource.addEventListener("seeked", () => {
+        syncVideoTimeline();
+        if (!state.videoExporting && !hasProcessedVideo()) {
+          renderCurrentVideoFrame(interactiveRenderSize());
+          scheduleVideoFrameRefine();
+        }
+      });
+      videoSource.addEventListener("ended", () => {
+        cancelVideoFrameLoop();
+        syncVideoTimeline(state.videoDuration);
+      });
+      processedVideo.addEventListener("play", () => syncVideoTimeline());
+      processedVideo.addEventListener("pause", () => syncVideoTimeline());
+      processedVideo.addEventListener("timeupdate", () => syncVideoTimeline());
+      processedVideo.addEventListener("ended", () => syncVideoTimeline(state.videoDuration));
+
       fileInput.addEventListener("change", (event) => loadFile(event.target.files[0]));
       cameraFile.addEventListener("change", (event) => loadFile(event.target.files[0]));
       mobileGalleryFile?.addEventListener("change", (event) => loadFile(event.target.files[0]));
+      window.addEventListener("paste", (event) => {
+        if (isEditablePasteTarget(event.target) || isEditablePasteTarget(document.activeElement)) return;
+        const imageFile = clipboardImageFile(event);
+        if (!imageFile) return;
+        event.preventDefault();
+        loadFile(imageFile);
+      });
       cameraButton.addEventListener("click", () => {
         cameraFile.value = "";
         cameraFile.click();
       });
-      mobileInputButton?.addEventListener("click", () => {
+      mobileInputButton?.addEventListener("click", async () => {
+        if (mobileCapture.state !== "idle" || isMobileCaptureSource()) {
+          await closeMobileCapture({ resetSource: true });
+        }
         mobileGalleryFile.value = "";
         mobileGalleryFile.click();
       });
       mobileCameraButton?.addEventListener("click", () => {
-        cameraFile.value = "";
-        cameraFile.click();
+        openMobileCamera();
+      });
+      mobileRecordControl?.addEventListener("pointerdown", (event) => {
+        if (mobileCapture.state !== "previewing") return;
+        event.preventDefault();
+        mobileRecordControl.setPointerCapture?.(event.pointerId);
+        startMobileRecording(event.pointerId);
+      });
+      const finishMobileHold = (event) => {
+        if (mobileCapture.state !== "recording") return;
+        if (mobileCapture.pointerId !== null && event.pointerId !== mobileCapture.pointerId) return;
+        event.preventDefault();
+        finishMobileRecording("release");
+      };
+      mobileRecordControl?.addEventListener("pointerup", finishMobileHold);
+      mobileRecordControl?.addEventListener("pointercancel", finishMobileHold);
+      mobileRecordControl?.addEventListener("lostpointercapture", (event) => {
+        if (mobileCapture.state === "recording" && event.pointerId === mobileCapture.pointerId) finishMobileRecording("release");
+      });
+      mobileRecordReturn?.addEventListener("click", restartMobileRecording);
+      mobileRecordConfirm?.addEventListener("click", confirmMobileRecording);
+      mobileCameraRetry?.addEventListener("click", openMobileCamera);
+      mobilePlaybackToggle?.addEventListener("click", () => {
+        if (mobileCapture.state !== "ready") return;
+        if (mobileCameraSource.ended) mobileCameraSource.currentTime = 0;
+        if (mobileCameraSource.paused) mobileCameraSource.play().catch(() => {});
+        else mobileCameraSource.pause();
+      });
+      mobilePlaybackProgress?.addEventListener("pointerdown", () => {
+        if (mobileCapture.state !== "ready") return;
+        mobileCapture.seeking = true;
+        mobileCameraSource.pause();
+      });
+      mobilePlaybackProgress?.addEventListener("input", () => {
+        if (mobileCapture.state !== "ready") return;
+        mobileCameraSource.currentTime = Number(mobilePlaybackProgress.value) || 0;
+        syncMobilePlaybackUi();
+      });
+      mobilePlaybackProgress?.addEventListener("change", () => {
+        if (mobileCapture.state !== "ready") return;
+        mobileCapture.seeking = false;
+        renderMobileCaptureFrame();
+        mobileCameraSource.play().catch(() => {});
+      });
+      mobileCameraSource?.addEventListener("play", () => {
+        mobileCapture.lastRenderAt = 0;
+        scheduleMobileCaptureRenderLoop();
+        syncMobilePlaybackUi();
+      });
+      mobileCameraSource?.addEventListener("pause", () => {
+        cancelMobileCaptureRenderLoop();
+        syncMobilePlaybackUi();
+      });
+      mobileCameraSource?.addEventListener("seeked", () => {
+        renderMobileCaptureFrame();
+        syncMobilePlaybackUi();
+      });
+      mobileCameraSource?.addEventListener("timeupdate", syncMobilePlaybackUi);
+      mobileCameraSource?.addEventListener("ended", () => {
+        cancelMobileCaptureRenderLoop();
+        syncMobilePlaybackUi();
       });
       drop.addEventListener("click", (event) => {
         if (event.target === fileInput) return;
         event.preventDefault();
         fileInput.click();
       });
-      drop.addEventListener("dragover", (event) => {
-        event.preventDefault();
-        drop.classList.add("drag");
+
+      inputStatus.addEventListener("click", () => {
+        toggleInputGuidanceLanguage();
+        scheduleInputGuidanceRotation();
+        inputStatus.blur();
       });
-      drop.addEventListener("dragleave", () => drop.classList.remove("drag"));
-      drop.addEventListener("drop", (event) => {
+      inputStatus.addEventListener("keydown", (event) => {
+        if (inputStatus.dataset.mode !== "guidance" || !["Enter", " "].includes(event.key)) return;
         event.preventDefault();
-        drop.classList.remove("drag");
-        loadFile(event.dataTransfer.files[0]);
+        toggleInputGuidanceLanguage();
+        scheduleInputGuidanceRotation();
       });
-      function exportPng() {
+      scheduleInputGuidanceRotation();
+
+      function hasDraggedFiles(event) {
+        return Array.from(event.dataTransfer?.types || []).includes("Files");
+      }
+
+      function setDropDragging(active) {
+        drop.classList.toggle("drag", active);
+        inputPanel.classList.toggle("is-dragging", active);
+      }
+
+      window.addEventListener("dragenter", (event) => {
+        if (!hasDraggedFiles(event)) return;
+        event.preventDefault();
+        setDropDragging(true);
+      });
+      window.addEventListener("dragover", (event) => {
+        if (!hasDraggedFiles(event)) return;
+        event.preventDefault();
+        if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+        setDropDragging(true);
+      });
+      window.addEventListener("dragleave", (event) => {
+        if (event.relatedTarget === null) setDropDragging(false);
+      });
+      window.addEventListener("drop", (event) => {
+        if (!hasDraggedFiles(event)) return;
+        event.preventDefault();
+        setDropDragging(false);
+        const file = event.dataTransfer?.files?.[0];
+        if (file) loadFile(file);
+      });
+      async function exportOutput() {
         if (!state.source) return;
+        if (mobileCapture.state === "ready" && mobileCapture.rawBlob) {
+          await downloadMobileRecording();
+          return;
+        }
+        if (isVideoSource()) {
+          exportVideo();
+          return;
+        }
         flushRenderOutput();
         const a = document.createElement("a");
         a.href = result.toDataURL("image/png");
@@ -6715,7 +9278,7 @@
       }
 
       document.querySelectorAll("[data-export-png]").forEach((button) => {
-        button.addEventListener("click", exportPng);
+        button.addEventListener("click", exportOutput);
       });
       document.getElementById("randomize").addEventListener("click", () => {
         randomizeChain();
@@ -6735,6 +9298,12 @@
         scheduleMobileScrollSync();
       });
       window.addEventListener("scroll", scheduleMobileScrollSync, { passive: true });
+      window.addEventListener("pagehide", () => {
+        cancelMobileCaptureRenderLoop();
+        stopMobileCameraTracks();
+        revokeMobileCaptureUrl("rawUrl");
+        revokeMobileCaptureUrl("renderedUrl");
+      });
 
       renderAll(false);
     </script>
