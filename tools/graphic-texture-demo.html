@@ -553,21 +553,21 @@
         display: none;
         align-items: center;
         justify-content: center;
-        width: 304px;
-        height: 60px;
-        margin-top: 32px;
+        grid-area: 1 / 3;
+        width: 140px;
+        height: 50px;
+        margin: 0;
         padding: 0;
         overflow: hidden;
-        border: 1px solid var(--yellow);
+        border: 0;
         border-radius: 0;
-        background: #1a1a1d;
-        color: var(--yellow);
+        background: var(--yellow);
+        color: #1a1a1d;
         font-family: var(--font-mono);
-        font-size: 30px;
+        font-size: 24px;
         font-weight: 300;
-        line-height: 39px;
+        line-height: 31px;
         letter-spacing: 0;
-        text-transform: uppercase;
         cursor: pointer;
         transition:
           transform var(--motion-standard, 180ms) var(--motion-ease, ease),
@@ -585,11 +585,11 @@
         position: relative;
         z-index: 1;
         display: none;
-        flex: 0 0 41px;
-        font-size: 24px;
-        font-weight: 400;
-        line-height: 31px;
-        text-align: left;
+        flex: 0 0 auto;
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 21px;
+        text-align: center;
       }
 
       .video-process-label {
@@ -599,9 +599,9 @@
       }
 
       .video-process-button.has-progress {
-        justify-content: flex-start;
-        gap: 12px;
-        padding-left: 23px;
+        justify-content: center;
+        gap: 5px;
+        padding: 0;
       }
 
       .video-process-button.has-progress .video-process-value {
@@ -609,14 +609,7 @@
       }
 
       .video-process-button::before {
-        position: absolute;
-        inset: 0;
-        width: var(--render-progress, 0%);
-        background: rgba(237, 255, 135, 0.16);
-        content: "";
-        pointer-events: none;
-        transition: width 160ms linear;
-        z-index: 0;
+        display: none;
       }
 
       .video-process-button:disabled {
@@ -624,40 +617,37 @@
       }
 
       .video-process-button.is-ready {
-        border-color: var(--yellow);
-        background: #222227;
-        color: var(--yellow);
+        display: none;
       }
 
       .video-process-button.is-processing {
-        border-color: var(--yellow);
+        border: 1px solid var(--yellow);
         background: #1a1a1d;
         color: var(--yellow);
+        font-size: 16px;
+        line-height: 21px;
       }
 
       .video-process-button.is-error {
-        border-color: #87e3ff;
-        background: #222227;
-        color: #87e3ff;
-      }
-
-      @media (hover: hover) and (pointer: fine) {
-        .video-process-button:not(:disabled):hover {
-          transform: translateY(-1px);
-        }
+        border: 1px solid var(--yellow);
+        background: #1a1a1d;
+        color: var(--yellow);
+        font-size: 24px;
+        line-height: 31px;
       }
 
       .video-process-button:not(:disabled):active {
         transform: translateY(1px) scale(0.99);
+        filter: brightness(0.8);
       }
 
       .video-timeline {
         position: absolute;
-        left: 50%;
-        bottom: 20px;
+        left: calc(50% + 25px);
+        bottom: 40px;
         display: none;
-        grid-template-columns: 60px minmax(0, 570px) 140px;
-        width: min(770px, calc(100% - 80px));
+        grid-template-columns: 60px minmax(0, 560px) 140px;
+        width: min(760px, calc(100% - 80px));
         height: 50px;
         background: #1a1a1d;
         color: var(--paper);
@@ -678,6 +668,50 @@
         background: #1a1a1d;
         color: var(--paper);
         cursor: pointer;
+      }
+
+      .video-play-indicator {
+        position: absolute;
+        left: 16px;
+        top: 11px;
+        display: none;
+        width: 28px;
+        height: 28px;
+        color: #d9d9d9;
+        pointer-events: none;
+        transform-origin: center;
+      }
+
+      .video-play-indicator svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .video-play-indicator path {
+        fill: currentColor;
+      }
+
+      @keyframes video-render-icon-guide {
+        0% {
+          color: #d9d9d9;
+          transform: rotate(0deg);
+        }
+        100% {
+          color: var(--yellow);
+          transform: rotate(-45deg);
+        }
+      }
+
+      @keyframes video-render-icon-return {
+        0% {
+          color: var(--yellow);
+          transform: rotate(-45deg);
+        }
+        100% {
+          color: #d9d9d9;
+          transform: rotate(0deg);
+        }
       }
 
       .video-play-toggle::before,
@@ -723,7 +757,6 @@
       }
 
       #videoProgress {
-        --video-progress: 0%;
         display: block;
         width: 100%;
         height: 30px;
@@ -733,13 +766,15 @@
         outline: 0;
         appearance: none;
         background: transparent;
-        cursor: ew-resize;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
       }
 
       #videoProgress::-webkit-slider-runnable-track {
         height: 6px;
         border: 0;
-        background: linear-gradient(to right, var(--yellow) 0 var(--video-progress), #555 0 100%);
+        background: linear-gradient(to right, var(--yellow) 0 var(--timeline-progress, 0%), #555 0 100%);
       }
 
       #videoProgress::-webkit-slider-thumb {
@@ -755,12 +790,12 @@
       #videoProgress::-moz-range-track {
         height: 6px;
         border: 0;
-        background: #555;
+        background: linear-gradient(to right, var(--yellow) 0 var(--timeline-progress, 0%), #555 0 100%);
       }
 
       #videoProgress::-moz-range-progress {
         height: 6px;
-        background: var(--yellow);
+        background: transparent;
       }
 
       #videoProgress::-moz-range-thumb {
@@ -772,7 +807,8 @@
       }
 
       .video-time {
-        display: grid;
+        grid-area: 1 / 3;
+        display: none;
         place-items: center;
         min-width: 0;
         background: #1a1a1d;
@@ -783,6 +819,92 @@
         line-height: 21px;
         letter-spacing: -0.05em;
         white-space: nowrap;
+      }
+
+      .video-timeline[data-state="ready"] .video-time {
+        display: grid;
+      }
+
+      .app.has-video .video-timeline[data-state="ready"] .video-process-button {
+        display: none;
+      }
+
+      .video-timeline[data-state="idle"] .video-play-indicator,
+      .video-timeline[data-state="error"] .video-play-indicator {
+        display: block;
+      }
+
+      .video-timeline[data-state="processing"] .video-play-toggle {
+        cursor: default;
+        pointer-events: none;
+      }
+
+      .video-timeline[data-state="idle"] .video-play-toggle,
+      .video-timeline[data-state="error"] .video-play-toggle {
+        cursor: pointer;
+      }
+
+      .video-timeline[data-state="idle"] .video-play-toggle:hover .video-play-indicator,
+      .video-timeline[data-state="idle"] .video-play-toggle:focus-visible .video-play-indicator,
+      .video-timeline[data-state="error"] .video-play-toggle:hover .video-play-indicator,
+      .video-timeline[data-state="error"] .video-play-toggle:focus-visible .video-play-indicator {
+        animation: video-render-icon-guide 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .video-timeline[data-state="idle"] .video-play-toggle.is-render-icon-returning .video-play-indicator,
+      .video-timeline[data-state="error"] .video-play-toggle.is-render-icon-returning .video-play-indicator {
+        animation: video-render-icon-return 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .video-timeline[data-state="idle"] .video-play-toggle::before,
+      .video-timeline[data-state="idle"] .video-play-toggle::after,
+      .video-timeline[data-state="error"] .video-play-toggle::before,
+      .video-timeline[data-state="error"] .video-play-toggle::after {
+        opacity: 0;
+      }
+
+      .video-timeline[data-state="processing"] .video-play-toggle.is-paused::before {
+        top: 13px;
+        left: 20px;
+        width: 5px;
+        height: 24px;
+        border: 0;
+        background: currentColor;
+      }
+
+      .video-timeline[data-state="processing"] .video-play-toggle.is-paused::after {
+        top: 13px;
+        right: 20px;
+        width: 5px;
+        height: 24px;
+        background: currentColor;
+        opacity: 1;
+      }
+
+      .video-timeline[data-state="processing"] #videoProgress {
+        cursor: default;
+      }
+
+      .video-timeline[data-state="idle"] #videoProgress::-webkit-slider-runnable-track,
+      .video-timeline[data-state="error"] #videoProgress::-webkit-slider-runnable-track,
+      .video-timeline[data-state="idle"] #videoProgress::-moz-range-track,
+      .video-timeline[data-state="error"] #videoProgress::-moz-range-track {
+        background: #555;
+      }
+
+      .video-timeline[data-state="idle"] #videoProgress::-webkit-slider-thumb,
+      .video-timeline[data-state="error"] #videoProgress::-webkit-slider-thumb,
+      .video-timeline[data-state="processing"] #videoProgress::-webkit-slider-thumb,
+      .video-timeline[data-state="idle"] #videoProgress::-moz-range-thumb,
+      .video-timeline[data-state="error"] #videoProgress::-moz-range-thumb,
+      .video-timeline[data-state="processing"] #videoProgress::-moz-range-thumb {
+        background: transparent;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .video-timeline .video-play-toggle .video-play-indicator {
+          animation: none !important;
+        }
       }
 
       .video-source {
@@ -3064,6 +3186,10 @@
           gap: 8px;
         }
 
+        .app:not(.has-source) .preset-grid {
+          row-gap: 18px;
+        }
+
         .preset {
           position: relative;
           display: block;
@@ -4152,7 +4278,7 @@
           --mobile-bg-chip: #b8cfdb;
           --mobile-page-width: min(390px, 100%);
           --mobile-preview-size: min(390px, 100vw);
-          --mobile-preview-height: 520px;
+          --mobile-preview-height: min(520px, 133.333vw);
         }
 
         html,
@@ -4801,11 +4927,13 @@
         }
 
         .app[class*="mobile-capture-"] #mobileResult {
-          position: static;
-          width: auto;
-          height: auto;
-          max-width: 100%;
-          max-height: 100%;
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          max-width: none;
+          max-height: none;
+          object-fit: cover;
         }
 
         .app.mobile-camera-session .mobile-shell {
@@ -5384,8 +5512,21 @@
         }
       }
 
+      .app.has-source [data-export-png]:disabled,
       [data-export-png]:disabled {
+        background: #222227;
+        color: #77777f;
         cursor: not-allowed;
+        filter: none;
+        transform: none;
+      }
+
+      .app.has-source [data-export-png]:disabled .export-icon,
+      .app.has-source [data-export-png]:disabled .export-icon img,
+      [data-export-png]:disabled .export-icon,
+      [data-export-png]:disabled .export-icon img {
+        opacity: 0.58;
+        filter: brightness(0) saturate(100%) invert(34%) sepia(7%) saturate(263%) hue-rotate(202deg) brightness(91%) contrast(83%);
       }
 
       @media (hover: hover) and (pointer: fine) {
@@ -5429,12 +5570,14 @@
       .mobile-alpha-toggle:active,
       .mobile-dock-button:not(:disabled):active {
         transform: translateY(1px) scale(0.99);
+        filter: brightness(0.8);
         transition-duration: var(--motion-fast);
         transition-timing-function: var(--motion-press);
       }
 
       .video-play-toggle:not(:disabled):active {
         transform: translateY(1px) scale(0.98);
+        filter: brightness(0.8);
         transition-duration: var(--motion-fast);
         transition-timing-function: var(--motion-press);
       }
@@ -5508,10 +5651,6 @@
           <section class="panel">
             <h2 data-cn="预设">Presets</h2>
             <div class="preset-grid" id="presetGrid"></div>
-            <button class="video-process-button" id="videoProcessButton" type="button">
-              <span class="video-process-value" id="videoProcessValue" aria-hidden="true"></span>
-              <span class="video-process-label" id="videoProcessLabel">RENDER</span>
-            </button>
             <button class="randomize-button" id="randomize">NICE TRY</button>
             <button class="mobile-export" data-export-png>
               <span class="export-icon"><img src="../assets/download-icon-figma.svg" alt="" /></span>
@@ -5546,10 +5685,20 @@
             <canvas id="result" class="result" width="1000" height="1000"></canvas>
             <video id="processedVideo" class="processed-video" muted playsinline preload="auto"></video>
             <div class="video-timeline" id="videoTimeline" aria-label="Video playback">
-              <button class="video-play-toggle is-paused" id="videoPlayToggle" type="button" aria-label="播放" aria-pressed="false"></button>
+              <button class="video-play-toggle is-paused" id="videoPlayToggle" type="button" aria-label="播放" aria-pressed="false">
+                <span class="video-play-indicator" aria-hidden="true">
+                  <svg viewBox="0 0 28 28" focusable="false">
+                    <path d="M15.6738 28H12.3135V22H15.6738V28ZM15.6738 9.95508L22.7139 2.91504L25.0898 5.29102L18.0674 12.3135H28V15.6738H18.0615L25.0859 22.6982L22.71 25.0742L13.999 16.3633L5.28125 25.0811L2.90527 22.7051L9.93652 15.6738H0V12.3135H9.94141L2.90723 5.2793L5.28418 2.90332L12.3135 9.93262V0H15.6738V9.95508Z" />
+                  </svg>
+                </span>
+              </button>
               <div class="video-progress-wrap">
                 <input class="video-progress" id="videoProgress" type="range" min="0" max="0" step="0.001" value="0" aria-label="视频进度" />
               </div>
+              <button class="video-process-button" id="videoProcessButton" type="button">
+                <span class="video-process-value" id="videoProcessValue" aria-hidden="true"></span>
+                <span class="video-process-label" id="videoProcessLabel">Render</span>
+              </button>
               <output class="video-time" id="videoTime">00/00</output>
             </div>
           </div>
@@ -5876,7 +6025,6 @@
       let videoFrameRequest = 0;
       let videoFallbackFrame = 0;
       let lastRenderedVideoTime = -Infinity;
-      let resumeVideoAfterSeek = false;
       let processedVideoBlob = null;
       let processedVideoUrl = "";
       let processedVideoSignature = "";
@@ -5907,6 +6055,8 @@
         maxDuration: 5,
         fps: 10,
         renderSize: 540,
+        outputAspect: 3 / 4,
+        sourceAspect: 3 / 4,
         renderRequest: 0,
         fallbackRequest: 0,
         lastRenderAt: 0,
@@ -6012,6 +6162,7 @@
           outputReverse: state.outputReverse,
           fps: mobileCapture.fps,
           renderSize: mobileCapture.renderSize,
+          outputAspect: mobileCapture.outputAspect,
         });
       }
 
@@ -6146,9 +6297,13 @@
       }
 
       function applyMobileCaptureSource(type) {
+        const mediaAspect = mobileCameraSource.videoWidth / Math.max(1, mobileCameraSource.videoHeight);
+        mobileCapture.sourceAspect = Number.isFinite(mediaAspect) && mediaAspect > 0
+          ? mediaAspect
+          : mobileCapture.outputAspect;
         state.source = mobileCameraSource;
         state.sourceType = type;
-        state.sourceAspect = mobileCameraSource.videoWidth / Math.max(1, mobileCameraSource.videoHeight);
+        state.sourceAspect = mobileCapture.outputAspect;
         state.sourceHasTransparency = false;
         window.scrollTo(0, 0);
         invalidateSourceImageCache();
@@ -6197,7 +6352,6 @@
           mobileCameraSource.srcObject = stream;
           mobileCameraSource.loop = false;
           mobileCameraSource.muted = true;
-          mobileCameraSource.load();
           if (mobileCameraSource.readyState < 1) await waitForMobileVideoEvent("loadedmetadata");
           await mobileCameraSource.play();
           mobileCapture.renderSize = 540;
@@ -6262,6 +6416,8 @@
       async function startMobileRecording(pointerId = null) {
         if (mobileCapture.state !== "previewing" || !mobileCapture.stream) return;
         if (!result.captureStream) {
+          cancelMobileCaptureRenderLoop();
+          stopMobileCameraTracks();
           mobileCameraErrorText.textContent = "当前浏览器可以实时预览，但不支持录制特效画布。";
           setMobileCaptureState("error");
           return;
@@ -6283,6 +6439,14 @@
           setMobileCaptureState("recording");
           startMobileRecordTimers();
         } catch (error) {
+          await Promise.all([
+            stopMobileRecorder(mobileCapture.rawRecorder),
+            stopMobileRecorder(mobileCapture.renderedRecorder),
+          ]).catch(() => {});
+          mobileCapture.rawRecorder = null;
+          mobileCapture.renderedRecorder = null;
+          cancelMobileCaptureRenderLoop();
+          stopMobileCameraTracks();
           mobileCameraErrorText.textContent = `无法开始录制：${error.message}`;
           setMobileCaptureState("error");
         }
@@ -6337,6 +6501,8 @@
             stopMobileCameraTracks();
             await installMobileReview();
           } catch (error) {
+            cancelMobileCaptureRenderLoop();
+            stopMobileCameraTracks();
             mobileCameraErrorText.textContent = `录制失败：${error.message}`;
             setMobileCaptureState("error");
           } finally {
@@ -6599,7 +6765,7 @@
         if (!mobileFixedTop) return;
         requestAnimationFrame(() => {
           const previewSize = Math.ceil(mobileFixedTop.getBoundingClientRect().width);
-          const previewHeight = 520;
+          const previewHeight = Math.round(previewSize * 4 / 3);
           app.style.setProperty("--mobile-preview-size", `${previewSize}px`);
           app.style.setProperty("--mobile-preview-height", `${previewHeight}px`);
           const topHeight = Math.ceil(mobileFixedTop.getBoundingClientRect().height);
@@ -6629,6 +6795,7 @@
       function videoSettingsSignature() {
         if (!isVideoSource()) return "";
         return JSON.stringify({
+          motionVersion: 2,
           source: videoObjectUrl,
           preset: state.preset,
           nodes: state.nodes,
@@ -6648,18 +6815,28 @@
         const ready = isVideo && hasProcessedVideo();
         const processing = isVideo && state.videoExporting;
         const failed = isVideo && videoProcessPhase === "error";
+        videoTimeline.dataset.state = ready ? "ready" : processing ? "processing" : failed ? "error" : "idle";
         videoProcessButton.classList.toggle("is-ready", ready);
         videoProcessButton.classList.toggle("is-processing", processing);
         videoProcessButton.classList.toggle("is-error", failed);
         videoProcessButton.classList.toggle("has-progress", processing);
         videoProcessButton.disabled = !isVideo || ready || processing;
         videoProcessButton.style.setProperty("--render-progress", `${processing ? videoProcessProgress : 0}%`);
+        videoTimeline.style.setProperty("--render-progress", `${processing ? videoProcessProgress : 0}%`);
+        if (processing) {
+          videoTimeline.style.setProperty("--timeline-progress", `${videoProcessProgress}%`);
+        } else {
+          const media = playbackVideo();
+          const duration = state.videoDuration || media.duration || 0;
+          const current = Math.min(Math.max(0, media.currentTime || 0), duration || 0);
+          videoTimeline.style.setProperty("--timeline-progress", `${duration > 0 ? current / duration * 100 : 0}%`);
+        }
         videoProcessValue.textContent = processing ? `${videoProcessProgress}%` : "";
         videoProcessLabel.textContent = processing
-          ? (videoProcessPhase === "encoding" ? "ENCODING" : "RENDERING")
-          : (ready ? "READY" : failed ? "RETRY" : "RENDER");
-        videoPlayToggle.disabled = !ready || processing;
-        videoProgress.disabled = processing;
+          ? "Rendering"
+          : (failed ? "Retry" : ready ? "" : "Render");
+        videoPlayToggle.disabled = !isVideo || processing;
+        videoProgress.disabled = !isVideo || processing;
         document.querySelectorAll("[data-export-png]").forEach((button) => {
           const disabled = !state.source || processing || (isVideo && !ready);
           button.disabled = disabled;
@@ -6695,13 +6872,18 @@
         videoProgress.max = String(duration || 0);
         if (!videoProgress.matches(":active")) videoProgress.value = String(current);
         const pct = duration > 0 ? current / duration * 100 : 0;
-        videoProgress.style.setProperty("--video-progress", `${pct}%`);
+        if (!state.videoExporting) videoTimeline.style.setProperty("--timeline-progress", `${pct}%`);
         const showMinutes = duration >= 60;
         videoTime.textContent = `${formatVideoTime(current, showMinutes)}/${formatVideoTime(duration, showMinutes)}`;
         const paused = media.paused || media.ended;
         videoPlayToggle.classList.toggle("is-paused", paused);
-        videoPlayToggle.setAttribute("aria-label", paused ? "播放" : "暂停");
-        videoPlayToggle.setAttribute("aria-pressed", String(!paused));
+        if (hasProcessedVideo()) {
+          videoPlayToggle.setAttribute("aria-label", paused ? "播放" : "暂停");
+          videoPlayToggle.setAttribute("aria-pressed", String(!paused));
+        } else {
+          videoPlayToggle.setAttribute("aria-label", "开始渲染");
+          videoPlayToggle.setAttribute("aria-pressed", "false");
+        }
       }
 
       function cancelVideoFrameLoop() {
@@ -6713,10 +6895,10 @@
         videoFallbackFrame = 0;
       }
 
-      function renderCurrentVideoFrame(renderSize = videoRenderSize()) {
+      function renderCurrentVideoFrame(renderSize = videoRenderSize(), mediaTime = videoSource.currentTime || 0) {
         if (!isVideoSource() || videoSource.readyState < 2) return;
         invalidateSourceImageCache();
-        renderOutput(renderSize);
+        renderOutput(renderSize, createRenderFrameContext(mediaTime, state.videoFps));
         syncVideoTimeline();
       }
 
@@ -6733,7 +6915,7 @@
           syncVideoTimeline(mediaTime);
           if (mediaTime - lastRenderedVideoTime >= minInterval - 0.004 || mediaTime < lastRenderedVideoTime) {
             lastRenderedVideoTime = mediaTime;
-            renderCurrentVideoFrame(renderSize);
+            renderCurrentVideoFrame(renderSize, mediaTime);
           }
           scheduleNextVideoFrame();
         };
@@ -6834,6 +7016,83 @@
       function hash(x, y, seed = 1) {
         const n = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
         return n - Math.floor(n);
+      }
+
+      function fastTemporalHash(x, y, seed = 1) {
+        let n = Math.imul(x | 0, 374761393) + Math.imul(y | 0, 668265263) + Math.imul(seed | 0, 69069);
+        n = Math.imul(n ^ (n >>> 13), 1274126177);
+        return ((n ^ (n >>> 16)) >>> 0) / 4294967295;
+      }
+
+      const staticRenderFrameContext = Object.freeze({
+        animated: false,
+        time: 0,
+        frameIndex: 0,
+        seedOffset: 0,
+      });
+
+      function createRenderFrameContext(mediaTime = 0, fps = 12) {
+        const safeTime = Number.isFinite(mediaTime) ? Math.max(0, mediaTime) : 0;
+        const safeFps = Math.max(1, Math.round(Number(fps) || 12));
+        const frameIndex = Math.max(0, Math.floor(safeTime * safeFps + 0.0001));
+        return {
+          animated: true,
+          time: safeTime,
+          frameIndex,
+          seedOffset: (frameIndex + 1) * 131,
+        };
+      }
+
+      function resolveRenderFrameContext(frameContext = null) {
+        if (frameContext) return frameContext;
+        if (isVideoSource()) return createRenderFrameContext(videoSource.currentTime || 0, state.videoFps);
+        if (isMobileCaptureSource()) return createRenderFrameContext(mobileCameraSource.currentTime || 0, mobileCapture.fps);
+        return staticRenderFrameContext;
+      }
+
+      function temporalHash(x, y, seed, frameContext, motionMix = 0.3) {
+        const stable = hash(x, y, seed);
+        if (!frameContext.animated || motionMix <= 0) return stable;
+        const animated = fastTemporalHash(x, y, seed + frameContext.seedOffset);
+        return lerp(stable, animated, clamp(motionMix, 0, 1));
+      }
+
+      function temporalPatternHash(x, y, seed, frameContext) {
+        if (!frameContext.animated) return hash(x, y, seed);
+        return fastTemporalHash(x, y, seed + frameContext.seedOffset);
+      }
+
+      function temporalThresholdHit(x, y, seed, threshold, frameContext, motionRatio = 0.65) {
+        if (threshold <= 0) return false;
+        if (!frameContext.animated) return hash(x, y, seed) < threshold;
+        const movingShare = clamp(motionRatio, 0, 1);
+        const stableThreshold = threshold * (1 - movingShare);
+        const movingThreshold = threshold * movingShare;
+        return hash(x, y, seed) < stableThreshold
+          || temporalPatternHash(x, y, seed + 977, frameContext) < movingThreshold;
+      }
+
+      function createTemporalToneSample(width, height, frameContext, seed, motionMix = 0.58) {
+        if (!frameContext.animated || motionMix <= 0) {
+          return { animated: false, offsetX: 0, offsetY: 0, mix: 0 };
+        }
+        const frameSeed = frameContext.frameIndex + 1;
+        const rangeX = Math.max(1, Math.min(width - 1, 96));
+        const rangeY = Math.max(1, Math.min(height - 1, 72));
+        return {
+          animated: true,
+          offsetX: Math.floor(fastTemporalHash(frameSeed, seed, seed + 31) * rangeX),
+          offsetY: Math.floor(fastTemporalHash(seed, frameSeed, seed + 47) * rangeY),
+          mix: clamp(motionMix, 0, 1),
+        };
+      }
+
+      function sampleTemporalToneMap(map, width, height, x, y, sample) {
+        const stable = map[y * width + x];
+        if (!sample.animated) return stable;
+        const sampleX = (x + sample.offsetX) % width;
+        const sampleY = (y + sample.offsetY) % height;
+        return lerp(stable, map[sampleY * width + sampleX], sample.mix);
       }
 
       function valueNoise(x, y, seed = 1) {
@@ -6962,6 +7221,29 @@
         if (w / h > aspect) dw = h * aspect;
         else dh = w / aspect;
         ctx.drawImage(media, (w - dw) / 2, (h - dh) / 2, dw, dh);
+      }
+
+      function drawCover(ctx, media, aspect, w, h, fill = "#fff") {
+        if (fill) {
+          ctx.fillStyle = fill;
+          ctx.fillRect(0, 0, w, h);
+        }
+        const sourceWidth = media.videoWidth || media.naturalWidth || media.width || Math.max(1, Math.round(aspect * 1000));
+        const sourceHeight = media.videoHeight || media.naturalHeight || media.height || 1000;
+        const sourceAspect = sourceWidth / Math.max(1, sourceHeight);
+        const targetAspect = w / Math.max(1, h);
+        let sx = 0;
+        let sy = 0;
+        let sw = sourceWidth;
+        let sh = sourceHeight;
+        if (sourceAspect > targetAspect) {
+          sw = sourceHeight * targetAspect;
+          sx = (sourceWidth - sw) / 2;
+        } else if (sourceAspect < targetAspect) {
+          sh = sourceWidth / targetAspect;
+          sy = (sourceHeight - sh) / 2;
+        }
+        ctx.drawImage(media, sx, sy, sw, sh, 0, 0, w, h);
       }
 
       function invalidateSourceImageCache() {
@@ -7645,6 +7927,9 @@
 
       function buildSourceImage(maxSide = state.size) {
         const aspect = Math.max(0.01, state.sourceAspect || 1);
+        const mediaAspect = isMobileCaptureSource()
+          ? Math.max(0.01, mobileCapture.sourceAspect || aspect)
+          : aspect;
         const normalizeDimension = (value) => {
           const rounded = Math.max(1, Math.round(value));
           return isMotionSource() ? Math.max(2, Math.round(rounded / 2) * 2) : rounded;
@@ -7658,6 +7943,7 @@
           sourceImageCache.width === width &&
           sourceImageCache.height === height &&
           sourceImageCache.aspect === aspect &&
+          sourceImageCache.mediaAspect === mediaAspect &&
           sourceImageCache.hasTransparency === state.sourceHasTransparency
         ) {
           return sourceImageCache.imageData;
@@ -7666,7 +7952,11 @@
         work.width = width;
         work.height = height;
         workCtx.clearRect(0, 0, width, height);
-        drawContain(workCtx, state.source, aspect, width, height, state.sourceHasTransparency ? null : "#ffffff");
+        if (isMobileCaptureSource()) {
+          drawCover(workCtx, state.source, mediaAspect, width, height, "#ffffff");
+        } else {
+          drawContain(workCtx, state.source, aspect, width, height, state.sourceHasTransparency ? null : "#ffffff");
+        }
 
         if (!renderingVideoBatch && !isMobileCaptureSource()) {
           const miniMax = 320;
@@ -7688,6 +7978,7 @@
           width,
           height,
           aspect,
+          mediaAspect,
           hasTransparency: state.sourceHasTransparency,
           imageData,
         };
@@ -7940,7 +8231,7 @@
         resultCtx.restore();
       }
 
-      function renderPenTrace(source, mask, w, h, textureMask = mask) {
+      function renderPenTrace(source, mask, w, h, textureMask = mask, frameContext = staticRenderFrameContext) {
         const out = getRenderBuffers(w, h).output;
         const d = out.data;
         const ink = state.nodes.ink;
@@ -7962,6 +8253,7 @@
         const distressThreshold = distress.amount / 360;
         const inkStrength = ink.strength / 100 * inkAlpha;
         const paperToneMap = textureActive ? getPaperToneMap(w, h, texture, 81) : null;
+        const paperToneSample = createTemporalToneSample(w, h, frameContext, 811, 0.48);
         const edgeMap = edge.enabled && edge.width > 0
           ? createEdgeMap(mask, w, h, Math.max(1, Math.round(edge.width)))
           : null;
@@ -7972,7 +8264,9 @@
             const i = p * 4;
             const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
             const textureStrength = textureActive ? textureClip : 0;
-            const paperTone = paperToneMap ? paperToneMap[p] * textureStrength : 0;
+            const paperTone = paperToneMap
+              ? sampleTemporalToneMap(paperToneMap, w, h, x, y, paperToneSample) * textureStrength
+              : 0;
 
             let r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + paperTone);
             let g = clamp(lerp(255, bgRgb.g, bgCompositeAlpha) + paperTone);
@@ -7984,11 +8278,18 @@
               line = Math.max(line, 0.92);
             }
 
-            const broken = distressActive && hash(Math.floor(x / grainCell), Math.floor(y / grainCell), distress.seed) < distressThreshold;
+            const broken = distressActive && temporalThresholdHit(
+              Math.floor(x / grainCell),
+              Math.floor(y / grainCell),
+              distress.seed,
+              distressThreshold,
+              frameContext,
+              0.58,
+            );
             if (broken) line *= 0.18;
 
             if (line > 0.05 && ink.enabled) {
-              const scratch = 0.78 + hash(x, y, 91) * 0.32;
+              const scratch = 0.78 + temporalHash(x, y, 91, frameContext, 0.24) * 0.32;
               const mix = clamp(line * inkStrength * scratch, 0, 1);
               const lineR = lerp(inkRgb.r, edgeRgb.r, line * 0.35);
               const lineG = lerp(inkRgb.g, edgeRgb.g, line * 0.35);
@@ -8042,7 +8343,7 @@
         return blurCtx.getImageData(0, 0, w, h).data;
       }
 
-      function renderThermalMap(source, mask, w, h, textureMask = mask) {
+      function renderThermalMap(source, mask, w, h, textureMask = mask, frameContext = staticRenderFrameContext) {
         const { data } = source;
         const out = getRenderBuffers(w, h).output;
         const d = out.data;
@@ -8084,6 +8385,8 @@
         const scanScale = textureScan / 100;
         const paperToneMap = textureActive ? getPaperToneMap(w, h, texture, 121) : null;
         const scanToneMap = textureActive ? getPaperToneMap(w, h, texture, 123, 173) : null;
+        const paperToneSample = createTemporalToneSample(w, h, frameContext, 1211, 0.46);
+        const scanToneSample = createTemporalToneSample(w, h, frameContext, 1231, 0.56);
 
         for (let y = 0; y < h; y++) {
           const row = y * w;
@@ -8106,16 +8409,31 @@
             const fuzzyEdge = clamp((Math.abs(sx1 - sx0) + Math.abs(sy1 - sy0)) * fuzzyEdgeScale, 0, 1);
             const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
             const textureStrength = textureActive ? textureClip : 0;
-            const paperTone = paperToneMap ? paperToneMap[p] * textureStrength : 0;
+            const paperTone = paperToneMap
+              ? sampleTemporalToneMap(paperToneMap, w, h, x, y, paperToneSample) * textureStrength
+              : 0;
             const materialArea = Math.max(softA, bodyA, fuzzyEdge);
-            const materialNoise = textureStrength * materialArea * (hash(x, y, 122) - 0.5) * materialNoiseScale;
-            const grain = distressActive ? hash(Math.floor(x / distressCell), Math.floor(y / distressCell), distress.seed) : 1;
-            const fineGrain = distressActive ? hash(x, y, distress.seed + 127) : 1;
-            const coarseDrop = distressActive && grain < distressAmount * 0.52;
-            const pixelDrop = distressActive && fineGrain < distressAmount * 0.085;
+            const materialNoise = textureStrength * materialArea * (temporalHash(x, y, 122, frameContext, 0.34) - 0.5) * materialNoiseScale;
+            const coarseDrop = distressActive && temporalThresholdHit(
+              Math.floor(x / distressCell),
+              Math.floor(y / distressCell),
+              distress.seed,
+              distressAmount * 0.52,
+              frameContext,
+              0.5,
+            );
+            const pixelDrop = distressActive && temporalThresholdHit(
+              x,
+              y,
+              distress.seed + 127,
+              distressAmount * 0.085,
+              frameContext,
+              0.62,
+            );
             const distressDrop = coarseDrop ? 0.18 : pixelDrop ? 0.56 : 1;
             const distressNoise = distressActive
-              ? (hash(Math.floor(x / 2), Math.floor(y / 2), distress.seed + 151) - 0.5) * (10 + distress.amount * 1.25) * Math.max(softA, bodyA)
+              ? (temporalHash(Math.floor(x / 2), Math.floor(y / 2), distress.seed + 151, frameContext, 0.56) - 0.5)
+                * (10 + distress.amount * 1.25) * Math.max(softA, bodyA)
               : 0;
 
             let r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + paperTone);
@@ -8138,7 +8456,10 @@
             b = lerp(b, edgeRgb.b, edgeMix);
 
             const paintedArea = Math.max(haloMix, bodyMix, edgeMix);
-            const scanTone = scanToneMap ? scanToneMap[p] * textureStrength * 0.34 * scanScale : 0;
+            const scanTone = scanToneMap
+              ? sampleTemporalToneMap(scanToneMap, w, h, x, y, scanToneSample)
+                * textureStrength * 0.34 * scanScale
+              : 0;
             d[i] = clamp(r + materialNoise + scanTone + distressNoise);
             d[i + 1] = clamp(g + materialNoise + scanTone + distressNoise);
             d[i + 2] = clamp(b + materialNoise + scanTone + distressNoise);
@@ -8217,7 +8538,7 @@
         }
       }
 
-      function applyGraphicDecor(source, mask, w, h, clipToMask = false) {
+      function applyGraphicDecor(source, mask, w, h, clipToMask = false, frameContext = staticRenderFrameContext) {
         const decor = state.nodes.decor;
         if (!decor.enabled) return;
 
@@ -8260,8 +8581,21 @@
           resultCtx.fillStyle = "#111111";
           const count = Math.floor(decor.particles * 8);
           for (let i = 0; i < count; i++) {
-            const x = Math.floor(hash(i, 1, 91) * w);
-            const y = Math.floor(hash(i, 2, 91) * h);
+            let normalizedX = hash(i, 1, 91);
+            let normalizedY = hash(i, 2, 91);
+            if (frameContext.animated) {
+              const angle = hash(i, 4, 91) * Math.PI * 2;
+              const speed = 0.006 + hash(i, 5, 91) * 0.012;
+              normalizedX += Math.cos(angle) * speed * frameContext.time;
+              normalizedY += Math.sin(angle) * speed * frameContext.time;
+              normalizedX -= Math.floor(normalizedX);
+              normalizedY -= Math.floor(normalizedY);
+              resultCtx.globalAlpha = 0.46 + Math.sin(frameContext.time * (1.4 + hash(i, 6, 91)) + i) * 0.09;
+            } else {
+              resultCtx.globalAlpha = 0.55;
+            }
+            const x = Math.min(w - 1, Math.floor(normalizedX * w));
+            const y = Math.min(h - 1, Math.floor(normalizedY * h));
             const p = y * w + x;
             const nearMask = clipToMask
               ? mask[p] > 0.08
@@ -8295,8 +8629,9 @@
         return reversed;
       }
 
-      function renderOutput(renderSize = finalRenderSize()) {
+      function renderOutput(renderSize = finalRenderSize(), frameContext = null) {
         if (!state.source) return;
+        const renderFrame = resolveRenderFrameContext(frameContext);
         const profiling = renderingVideoBatch && Boolean(videoRenderProfile);
         const measuring = profiling || renderDebugEnabled;
         const renderStarted = measuring ? performance.now() : 0;
@@ -8331,12 +8666,12 @@
         };
         if (!renderingVideoBatch && !isMobileCaptureSource()) renderMaskMini(outputMask, w, h);
         if (state.preset === "penTrace") {
-          renderPenTrace(source, outputMask, w, h, textureMask);
+          renderPenTrace(source, outputMask, w, h, textureMask, renderFrame);
           finishProfile();
           return;
         }
         if (state.preset === "thermalMap") {
-          renderThermalMap(source, outputMask, w, h, textureMask);
+          renderThermalMap(source, outputMask, w, h, textureMask, renderFrame);
           finishProfile();
           return;
         }
@@ -8379,6 +8714,8 @@
         const textureBleed = texture.bleed / 100;
         const paperToneMap = texture.enabled ? getPaperToneMap(w, h, texture, 21) : null;
         const scanToneMap = texture.enabled ? getPaperToneMap(w, h, texture, 5, 97) : null;
+        const paperToneSample = createTemporalToneSample(w, h, renderFrame, 211, 0.46);
+        const scanToneSample = createTemporalToneSample(w, h, renderFrame, 591, 0.54);
         const edgeMap = edge.enabled && edge.width > 0
           ? createEdgeMap(outputMask, w, h, Math.max(1, Math.round(edge.width)))
           : null;
@@ -8403,7 +8740,16 @@
               const lx = ((rx % screenCell) + screenCell) % screenCell - screenHalfCell;
               const ly = ((ry % screenCell) + screenCell) % screenCell - screenHalfCell;
               const tone = clamp((255 - luma) / 255, 0, 1);
-              const radius = screenCell * (0.12 + tone * 0.52) * screenStrength * (0.72 + maskStrength * 0.28);
+              const dotPulse = renderFrame.animated
+                ? 0.9 + temporalPatternHash(
+                  Math.floor(rx / screenCell),
+                  Math.floor(ry / screenCell),
+                  419,
+                  renderFrame,
+                ) * 0.2
+                : 1;
+              const radius = screenCell * (0.12 + tone * 0.52) * screenStrength
+                * (0.72 + maskStrength * 0.28) * dotPulse;
               if (lx * lx + ly * ly > radius * radius) {
                 m = 0;
                 maskStrength = 0;
@@ -8411,9 +8757,23 @@
             }
 
             if (distress.enabled && maskStrength > 0.03 && textureStrength > 0.03) {
-              const speckle = hash(Math.floor(x / distressCell), Math.floor(y / distressCell), distress.seed);
-              const fine = hash(x, y, distress.seed + 9);
-              if (speckle < distressHoleThreshold || fine < sourceHoleThreshold) {
+              const speckleHole = temporalThresholdHit(
+                Math.floor(x / distressCell),
+                Math.floor(y / distressCell),
+                distress.seed,
+                distressHoleThreshold,
+                renderFrame,
+                0.4,
+              );
+              const fineHole = temporalThresholdHit(
+                x,
+                y,
+                distress.seed + 9,
+                sourceHoleThreshold,
+                renderFrame,
+                0.54,
+              );
+              if (speckleHole || fineHole) {
                 m = 0;
                 maskStrength = 0;
               }
@@ -8425,7 +8785,9 @@
             let a = transparent ? 0 : 255;
 
             if (color.enabled && (!transparent || !directTransparentForeground)) {
-              const fabricTone = paperToneMap ? paperToneMap[p] * textureStrength : 0;
+              const fabricTone = paperToneMap
+                ? sampleTemporalToneMap(paperToneMap, w, h, x, y, paperToneSample) * textureStrength
+                : 0;
               r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + fabricTone);
               g = clamp(lerp(255, bgRgb.g, bgCompositeAlpha) + fabricTone);
               b = clamp(lerp(255, bgRgb.b, bgCompositeAlpha) + fabricTone);
@@ -8434,7 +8796,7 @@
             if (maskStrength > 0.03 && ink.enabled) {
               const strength = inkStrength * maskStrength;
               const shade = clamp((255 - luma) / 255, 0, 1);
-              const printNoise = textureStrength * (hash(x, y, 4) - 0.5) * printNoiseScale;
+              const printNoise = textureStrength * (temporalHash(x, y, 4, renderFrame, 0.3) - 0.5) * printNoiseScale;
               const inkR = lerp(inkRgb.r, hiRgb.r, shade * 0.18 * hiAlpha);
               const inkG = lerp(inkRgb.g, hiRgb.g, shade * 0.18 * hiAlpha);
               const inkB = lerp(inkRgb.b, hiRgb.b, shade * 0.18 * hiAlpha);
@@ -8451,7 +8813,7 @@
             }
 
             if (e && edge.enabled) {
-              const jag = hash(Math.floor(x / 3), Math.floor(y / 3), 13);
+              const jag = temporalHash(Math.floor(x / 3), Math.floor(y / 3), 13, renderFrame, 0.26);
               const mix = (0.62 + jag * edge.rough / 180) * edgeAlpha;
               if (directTransparentForeground && a === 0) {
                 r = edgeRgb.r;
@@ -8468,11 +8830,14 @@
             if (texture.enabled) {
               const scan = transparent && a === 0
                 ? 0
-                : (scanToneMap ? scanToneMap[p] * textureStrength * 0.28 * textureScanScale : 0);
+                : (scanToneMap
+                  ? sampleTemporalToneMap(scanToneMap, w, h, x, y, scanToneSample)
+                    * textureStrength * 0.28 * textureScanScale
+                  : 0);
               if (maskStrength > 0.03 && textureStrength > 0.03 && textureBleed > 0) {
-                r = lerp(r, inkRgb.r, textureBleed * hash(x, y, 33) * 0.16 * maskStrength * textureStrength);
-                g = lerp(g, inkRgb.g, textureBleed * hash(x, y, 34) * 0.16 * maskStrength * textureStrength);
-                b = lerp(b, inkRgb.b, textureBleed * hash(x, y, 35) * 0.16 * maskStrength * textureStrength);
+                r = lerp(r, inkRgb.r, textureBleed * temporalHash(x, y, 33, renderFrame, 0.44) * 0.16 * maskStrength * textureStrength);
+                g = lerp(g, inkRgb.g, textureBleed * temporalHash(x, y, 34, renderFrame, 0.44) * 0.16 * maskStrength * textureStrength);
+                b = lerp(b, inkRgb.b, textureBleed * temporalHash(x, y, 35, renderFrame, 0.44) * 0.16 * maskStrength * textureStrength);
               }
               r = clamp(r + scan);
               g = clamp(g + scan);
@@ -8489,7 +8854,7 @@
         result.width = w;
         result.height = h;
         resultCtx.putImageData(out, 0, 0);
-        if (decor.enabled) applyGraphicDecor(source, textureMask, w, h, clipDecor);
+        if (decor.enabled) applyGraphicDecor(source, textureMask, w, h, clipDecor, renderFrame);
         syncResultFit();
         finishProfile();
       }
@@ -8855,7 +9220,7 @@
             const seekStarted = performance.now();
             await seekVideo(Math.max(0, time));
             recordVideoSeekTime(performance.now() - seekStarted);
-            renderCurrentVideoFrame(renderSize);
+            renderCurrentVideoFrame(renderSize, time);
 
             if (!encoder) {
               const config = await getSupportedVideoEncoderConfig(result.width, result.height, bitrate);
@@ -8918,7 +9283,7 @@
             const seekStarted = performance.now();
             await seekVideo(Math.max(0, time));
             recordVideoSeekTime(performance.now() - seekStarted);
-            renderCurrentVideoFrame(renderSize);
+            renderCurrentVideoFrame(renderSize, time);
             frameBlobs.push(await canvasToFrameBlob());
             updateVideoProcessProgress(frame, frameCount);
             await yieldVideoRenderer(frame);
@@ -9057,7 +9422,7 @@
         if (downloadProcessedVideo()) setInputStatus("视频已载入：可继续拖入文件替换");
       }
 
-      videoProcessButton.addEventListener("click", () => {
+      function startVideoRendering() {
         if (!isVideoSource() || state.videoExporting || hasProcessedVideo()) return;
         if (videoRefineTimer) window.clearTimeout(videoRefineTimer);
         videoRefineTimer = 0;
@@ -9067,10 +9432,29 @@
           syncVideoProcessUi();
           setInputStatus(`视频渲染失败：${error.message}`);
         });
+      }
+
+      videoProcessButton.addEventListener("click", startVideoRendering);
+
+      function clearRenderIconReturnAnimation() {
+        videoPlayToggle.classList.remove("is-render-icon-returning");
+      }
+
+      videoPlayToggle.addEventListener("pointerenter", clearRenderIconReturnAnimation);
+      videoPlayToggle.addEventListener("pointerleave", () => {
+        if (!isVideoSource() || !["idle", "error"].includes(videoTimeline.dataset.state)) return;
+        videoPlayToggle.classList.add("is-render-icon-returning");
+      });
+      videoPlayToggle.addEventListener("animationend", (event) => {
+        if (event.animationName === "video-render-icon-return") clearRenderIconReturnAnimation();
       });
 
       videoPlayToggle.addEventListener("click", () => {
         if (!isVideoSource() || state.videoExporting) return;
+        if (!hasProcessedVideo()) {
+          startVideoRendering();
+          return;
+        }
         const media = playbackVideo();
         if (media.ended) media.currentTime = 0;
         if (media.paused) media.play().catch(() => setInputStatus("浏览器阻止了视频播放，请再点击一次"));
@@ -9079,27 +9463,24 @@
 
       videoProgress.addEventListener("pointerdown", () => {
         if (!isVideoSource() || state.videoExporting) return;
-        const media = playbackVideo();
-        resumeVideoAfterSeek = !media.paused;
-        media.pause();
+        playbackVideo().pause();
       });
 
       videoProgress.addEventListener("input", () => {
         if (!isVideoSource() || state.videoExporting) return;
         const time = Number(videoProgress.value) || 0;
-        playbackVideo().currentTime = time;
+        const media = playbackVideo();
+        if (!media.paused) media.pause();
+        media.currentTime = time;
         syncVideoTimeline(time);
       });
 
       videoProgress.addEventListener("change", () => {
         if (!isVideoSource() || state.videoExporting) return;
-        const media = playbackVideo();
         if (!hasProcessedVideo()) {
           renderCurrentVideoFrame(interactiveRenderSize());
           scheduleVideoFrameRefine();
         }
-        if (resumeVideoAfterSeek) media.play().catch(() => {});
-        resumeVideoAfterSeek = false;
       });
 
       videoSource.addEventListener("play", () => {
@@ -9300,10 +9681,106 @@
       window.addEventListener("scroll", scheduleMobileScrollSync, { passive: true });
       window.addEventListener("pagehide", () => {
         cancelMobileCaptureRenderLoop();
+        [mobileCapture.rawRecorder, mobileCapture.renderedRecorder].forEach((recorder) => {
+          if (!recorder) return;
+          try {
+            if (recorder.state !== "inactive") recorder.stop();
+          } catch (_error) {}
+          recorder.stream?.getTracks().forEach((track) => track.stop());
+        });
         stopMobileCameraTracks();
         revokeMobileCaptureUrl("rawUrl");
         revokeMobileCaptureUrl("renderedUrl");
       });
+
+      if (renderDebugEnabled) {
+        const motionDebugSize = Math.round(clamp(Number(new URLSearchParams(window.location.search).get("debugRenderSize")) || 240, 120, 1080));
+        const frameA = createRenderFrameContext(1, 12);
+        const frameB = createRenderFrameContext(1, 12);
+        const frameC = createRenderFrameContext(1 + 1 / 12, 12);
+        const sampleA = temporalHash(31, 47, 122, frameA, 0.34);
+        const sampleB = temporalHash(31, 47, 122, frameB, 0.34);
+        const sampleC = temporalHash(31, 47, 122, frameC, 0.34);
+        document.documentElement.dataset.motionDebug = JSON.stringify({
+          sameTimeDeterministic: sampleA === sampleB,
+          adjacentFrameChanges: sampleA !== sampleC,
+          staticFramePreserved: temporalHash(31, 47, 122, staticRenderFrameContext, 0.34) === hash(31, 47, 122),
+          frameIndexes: [frameA.frameIndex, frameC.frameIndex],
+          renderSize: motionDebugSize,
+        });
+
+        const previousState = {
+          preset: state.preset,
+          selected: state.selected,
+          source: state.source,
+          sourceType: state.sourceType,
+          sourceAspect: state.sourceAspect,
+          sourceHasTransparency: state.sourceHasTransparency,
+          nodes: clone(state.nodes),
+          outputReverse: state.outputReverse,
+        };
+        const testSource = document.createElement("canvas");
+        testSource.width = 240;
+        testSource.height = 150;
+        const testCtx = testSource.getContext("2d");
+        const gradient = testCtx.createLinearGradient(0, 0, testSource.width, testSource.height);
+        gradient.addColorStop(0, "#101010");
+        gradient.addColorStop(0.5, "#e6e6e6");
+        gradient.addColorStop(1, "#505050");
+        testCtx.fillStyle = gradient;
+        testCtx.fillRect(0, 0, testSource.width, testSource.height);
+        testCtx.fillStyle = "#080808";
+        testCtx.fillRect(24, 24, 72, 88);
+        testCtx.beginPath();
+        testCtx.arc(166, 72, 42, 0, Math.PI * 2);
+        testCtx.fill();
+
+        state.source = testSource;
+        state.sourceType = "image";
+        state.sourceAspect = testSource.width / testSource.height;
+        state.sourceHasTransparency = false;
+        state.outputReverse = false;
+        const renderMotionChecks = {};
+        Object.keys(presets).forEach((presetId) => {
+          state.preset = presetId;
+          state.selected = presets[presetId].selected;
+          state.nodes = clone(presets[presetId].nodes);
+          invalidateSourceImageCache();
+          renderOutput(motionDebugSize, staticRenderFrameContext);
+          const staticStartedAt = performance.now();
+          renderOutput(motionDebugSize, staticRenderFrameContext);
+          const staticFrameMs = performance.now() - staticStartedAt;
+          const startedAt = performance.now();
+          renderOutput(motionDebugSize, frameA);
+          const first = new Uint8ClampedArray(resultCtx.getImageData(0, 0, result.width, result.height).data);
+          renderOutput(motionDebugSize, frameB);
+          const repeated = resultCtx.getImageData(0, 0, result.width, result.height).data;
+          let repeatedDifference = 0;
+          for (let i = 0; i < first.length; i++) repeatedDifference += first[i] !== repeated[i] ? 1 : 0;
+          renderOutput(motionDebugSize, frameC);
+          const adjacent = resultCtx.getImageData(0, 0, result.width, result.height).data;
+          let adjacentDifference = 0;
+          let adjacentDelta = 0;
+          for (let i = 0; i < first.length; i += 4) {
+            const delta = Math.abs(first[i] - adjacent[i]) + Math.abs(first[i + 1] - adjacent[i + 1]) + Math.abs(first[i + 2] - adjacent[i + 2]);
+            if (delta > 0) adjacentDifference += 1;
+            adjacentDelta += delta;
+          }
+          renderMotionChecks[presetId] = {
+            deterministic: repeatedDifference === 0,
+            changedPixels: adjacentDifference,
+            meanRgbDelta: Number((adjacentDelta / Math.max(1, first.length / 4)).toFixed(3)),
+            staticFrameMs: Number(staticFrameMs.toFixed(2)),
+            animatedFrameMs: Number(((performance.now() - startedAt) / 3).toFixed(2)),
+          };
+        });
+        document.documentElement.dataset.motionRenderDebug = JSON.stringify(renderMotionChecks);
+
+        Object.assign(state, previousState);
+        invalidateSourceImageCache();
+        renderBufferCache = null;
+        paperToneCache = { signature: "", maps: new Map() };
+      }
 
       renderAll(false);
     </script>
