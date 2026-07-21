@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="../assets/browser-icon.svg" />
+    <link rel="icon" type="image/png" sizes="24x24" href="../assets/browser-icon-figma.png?v=20260721" />
     <title>Synthub Graphic Texture V1.9</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
@@ -3313,6 +3313,8 @@
         }
 
         .main {
+          --main-side-padding: 40px;
+          --note-right-inset: 37.5px;
           padding: 30px 40px 24px;
           background: #f5f5f5;
         }
@@ -3322,7 +3324,7 @@
           grid-template-columns: minmax(220px, 331px) minmax(0, 520px);
           column-gap: clamp(28px, 4vw, 108px);
           align-items: flex-start;
-          justify-content: flex-start;
+          justify-content: space-between;
         }
 
         .title {
@@ -3342,6 +3344,8 @@
           width: min(520px, 100%);
           max-width: 520px;
           margin-top: 12px;
+          margin-right: calc(var(--note-right-inset) - var(--main-side-padding));
+          justify-self: end;
           color: var(--muted);
           font-family: var(--font-mono);
           font-size: 14px;
@@ -3536,6 +3540,7 @@
 
         @media (max-width: 1360px) {
           .main {
+            --main-side-padding: 28px;
             padding-right: 28px;
             padding-left: 28px;
           }
@@ -5378,6 +5383,91 @@
       }
 
       @media (min-width: 641px) {
+        :root {
+          --desktop-ui-scale: 0.8;
+        }
+
+        .app {
+          width: calc(100vw / var(--desktop-ui-scale));
+          height: calc(100vh / var(--desktop-ui-scale));
+          zoom: var(--desktop-ui-scale);
+        }
+
+        .side,
+        .main,
+        .right {
+          height: 100%;
+        }
+
+        .brand {
+          min-height: 122.5px;
+          padding: 30px;
+        }
+
+        .brand-logo {
+          position: relative;
+          flex: 0 0 auto;
+          width: 300px;
+          height: 62.5px;
+        }
+
+        .brand .brand-logo img {
+          position: absolute;
+          display: block;
+          max-width: none;
+          margin: 0;
+          object-fit: fill;
+        }
+
+        .brand .brand-logo .brand-logo-star-a {
+          top: 0;
+          left: 9.38%;
+          width: 2.08%;
+          height: 100%;
+        }
+
+        .brand .brand-logo .brand-logo-star-b {
+          top: 11.01%;
+          left: 2.29%;
+          width: 16.25%;
+          height: 77.98%;
+        }
+
+        .brand .brand-logo .brand-logo-star-c {
+          top: 45%;
+          left: 0;
+          width: 20.83%;
+          height: 10%;
+        }
+
+        .brand .brand-logo .brand-logo-star-d {
+          top: 11.14%;
+          left: 2.32%;
+          width: 16.19%;
+          height: 77.72%;
+        }
+
+        .brand .brand-logo .brand-logo-word {
+          top: 2%;
+          left: 25.73%;
+          width: 50.44%;
+          height: 96.02%;
+        }
+
+        .brand .brand-logo .brand-logo-underline {
+          top: 89.52%;
+          left: 66.51%;
+          width: 9.65%;
+          height: 8.48%;
+        }
+
+        .brand .brand-logo .brand-logo-ub {
+          top: 23.7%;
+          left: 78.52%;
+          width: 21.48%;
+          height: 74.32%;
+        }
+
         .side-scroll > .input-panel {
           position: relative;
           min-height: 240px;
@@ -5389,10 +5479,6 @@
 
         .side-scroll > .input-panel .side-previews.has-preview {
           display: grid;
-        }
-
-        .app:not(.has-source) .side-scroll > .input-panel + .panel {
-          padding-top: 49px;
         }
 
         .input-panel .input-drop-hint {
@@ -5605,7 +5691,15 @@
     <main class="app">
       <aside class="side">
         <div class="brand">
-          <img src="../assets/synthub-logo.svg" alt="synthub" />
+          <div class="brand-logo" role="img" aria-label="synthub">
+            <img class="brand-logo-star-a" src="../assets/synthub-logo-star-a.svg" alt="" />
+            <img class="brand-logo-star-b" src="../assets/synthub-logo-star-b.svg" alt="" />
+            <img class="brand-logo-star-c" src="../assets/synthub-logo-star-c.svg" alt="" />
+            <img class="brand-logo-star-d" src="../assets/synthub-logo-star-d.svg" alt="" />
+            <img class="brand-logo-word" src="../assets/synthub-logo-word.svg" alt="" />
+            <img class="brand-logo-underline" src="../assets/synthub-logo-underline.svg" alt="" />
+            <img class="brand-logo-ub" src="../assets/synthub-logo-ub.svg" alt="" />
+          </div>
         </div>
         <div class="side-scroll">
           <section class="panel input-panel" id="inputPanel">
@@ -7398,9 +7492,63 @@
         renderAll();
       }
 
+      const niceTryHistoryStorageKey = "graphic-texture-nice-try-history-v1";
+
+      function loadNiceTryHistory() {
+        try {
+          const saved = JSON.parse(sessionStorage.getItem(niceTryHistoryStorageKey) || "[]");
+          return Array.isArray(saved) ? saved.slice(-24) : [];
+        } catch (_error) {
+          return [];
+        }
+      }
+
+      const niceTryHistory = loadNiceTryHistory();
+
+      function persistNiceTryHistory() {
+        try {
+          sessionStorage.setItem(niceTryHistoryStorageKey, JSON.stringify(niceTryHistory.slice(-24)));
+        } catch (_error) {
+          // History remains available for the current page even when storage is unavailable.
+        }
+      }
+
+      function captureNiceTryState() {
+        return {
+          preset: state.preset,
+          selected: state.selected,
+          nodes: clone(state.nodes),
+          outputReverse: state.outputReverse,
+        };
+      }
+
+      function rememberNiceTryState() {
+        niceTryHistory.push(captureNiceTryState());
+        if (niceTryHistory.length > 24) niceTryHistory.shift();
+        persistNiceTryHistory();
+      }
+
+      function restoreNiceTryState() {
+        while (niceTryHistory.length) {
+          const previous = niceTryHistory.pop();
+          if (!previous?.nodes || !presets[previous.preset]) continue;
+          state.preset = previous.preset;
+          state.selected = previous.selected || presets[previous.preset].selected;
+          state.nodes = clone(previous.nodes);
+          state.outputReverse = Boolean(previous.outputReverse);
+          state.flyoutOpen = false;
+          persistNiceTryHistory();
+          renderAll();
+          return true;
+        }
+        persistNiceTryHistory();
+        return false;
+      }
+
       function randomizeChain() {
         const preset = presets[state.preset];
         const profile = presetRandomProfiles[state.preset];
+        rememberNiceTryState();
         state.nodes = clone(preset.nodes);
         state.outputReverse = chance(0.5);
 
@@ -7507,10 +7655,17 @@
         nodeList.querySelector(".node.active")?.classList.remove("active");
       }
 
+      function getDesktopUiScale() {
+        const scale = Number.parseFloat(getComputedStyle(app).zoom);
+        return Number.isFinite(scale) && scale > 0 ? scale : 1;
+      }
+
       function positionParamFlyout() {
         const active = nodeList.querySelector(".node.active");
-        if (!active || !state.flyoutOpen || window.innerWidth <= 860) {
-          paramFlyout.classList.toggle("closed", !state.flyoutOpen || window.innerWidth <= 860);
+        const uiScale = getDesktopUiScale();
+        const compactViewport = window.innerWidth / uiScale <= 860;
+        if (!active || !state.flyoutOpen || compactViewport) {
+          paramFlyout.classList.toggle("closed", !state.flyoutOpen || compactViewport);
           return;
         }
         paramFlyout.classList.remove("closed");
@@ -7519,8 +7674,8 @@
         const gap = 35;
         const left = Math.max(12, itemRect.left - flyoutRect.width - gap);
         const top = clamp(itemRect.top, 12, window.innerHeight - flyoutRect.height - 12);
-        paramFlyout.style.setProperty("--flyout-left", `${left}px`);
-        paramFlyout.style.setProperty("--flyout-top", `${top}px`);
+        paramFlyout.style.setProperty("--flyout-left", `${left / uiScale}px`);
+        paramFlyout.style.setProperty("--flyout-top", `${top / uiScale}px`);
       }
 
       function controlRange(label, key, min, max, step = 1, cnLabel = "") {
@@ -7843,8 +7998,9 @@
 
         left = clamp(left, edge, window.innerWidth - popRect.width - edge);
         top = clamp(top, edge, window.innerHeight - popRect.height - edge);
-        popover.style.setProperty("--popover-left", `${left}px`);
-        popover.style.setProperty("--popover-top", `${top}px`);
+        const uiScale = getDesktopUiScale();
+        popover.style.setProperty("--popover-left", `${left / uiScale}px`);
+        popover.style.setProperty("--popover-top", `${top / uiScale}px`);
 
         if (previousHidden) popover.classList.add("hidden");
       }
@@ -7985,6 +8141,52 @@
         return imageData;
       }
 
+      function analyzeOpaqueBackground(data, w, h) {
+        if (isMotionSource() || w < 8 || h < 8) return null;
+        const inset = Math.min(Math.floor(Math.min(w, h) * 0.015), Math.floor((Math.min(w, h) - 1) / 2));
+        const perimeter = Math.max(1, (w + h) * 2);
+        const step = Math.max(1, Math.floor(perimeter / 320));
+        const samples = [];
+        const addSample = (x, y) => {
+          const i = (y * w + x) * 4;
+          samples.push([data[i], data[i + 1], data[i + 2]]);
+        };
+
+        for (let x = inset; x < w - inset; x += step) {
+          addSample(x, inset);
+          addSample(x, h - inset - 1);
+        }
+        for (let y = inset + step; y < h - inset - step; y += step) {
+          addSample(inset, y);
+          addSample(w - inset - 1, y);
+        }
+        if (samples.length < 12) return null;
+
+        const medianChannel = (channel) => {
+          const values = samples.map((sample) => sample[channel]).sort((a, b) => a - b);
+          return values[Math.floor(values.length * 0.5)];
+        };
+        const background = {
+          r: medianChannel(0),
+          g: medianChannel(1),
+          b: medianChannel(2),
+        };
+        const deviations = samples
+          .map(([r, g, b]) => Math.hypot(r - background.r, g - background.g, b - background.b))
+          .sort((a, b) => a - b);
+        const spread = deviations[Math.floor(deviations.length * 0.75)];
+        const confidence = clamp((30 - spread) / 18, 0, 1);
+        if (confidence <= 0.08) return null;
+
+        const distanceStart = clamp(22 + spread * 1.35, 22, 58);
+        return {
+          ...background,
+          confidence,
+          distanceStart,
+          distanceEnd: distanceStart + 54,
+        };
+      }
+
       function createMask(source) {
         const { data, width: w, height: h } = source;
         const extract = state.nodes.extract;
@@ -7995,6 +8197,25 @@
         const threshold = extract.enabled ? extract.threshold : 128;
         const grayKeep = extract.enabled ? clamp(extract.grayKeep || 0, 0, 100) / 100 : 0;
         const softWidth = grayKeep * Math.min(132, 255 - threshold);
+        const background = state.sourceHasTransparency || extract.invert
+          ? null
+          : analyzeOpaqueBackground(data, w, h);
+        let backgroundIsSelected = false;
+        if (background) {
+          let backgroundLuma = clamp(
+            (background.r * 0.299 + background.g * 0.587 + background.b * 0.114 - 128) * contrast + 128,
+          );
+          if (extract.invert) backgroundLuma = 255 - backgroundLuma;
+          const backgroundStrength = grayKeep <= 0
+            ? (backgroundLuma < threshold ? 1 : 0)
+            : clamp(1 - smoothstep(threshold, threshold + Math.max(1, softWidth), backgroundLuma), 0, 1);
+          backgroundIsSelected = backgroundStrength > 0.5;
+        }
+        if (!renderingVideoBatch && !isMotionSource()) {
+          document.documentElement.dataset.maskMode = background
+            ? (backgroundIsSelected ? "hybrid-subject" : "hybrid-merge")
+            : "luma";
+        }
         for (let y = 0; y < h; y++) {
           for (let x = 0; x < w; x++) {
             const i = (y * w + x) * 4;
@@ -8006,11 +8227,23 @@
             let luma = clamp((getLuma(data, i) - 128) * contrast + 128);
             if (extract.invert) luma = 255 - luma;
             const noisy = luma + (maskNoise[y * w + x] - 0.5) * 22;
+            let strength;
             if (grayKeep <= 0) {
-              mask[y * w + x] = noisy < threshold ? 1 : 0;
+              strength = noisy < threshold ? 1 : 0;
             } else {
-              mask[y * w + x] = clamp(1 - smoothstep(threshold, threshold + Math.max(1, softWidth), noisy), 0, 1);
+              strength = clamp(1 - smoothstep(threshold, threshold + Math.max(1, softWidth), noisy), 0, 1);
             }
+            if (background) {
+              const colorDistance = Math.hypot(
+                data[i] - background.r,
+                data[i + 1] - background.g,
+                data[i + 2] - background.b,
+              );
+              const colorStrength = smoothstep(background.distanceStart, background.distanceEnd, colorDistance)
+                * background.confidence;
+              strength = backgroundIsSelected ? colorStrength : Math.max(strength, colorStrength);
+            }
+            mask[y * w + x] = strength;
           }
         }
         return mask;
@@ -9661,7 +9894,13 @@
       document.querySelectorAll("[data-export-png]").forEach((button) => {
         button.addEventListener("click", exportOutput);
       });
-      document.getElementById("randomize").addEventListener("click", () => {
+      const randomizeButton = document.getElementById("randomize");
+      randomizeButton.title = "Click to randomize · Shift-click to restore the previous result";
+      randomizeButton.addEventListener("click", (event) => {
+        if (event.shiftKey) {
+          if (!restoreNiceTryState()) setInputStatus("暂无可恢复的 NICE TRY 参数");
+          return;
+        }
         randomizeChain();
       });
       mobileRandomize?.addEventListener("click", () => {

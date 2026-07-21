@@ -3,30 +3,550 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=tools/graphic-texture-demo.html" />
-    <link rel="icon" type="image/svg+xml" href="assets/browser-icon.svg" />
-    <title>Synthub Graphic Texture V1.9</title>
+    <link rel="icon" type="image/png" sizes="24x24" href="assets/browser-icon-figma.png?v=20260721" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="image" href="assets/idle-animation/loading-images-review/39-thermalMap.webp" fetchpriority="high" />
+    <title>graphic-texture</title>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&display=swap");
+
+      * {
+        box-sizing: border-box;
+      }
+
       html,
       body {
+        width: 100%;
         height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #f5f5f5;
       }
 
       body {
-        margin: 0;
         display: grid;
         place-items: center;
-        background: #f5f5f5;
         color: #111116;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       }
 
-      a {
+      .loading-stage {
+        position: relative;
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        background: transparent;
         color: inherit;
+        font: inherit;
+        cursor: pointer;
+        user-select: none;
+        transition: opacity 140ms linear;
+      }
+
+      .loading-stage:focus-visible {
+        outline: 1px solid #111116;
+        outline-offset: -8px;
+      }
+
+      body.is-entering .loading-stage {
+        opacity: 0;
+      }
+
+      .loading-frame {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: auto;
+        height: auto;
+        opacity: 1;
+        transition: opacity var(--frame-fade-duration, 180ms) linear;
+        will-change: opacity;
+      }
+
+      .loading-frame.is-hidden {
+        opacity: 0;
+      }
+
+      .entry-copy {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      .product-name {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        font-size: clamp(22px, 2.25vw, 40px);
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: -0.045em;
+      }
+
+      .brand-lockup {
+        display: none;
+      }
+
+      .enter-label {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        text-decoration-line: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 4px;
+      }
+
+      @media (max-width: 640px) {
+        :root {
+          --safe-area-top: env(safe-area-inset-top, 0px);
+          --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        html,
+        body,
+        .loading-stage {
+          height: 100dvh;
+        }
+
+        .loading-stage {
+          background: #242528;
+          color: #f5f5f5;
+          touch-action: manipulation;
+        }
+
+        .loading-frame {
+          --frame-fade-duration: 200ms;
+        }
+
+        .entry-copy {
+          top: calc(50% + 2px);
+          left: calc(50% + 2.5px);
+          z-index: 3;
+          display: block;
+          width: 275px;
+          height: 50px;
+          text-shadow: 0 0 4px #242528, 0 0 10px #242528;
+        }
+
+        .product-name {
+          display: none;
+        }
+
+        .brand-lockup {
+          display: flex;
+          align-items: flex-start;
+          width: 275px;
+          height: 50px;
+        }
+
+        .brand-mark {
+          position: relative;
+          flex: 0 0 50px;
+          width: 50px;
+          height: 50px;
+        }
+
+        .brand-mark-piece,
+        .brand-wordmark {
+          display: block;
+          pointer-events: none;
+        }
+
+        .brand-mark-piece {
+          position: absolute;
+        }
+
+        .brand-mark-piece.is-vertical {
+          top: 0;
+          left: 22.5px;
+          width: 5px;
+          height: 50px;
+        }
+
+        .brand-mark-piece.is-diagonal-a {
+          top: 5.53px;
+          left: 5.52px;
+          width: 38.99px;
+          height: 38.99px;
+        }
+
+        .brand-mark-piece.is-horizontal {
+          top: 22.5px;
+          left: 0;
+          width: 50px;
+          height: 5px;
+        }
+
+        .brand-mark-piece.is-diagonal-b {
+          top: 5.53px;
+          left: 5.56px;
+          width: 38.86px;
+          height: 38.86px;
+        }
+
+        .brand-wordmark {
+          width: 165px;
+          height: 50px;
+          margin-left: 60px;
+        }
+
+        .enter-label {
+          position: absolute;
+          top: 68px;
+          left: calc(50% - 2.5px);
+          color: #f5f5f5;
+          transform: translateX(-50%);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .loading-frame {
+          transition: none;
+        }
       }
     </style>
   </head>
   <body>
-    <a href="tools/graphic-texture-demo.html">Open Synthub Graphic Texture V1.9</a>
+    <button class="loading-stage" id="enterButton" type="button" aria-label="Enter graphic-texture">
+      <img
+        class="loading-frame"
+        data-effect="thermalMap"
+        src="assets/idle-animation/loading-images-review/39-thermalMap.webp"
+        alt=""
+        decoding="async"
+        fetchpriority="high"
+      />
+      <span class="entry-copy">
+        <span class="product-name">graphic-texture</span>
+        <span class="brand-lockup" aria-hidden="true">
+          <span class="brand-mark">
+            <img class="brand-mark-piece is-vertical" src="assets/mobile-loading-mark-vertical.svg" alt="" />
+            <img class="brand-mark-piece is-diagonal-a" src="assets/mobile-loading-mark-diagonal-a.svg" alt="" />
+            <img class="brand-mark-piece is-horizontal" src="assets/mobile-loading-mark-horizontal.svg" alt="" />
+            <img class="brand-mark-piece is-diagonal-b" src="assets/mobile-loading-mark-diagonal-b.svg" alt="" />
+          </span>
+          <img class="brand-wordmark" src="assets/mobile-loading-wordmark.svg" alt="" />
+        </span>
+        <span class="enter-label">Click in</span>
+      </span>
+    </button>
+
+    <script>
+      const targetUrl = "tools/graphic-texture-demo.html";
+      const enterButton = document.getElementById("enterButton");
+      const frame = document.querySelector(".loading-frame");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const mobileViewport = window.matchMedia("(max-width: 640px)");
+      const effects = ["thermalMap", "penTrace", "dotShirt", "xerox"];
+      const mobileAssetNames = {
+        "graphic-texture-chain-dotShirt (6).png": "mobile-dotShirt-6.webp",
+        "graphic-texture-chain-thermalMap (10).png": "mobile-thermalMap-10.webp",
+        "graphic-texture-chain-thermalMap (22).png": "mobile-thermalMap-22.webp",
+        "graphic-texture-chain-thermalMap (29).png": "mobile-thermalMap-29.webp",
+        "graphic-texture-chain-xerox (10).png": "mobile-xerox-10.webp",
+        "graphic-texture-chain-xerox (15).png": "mobile-xerox-15.webp",
+        "graphic-texture-chain-xerox (7).png": "mobile-xerox-7.webp",
+      };
+      const assetNames = [
+        "01-xerox.webp",
+        "39-thermalMap.webp",
+        "40-penTrace.webp",
+        "41-dotShirt.webp",
+        "42-xerox.webp",
+        "44-dotShirt.webp",
+        "45-xerox.webp",
+        "46-thermalMap.webp",
+        "47-dotShirt.webp",
+        "48-xerox.webp",
+        "49-thermalMap.webp",
+        "50-penTrace.webp",
+        "51-xerox.webp",
+        "52-thermalMap.webp",
+        "53-penTrace.webp",
+        "54-dotShirt.webp",
+        "55-thermalMap.webp",
+        "56-penTrace.webp",
+        "57-dotShirt.webp",
+        "58-xerox.webp",
+        "59-thermalMap.webp",
+        "60-penTrace.webp",
+        "61-dotShirt.webp",
+        "62-xerox.webp",
+        "63-thermalMap.webp",
+        "64-penTrace.webp",
+        "65-dotShirt.webp",
+        "66-xerox.webp",
+        "67-thermalMap.webp",
+        "68-penTrace.webp",
+        "graphic-texture-chain-dotShirt (6).png",
+        "graphic-texture-chain-thermalMap (10).png",
+        "graphic-texture-chain-thermalMap (22).png",
+        "graphic-texture-chain-thermalMap (29).png",
+        "graphic-texture-chain-xerox (10).png",
+        "graphic-texture-chain-xerox (15).png",
+        "graphic-texture-chain-xerox (7).png",
+      ];
+      const items = assetNames.map((name) => ({
+        effect: effects.find((effect) => name.toLowerCase().includes(effect.toLowerCase())) || "xerox",
+        mobileSrc: mobileAssetNames[name]
+          ? `assets/idle-animation/loading-images-review/${mobileAssetNames[name]}`
+          : "",
+        src: `assets/idle-animation/loading-images-review/${name}`,
+      }));
+      const effectQueues = new Map();
+      let effectOrder = [];
+      let lastItem = items[1];
+      let lastEffect = lastItem.effect;
+      let mobileNextImage = null;
+      let transitionVersion = 0;
+      let paused = document.hidden || reducedMotion.matches;
+      let timer = 0;
+      let entering = false;
+
+      function shuffle(list) {
+        const copy = list.slice();
+        for (let index = copy.length - 1; index > 0; index--) {
+          const target = Math.floor(Math.random() * (index + 1));
+          [copy[index], copy[target]] = [copy[target], copy[index]];
+        }
+        return copy;
+      }
+
+      function takeItem(forMobile = mobileViewport.matches) {
+        if (!effectOrder.length) {
+          effectOrder = shuffle(effects);
+          if (forMobile && effectOrder[0] === lastEffect) {
+            const swapIndex = effectOrder.findIndex((effect) => effect !== lastEffect);
+            if (swapIndex > 0) [effectOrder[0], effectOrder[swapIndex]] = [effectOrder[swapIndex], effectOrder[0]];
+          }
+        }
+        const effect = effectOrder.shift();
+        let queue = effectQueues.get(effect) || [];
+        if (!queue.length) queue = shuffle(items.filter((item) => item.effect === effect));
+        let item = queue.shift();
+        if (item === lastItem && queue.length) {
+          queue.push(item);
+          item = queue.shift();
+        }
+        effectQueues.set(effect, queue);
+        lastItem = item;
+        if (forMobile) lastEffect = effect;
+        return item;
+      }
+
+      function preload(item, forMobile = mobileViewport.matches) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          const src = forMobile && item.mobileSrc ? item.mobileSrc : item.src;
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true;
+            image.onload = null;
+            image.onerror = null;
+            resolve({
+              ...item,
+              loadedSrc: src,
+              width: image.naturalWidth,
+              height: image.naturalHeight,
+            });
+          };
+          image.onload = finish;
+          image.onerror = (error) => {
+            if (settled) return;
+            settled = true;
+            image.onload = null;
+            image.onerror = null;
+            reject(error);
+          };
+          image.src = src;
+          if (image.complete && image.naturalWidth) finish();
+        });
+      }
+
+      function placeFrame(sourceWidth = frame.naturalWidth, sourceHeight = frame.naturalHeight) {
+        if (!sourceWidth || !sourceHeight) return;
+        const isMobile = mobileViewport.matches;
+        const stageWidth = enterButton.clientWidth || window.innerWidth;
+        const stageHeight = enterButton.clientHeight || window.innerHeight;
+        if (isMobile) {
+          const rootStyle = getComputedStyle(document.documentElement);
+          const safeTop = Number.parseFloat(rootStyle.getPropertyValue("--safe-area-top")) || 0;
+          const safeBottom = Number.parseFloat(rootStyle.getPropertyValue("--safe-area-bottom")) || 0;
+          const margin = 16;
+          const availableWidth = Math.max(1, stageWidth - margin * 2);
+          const availableHeight = Math.max(1, stageHeight - safeTop - safeBottom - margin * 2);
+          const maximumHeight = Math.min(availableHeight, stageHeight * 0.7);
+          const fitScale = Math.min(
+            1,
+            availableWidth / sourceWidth,
+            availableHeight / sourceHeight,
+            maximumHeight / sourceHeight,
+          );
+          const targetWidth = stageWidth * (0.42 + Math.random() * 0.4);
+          const scale = Math.min(fitScale, targetWidth / sourceWidth);
+          const width = Math.max(1, Math.round(sourceWidth * scale));
+          const height = Math.max(1, Math.round(sourceHeight * scale));
+          const startTop = safeTop + margin;
+          const travelX = Math.max(0, availableWidth - width);
+          const travelY = Math.max(0, availableHeight - height);
+
+          frame.style.width = `${width}px`;
+          frame.style.height = `${height}px`;
+          frame.style.left = `${Math.round(margin + Math.random() * travelX)}px`;
+          frame.style.top = `${Math.round(startTop + Math.random() * travelY)}px`;
+          return;
+        }
+
+        const margin = Math.max(12, Math.min(32, Math.min(window.innerWidth, window.innerHeight) * 0.025));
+        const availableWidth = Math.max(1, window.innerWidth - margin * 2);
+        const availableHeight = Math.max(1, window.innerHeight - margin * 2);
+        const fitScale = Math.min(1, availableWidth / sourceWidth, availableHeight / sourceHeight);
+        const randomScale = 0.62 + Math.random() * 0.38;
+        const scale = fitScale * randomScale;
+        const width = Math.max(1, Math.round(sourceWidth * scale));
+        const height = Math.max(1, Math.round(sourceHeight * scale));
+        const travelX = Math.max(0, availableWidth - width);
+        const travelY = Math.max(0, availableHeight - height);
+
+        frame.style.width = `${width}px`;
+        frame.style.height = `${height}px`;
+        frame.style.left = `${Math.round(margin + Math.random() * travelX)}px`;
+        frame.style.top = `${Math.round(margin + Math.random() * travelY)}px`;
+      }
+
+      function wait(duration) {
+        return new Promise((resolve) => window.setTimeout(resolve, duration));
+      }
+
+      function mobileHoldDuration() {
+        return 700 + Math.random() * 700;
+      }
+
+      function prepareMobileNext() {
+        if (!mobileNextImage) mobileNextImage = preload(takeItem(true), true);
+        return mobileNextImage;
+      }
+
+      function scheduleMobileNext() {
+        window.clearTimeout(timer);
+        if (!paused && !reducedMotion.matches) timer = window.setTimeout(showNext, mobileHoldDuration());
+      }
+
+      async function showNext() {
+        if (mobileViewport.matches) {
+          const version = transitionVersion;
+          let nextItem;
+          try {
+            nextItem = await prepareMobileNext();
+          } catch (_error) {
+            mobileNextImage = null;
+            if (!paused) timer = window.setTimeout(showNext, 100);
+            return;
+          }
+          if (paused || version !== transitionVersion) return;
+          frame.classList.add("is-hidden");
+          await wait(200);
+          if (paused || version !== transitionVersion) return;
+          frame.src = nextItem.loadedSrc;
+          frame.dataset.effect = nextItem.effect;
+          placeFrame(nextItem.width, nextItem.height);
+          mobileNextImage = null;
+          prepareMobileNext().catch(() => {
+            mobileNextImage = null;
+          });
+          await wait(85);
+          if (paused || version !== transitionVersion) return;
+          frame.classList.remove("is-hidden");
+          scheduleMobileNext();
+          return;
+        }
+
+        let nextItem;
+        try {
+          nextItem = await preload(takeItem(false), false);
+        } catch (_error) {
+          timer = window.setTimeout(showNext, 100);
+          return;
+        }
+        frame.classList.add("is-hidden");
+        await wait(180);
+        frame.src = nextItem.loadedSrc;
+        frame.dataset.effect = nextItem.effect;
+        placeFrame(nextItem.width, nextItem.height);
+        await wait(70);
+        frame.classList.remove("is-hidden");
+        if (!reducedMotion.matches) timer = window.setTimeout(showNext, 720);
+      }
+
+      function startAnimation() {
+        window.clearTimeout(timer);
+        paused = document.hidden || reducedMotion.matches;
+        frame.classList.remove("is-hidden");
+        if (paused) return;
+        if (mobileViewport.matches) {
+          prepareMobileNext().catch(() => {
+            mobileNextImage = null;
+          });
+          scheduleMobileNext();
+        } else {
+          timer = window.setTimeout(showNext, 720);
+        }
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        window.clearTimeout(timer);
+        transitionVersion += 1;
+        paused = document.hidden || reducedMotion.matches;
+        if (!document.hidden) startAnimation();
+      });
+
+      reducedMotion.addEventListener("change", () => {
+        transitionVersion += 1;
+        startAnimation();
+      });
+      mobileViewport.addEventListener("change", () => {
+        transitionVersion += 1;
+        mobileNextImage = null;
+        placeFrame();
+        startAnimation();
+      });
+      if (frame.complete && frame.naturalWidth) {
+        placeFrame();
+      } else {
+        frame.addEventListener("load", () => placeFrame(), { once: true });
+      }
+      window.addEventListener("resize", () => placeFrame());
+      startAnimation();
+
+      fetch(targetUrl, { cache: "force-cache" }).catch(() => null);
+
+      function enterProduct() {
+        if (entering) return;
+        entering = true;
+        paused = true;
+        transitionVersion += 1;
+        window.clearTimeout(timer);
+        document.body.classList.add("is-entering");
+        window.setTimeout(() => window.location.assign(targetUrl), 140);
+      }
+
+      enterButton.addEventListener("click", enterProduct);
+    </script>
   </body>
 </html>
