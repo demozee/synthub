@@ -6114,6 +6114,13 @@
       let colorRenderTimer = 0;
       let colorOutsideHandlerBound = false;
       let sourceImageCache = null;
+      let opaqueBackgroundCache = {
+        data: null,
+        width: 0,
+        height: 0,
+        value: null,
+        strengthMap: null,
+      };
       let mobileScrollFrame = 0;
       let videoObjectUrl = "";
       let videoFrameRequest = 0;
@@ -6781,6 +6788,21 @@
         }, isVideoSource() ? 320 : 80);
       }
 
+      function scheduleNiceTryPreviewRender() {
+        cancelScheduledRenderOutput();
+        if (!state.source) return;
+        if (isVideoSource()) markProcessedVideoDirty();
+        renderFrameQueued = true;
+        renderOutputFrame = requestAnimationFrame(() => {
+          renderOutputFrame = requestAnimationFrame(() => {
+            renderOutputFrame = 0;
+            renderFrameQueued = false;
+            renderOutput(interactiveRenderSize());
+            if (isVideoSource()) scheduleVideoFrameRefine();
+          });
+        });
+      }
+
       function cancelScheduledRenderOutput() {
         if (renderOutputTimer) {
           window.clearTimeout(renderOutputTimer);
@@ -7342,6 +7364,13 @@
 
       function invalidateSourceImageCache() {
         sourceImageCache = null;
+        opaqueBackgroundCache = {
+          data: null,
+          width: 0,
+          height: 0,
+          value: null,
+          strengthMap: null,
+        };
       }
 
       function drawTransparencyGrid(ctx, w, h) {
@@ -7504,13 +7533,23 @@
       }
 
       const niceTryHistory = loadNiceTryHistory();
+      let niceTryHistoryPersistTimer = 0;
 
       function persistNiceTryHistory() {
+        if (niceTryHistoryPersistTimer) {
+          window.clearTimeout(niceTryHistoryPersistTimer);
+          niceTryHistoryPersistTimer = 0;
+        }
         try {
           sessionStorage.setItem(niceTryHistoryStorageKey, JSON.stringify(niceTryHistory.slice(-24)));
         } catch (_error) {
           // History remains available for the current page even when storage is unavailable.
         }
+      }
+
+      function scheduleNiceTryHistoryPersist() {
+        if (niceTryHistoryPersistTimer) window.clearTimeout(niceTryHistoryPersistTimer);
+        niceTryHistoryPersistTimer = window.setTimeout(persistNiceTryHistory, 80);
       }
 
       function captureNiceTryState() {
@@ -7525,10 +7564,10 @@
       function rememberNiceTryState() {
         niceTryHistory.push(captureNiceTryState());
         if (niceTryHistory.length > 24) niceTryHistory.shift();
-        persistNiceTryHistory();
+        scheduleNiceTryHistoryPersist();
       }
 
-      function restoreNiceTryState() {
+      function restoreNiceTryState(previewFirst = false) {
         while (niceTryHistory.length) {
           const previous = niceTryHistory.pop();
           if (!previous?.nodes || !presets[previous.preset]) continue;
@@ -7537,15 +7576,16 @@
           state.nodes = clone(previous.nodes);
           state.outputReverse = Boolean(previous.outputReverse);
           state.flyoutOpen = false;
-          persistNiceTryHistory();
-          renderAll();
+          scheduleNiceTryHistoryPersist();
+          renderAll(!previewFirst);
+          if (previewFirst) scheduleNiceTryPreviewRender();
           return true;
         }
-        persistNiceTryHistory();
+        scheduleNiceTryHistoryPersist();
         return false;
       }
 
-      function randomizeChain() {
+      function randomizeChain(previewFirst = false) {
         const preset = presets[state.preset];
         const profile = presetRandomProfiles[state.preset];
         rememberNiceTryState();
@@ -7568,7 +7608,8 @@
         state.nodes.edge.colorAlpha = 100;
         state.nodes.color.transparent = false;
         state.selected = preset.selected;
-        renderAll();
+        renderAll(!previewFirst);
+        if (previewFirst) scheduleNiceTryPreviewRender();
       }
 
       function presetIcon(id) {
@@ -8143,6 +8184,23 @@
 
       function analyzeOpaqueBackground(data, w, h) {
         if (isMotionSource() || w < 8 || h < 8) return null;
+        if (
+          opaqueBackgroundCache.data === data
+          && opaqueBackgroundCache.width === w
+          && opaqueBackgroundCache.height === h
+        ) {
+          return opaqueBackgroundCache.value;
+        }
+        const cacheValue = (value) => {
+          opaqueBackgroundCache = {
+            data,
+            width: w,
+            height: h,
+            value,
+            strengthMap: null,
+          };
+          return value;
+        };
         const inset = Math.min(Math.floor(Math.min(w, h) * 0.015), Math.floor((Math.min(w, h) - 1) / 2));
         const perimeter = Math.max(1, (w + h) * 2);
         const step = Math.max(1, Math.floor(perimeter / 320));
@@ -8160,7 +8218,7 @@
           addSample(inset, y);
           addSample(w - inset - 1, y);
         }
-        if (samples.length < 12) return null;
+        if (samples.length < 12) return cacheValue(null);
 
         const medianChannel = (channel) => {
           const values = samples.map((sample) => sample[channel]).sort((a, b) => a - b);
@@ -8176,15 +8234,49 @@
           .sort((a, b) => a - b);
         const spread = deviations[Math.floor(deviations.length * 0.75)];
         const confidence = clamp((30 - spread) / 18, 0, 1);
-        if (confidence <= 0.08) return null;
+        if (confidence <= 0.08) return cacheValue(null);
 
         const distanceStart = clamp(22 + spread * 1.35, 22, 58);
-        return {
+        return cacheValue({
           ...background,
           confidence,
           distanceStart,
           distanceEnd: distanceStart + 54,
-        };
+        });
+      }
+
+      function getOpaqueBackgroundStrengthMap(data, w, h, background) {
+        if (
+          opaqueBackgroundCache.data === data
+          && opaqueBackgroundCache.width === w
+          && opaqueBackgroundCache.height === h
+          && opaqueBackgroundCache.value === background
+          && opaqueBackgroundCache.strengthMap
+        ) {
+          return opaqueBackgroundCache.strengthMap;
+        }
+        const strengthMap = new Float32Array(w * h);
+        const distanceStartSq = background.distanceStart ** 2;
+        const distanceEndSq = background.distanceEnd ** 2;
+        for (let p = 0; p < strengthMap.length; p++) {
+          const i = p * 4;
+          const deltaR = data[i] - background.r;
+          const deltaG = data[i + 1] - background.g;
+          const deltaB = data[i + 2] - background.b;
+          const colorDistanceSq = deltaR * deltaR + deltaG * deltaG + deltaB * deltaB;
+          const strength = colorDistanceSq <= distanceStartSq
+            ? 0
+            : colorDistanceSq >= distanceEndSq
+              ? 1
+              : smoothstep(
+                background.distanceStart,
+                background.distanceEnd,
+                Math.sqrt(colorDistanceSq),
+              );
+          strengthMap[p] = strength * background.confidence;
+        }
+        opaqueBackgroundCache.strengthMap = strengthMap;
+        return strengthMap;
       }
 
       function createMask(source) {
@@ -8200,6 +8292,9 @@
         const background = state.sourceHasTransparency || extract.invert
           ? null
           : analyzeOpaqueBackground(data, w, h);
+        const backgroundStrengthMap = background
+          ? getOpaqueBackgroundStrengthMap(data, w, h, background)
+          : null;
         let backgroundIsSelected = false;
         if (background) {
           let backgroundLuma = clamp(
@@ -8234,13 +8329,7 @@
               strength = clamp(1 - smoothstep(threshold, threshold + Math.max(1, softWidth), noisy), 0, 1);
             }
             if (background) {
-              const colorDistance = Math.hypot(
-                data[i] - background.r,
-                data[i + 1] - background.g,
-                data[i + 2] - background.b,
-              );
-              const colorStrength = smoothstep(background.distanceStart, background.distanceEnd, colorDistance)
-                * background.confidence;
+              const colorStrength = backgroundStrengthMap[y * w + x];
               strength = backgroundIsSelected ? colorStrength : Math.max(strength, colorStrength);
             }
             mask[y * w + x] = strength;
@@ -9898,10 +9987,10 @@
       randomizeButton.title = "Click to randomize · Shift-click to restore the previous result";
       randomizeButton.addEventListener("click", (event) => {
         if (event.shiftKey) {
-          if (!restoreNiceTryState()) setInputStatus("暂无可恢复的 NICE TRY 参数");
+          if (!restoreNiceTryState(true)) setInputStatus("暂无可恢复的 NICE TRY 参数");
           return;
         }
-        randomizeChain();
+        randomizeChain(true);
       });
       mobileRandomize?.addEventListener("click", () => {
         randomizeChain();
@@ -9919,6 +10008,7 @@
       });
       window.addEventListener("scroll", scheduleMobileScrollSync, { passive: true });
       window.addEventListener("pagehide", () => {
+        persistNiceTryHistory();
         cancelMobileCaptureRenderLoop();
         [mobileCapture.rawRecorder, mobileCapture.renderedRecorder].forEach((recorder) => {
           if (!recorder) return;
