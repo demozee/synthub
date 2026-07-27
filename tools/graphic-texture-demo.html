@@ -490,68 +490,93 @@
 
       .video-metrics {
         position: absolute;
-        top: 30px;
-        right: 30px;
+        top: var(--video-metrics-top, 30px);
+        left: var(--video-metrics-left, auto);
         z-index: 6;
         display: none;
-        width: 140px;
+        grid-template-columns: 84px 74px 62px;
+        width: 220px;
+        height: 40px;
+        border: 1px solid #dadde7;
+        background: #f5f5f5;
+        color: #0f0e12;
+        font-family: var(--font-mono);
       }
 
       .app.has-video .video-metrics {
         display: grid;
-        gap: 10px;
       }
 
-      .video-metric {
-        position: relative;
-        width: 140px;
-        height: 50px;
-        border: 1px solid #daddE7;
-        border-radius: 8px;
-        background: #f5f5f5;
-        color: #27272d;
+      .video-quality-options {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 0;
+        height: 100%;
+        margin: 0;
+        padding: 0 16px;
+        border-right: 1px solid #dadde7;
+      }
+
+      .video-quality-option {
+        display: grid;
+        place-items: center;
+        width: 12px;
+        height: 38px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #0f0e12;
         font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 26px;
+        cursor: pointer;
       }
 
-      .video-metric-value {
-        position: absolute;
-        top: 3px;
-        right: 30px;
+      .video-quality-option.is-active {
+        color: #ff4a00;
+        font-weight: 500;
+      }
+
+      .video-quality-option:disabled {
+        cursor: default;
+      }
+
+      .video-quality-options:has(.video-quality-option:disabled) {
+        opacity: 0.55;
+      }
+
+      .video-resolution-value,
+      .video-fps-value {
+        display: grid;
+        place-items: center;
+        min-width: 0;
+        height: 100%;
+        margin: 0;
+        background: #eee;
+        color: #0f0e12;
+        font-family: var(--font-mono);
         font-size: 20px;
         font-weight: 400;
         line-height: 26px;
         letter-spacing: 0;
       }
 
-      .video-metric-unit {
+      .video-resolution-value {
+        position: relative;
+      }
+
+      .video-resolution-value::after {
         position: absolute;
-        top: 14px;
-        right: 8px;
-        color: #9296a0;
-        font-size: 10px;
-        font-weight: 300;
-        line-height: 13px;
-        letter-spacing: 0;
-      }
-
-      .video-metric-label {
-        position: absolute;
-        right: 8px;
-        bottom: 4px;
-        color: #9296a0;
-        font-size: 10px;
-        font-weight: 300;
-        line-height: 13px;
-        letter-spacing: 0;
-        white-space: nowrap;
-      }
-
-      .video-metric.resolution .video-metric-value {
-        right: 30px;
-      }
-
-      .video-metric.resolution .video-metric-unit {
-        right: 8px;
+        top: 12px;
+        right: -1px;
+        width: 1px;
+        height: 16px;
+        background: #dadde7;
+        content: "";
       }
 
       .video-process-button {
@@ -841,8 +866,11 @@
       }
 
       .video-timeline[data-state="processing"] .video-play-toggle {
-        cursor: default;
-        pointer-events: none;
+        cursor: pointer;
+      }
+
+      .video-timeline[data-state="paused"] .video-play-toggle {
+        cursor: pointer;
       }
 
       .video-timeline[data-state="idle"] .video-play-toggle,
@@ -887,7 +915,8 @@
         opacity: 1;
       }
 
-      .video-timeline[data-state="processing"] #videoProgress {
+      .video-timeline[data-state="processing"] #videoProgress,
+      .video-timeline[data-state="paused"] #videoProgress {
         cursor: default;
       }
 
@@ -901,9 +930,11 @@
       .video-timeline[data-state="idle"] #videoProgress::-webkit-slider-thumb,
       .video-timeline[data-state="error"] #videoProgress::-webkit-slider-thumb,
       .video-timeline[data-state="processing"] #videoProgress::-webkit-slider-thumb,
+      .video-timeline[data-state="paused"] #videoProgress::-webkit-slider-thumb,
       .video-timeline[data-state="idle"] #videoProgress::-moz-range-thumb,
       .video-timeline[data-state="error"] #videoProgress::-moz-range-thumb,
-      .video-timeline[data-state="processing"] #videoProgress::-moz-range-thumb {
+      .video-timeline[data-state="processing"] #videoProgress::-moz-range-thumb,
+      .video-timeline[data-state="paused"] #videoProgress::-moz-range-thumb {
         background: transparent;
       }
 
@@ -5812,6 +5843,45 @@
           object-fit: cover;
         }
 
+        .history-video-kind,
+        .history-video-time {
+          position: absolute;
+          z-index: 2;
+          background: rgba(34, 34, 39, 0.88);
+          color: #f4f3ef;
+          pointer-events: none;
+        }
+
+        .history-video-kind {
+          top: 8px;
+          left: 8px;
+          display: grid;
+          width: 24px;
+          height: 24px;
+          place-items: center;
+        }
+
+        .history-video-kind::before {
+          width: 0;
+          height: 0;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-left: 8px solid currentColor;
+          content: "";
+          transform: translateX(1px);
+        }
+
+        .history-video-time {
+          right: 8px;
+          bottom: 8px;
+          padding: 3px 5px;
+          font-family: var(--font-mono);
+          font-size: 11px;
+          font-weight: 300;
+          line-height: 14px;
+          letter-spacing: -0.25px;
+        }
+
         .history-count {
           margin-top: 8px;
           color: #9296a0;
@@ -6081,16 +6151,13 @@
           </div>
         </div>
         <div class="video-metrics" id="videoMetrics" aria-label="Video data">
-          <div class="video-metric">
-            <strong class="video-metric-value" id="videoMetricFps">12</strong>
-            <span class="video-metric-unit">fps</span>
-            <span class="video-metric-label">target FPS</span>
+          <div class="video-quality-options" role="group" aria-label="Video resolution">
+            <button class="video-quality-option" type="button" data-video-resolution="720" aria-label="Low resolution, 720 pixels" title="720 PX">L</button>
+            <button class="video-quality-option" type="button" data-video-resolution="1080" aria-label="Medium resolution, 1080 pixels" title="1080 PX">M</button>
+            <button class="video-quality-option" type="button" data-video-resolution="1920" aria-label="High resolution, 1920 pixels" title="1920 PX">H</button>
           </div>
-          <div class="video-metric resolution">
-            <strong class="video-metric-value" id="videoMetricResolution">1920</strong>
-            <span class="video-metric-unit">PX</span>
-            <span class="video-metric-label">max side resolution</span>
-          </div>
+          <output class="video-resolution-value" id="videoMetricResolution" aria-label="Selected resolution">720</output>
+          <output class="video-fps-value" id="videoMetricFps" aria-label="Target frames per second">12</output>
         </div>
         <div class="workspace">
           <div class="stage">
@@ -6358,9 +6425,8 @@
         sourceHasTransparency: false,
         size: 1000,
         previewSize: 720,
-        videoRenderShortSide: 1080,
-        videoRenderLongSide: 1920,
         videoTuneSize: 720,
+        videoResolution: 720,
         videoFps: 12,
         videoDuration: 0,
         videoExporting: false,
@@ -6438,8 +6504,10 @@
       const videoPlayToggle = document.getElementById("videoPlayToggle");
       const videoProgress = document.getElementById("videoProgress");
       const videoTime = document.getElementById("videoTime");
+      const videoMetrics = document.getElementById("videoMetrics");
       const videoMetricFps = document.getElementById("videoMetricFps");
       const videoMetricResolution = document.getElementById("videoMetricResolution");
+      const videoResolutionButtons = Array.from(document.querySelectorAll("[data-video-resolution]"));
       const videoProcessButton = document.getElementById("videoProcessButton");
       const videoProcessValue = document.getElementById("videoProcessValue");
       const videoProcessLabel = document.getElementById("videoProcessLabel");
@@ -6458,6 +6526,7 @@
       };
       let mobileScrollFrame = 0;
       let videoObjectUrl = "";
+      let videoSourceFile = null;
       let videoFrameRequest = 0;
       let videoFallbackFrame = 0;
       let lastRenderedVideoTime = -Infinity;
@@ -6466,6 +6535,11 @@
       let processedVideoSignature = "";
       let processedBuildPromise = null;
       let videoRefineTimer = 0;
+      let videoResolutionChangeToken = 0;
+      let videoResolutionRequestFrame = 0;
+      let videoRenderPaused = false;
+      let videoRenderResumePromise = null;
+      let videoRenderResumeResolve = null;
       let videoProcessProgress = 0;
       let videoProcessPhase = "idle";
       let renderingVideoBatch = false;
@@ -7090,12 +7164,9 @@
       }
 
       function videoRenderSize() {
-        const aspect = Math.max(0.01, state.sourceAspect || 1);
-        const requiredLongSide = aspect >= 1
-          ? Math.round(state.videoRenderShortSide * aspect)
-          : Math.round(state.videoRenderShortSide / aspect);
-        const target = Math.min(state.videoRenderLongSide, Math.max(state.videoRenderShortSide, requiredLongSide));
-        return Math.max(2, Math.round(target / 2) * 2);
+        const supported = [720, 1080, 1920];
+        const selected = Math.round(Number(state.videoResolution) || state.videoTuneSize);
+        return supported.includes(selected) ? selected : state.videoTuneSize;
       }
 
       function interactiveRenderSize() {
@@ -7126,14 +7197,17 @@
       function scheduleNiceTryPreviewRender() {
         cancelScheduledRenderOutput();
         if (!state.source) return;
-        if (isVideoSource()) markProcessedVideoDirty();
+        if (isVideoSource()) {
+          state.videoResolution = state.videoTuneSize;
+          markProcessedVideoDirty();
+          syncVideoMetrics();
+        }
         renderFrameQueued = true;
         renderOutputFrame = requestAnimationFrame(() => {
           renderOutputFrame = requestAnimationFrame(() => {
             renderOutputFrame = 0;
             renderFrameQueued = false;
             renderOutput(interactiveRenderSize());
-            if (isVideoSource()) scheduleVideoFrameRefine();
             scheduleRecipeHistoryCommit();
           });
         });
@@ -7160,7 +7234,12 @@
 
       function scheduleVideoFrameRefine(delay = 700) {
         if (videoRefineTimer) window.clearTimeout(videoRefineTimer);
-        if (!isVideoSource() || state.videoExporting || hasProcessedVideo()) return;
+        if (
+          !isVideoSource()
+          || state.videoExporting
+          || hasProcessedVideo()
+          || videoRenderSize() <= interactiveRenderSize()
+        ) return;
         videoRefineTimer = window.setTimeout(() => {
           videoRefineTimer = 0;
           renderCurrentVideoFrame(videoRenderSize());
@@ -7260,14 +7339,75 @@
       function syncVideoMetrics() {
         videoMetricFps.textContent = String(state.videoFps);
         videoMetricResolution.textContent = String(videoRenderSize());
+        videoResolutionButtons.forEach((button) => {
+          const active = Number(button.dataset.videoResolution) === videoRenderSize();
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", String(active));
+          button.disabled = !isVideoSource() || state.videoExporting;
+        });
+        syncVideoMetricsPosition();
+      }
+
+      function syncVideoMetricsPosition() {
+        if (!videoMetrics || !isVideoSource() || window.innerWidth <= 640) return;
+        const main = videoMetrics.parentElement;
+        const media = app.classList.contains("video-cache-ready") ? processedVideo : result;
+        if (!main || !media) return;
+        const mainRect = main.getBoundingClientRect();
+        const mediaRect = media.getBoundingClientRect();
+        const layoutScale = main.offsetWidth > 0 ? mainRect.width / main.offsetWidth : 1;
+        if (!mainRect.width || !mediaRect.width || !layoutScale) return;
+        const visualGap = 30;
+        const logicalGap = visualGap / layoutScale;
+        const rightAlignedLeft = (mediaRect.right - mainRect.left) / layoutScale - videoMetrics.offsetWidth;
+        const aboveMediaTop = (mediaRect.top - mainRect.top) / layoutScale - videoMetrics.offsetHeight - logicalGap;
+        const maxLeft = main.offsetWidth - logicalGap - videoMetrics.offsetWidth;
+        const left = clamp(rightAlignedLeft, logicalGap, Math.max(logicalGap, maxLeft));
+        const top = Math.max(logicalGap, aboveMediaTop);
+        videoMetrics.style.setProperty("--video-metrics-left", `${left}px`);
+        videoMetrics.style.setProperty("--video-metrics-top", `${top}px`);
+      }
+
+      async function changeVideoResolution(value) {
+        const nextResolution = Math.round(Number(value));
+        if (!isVideoSource() || state.videoExporting || ![720, 1080, 1920].includes(nextResolution)) {
+          syncVideoMetrics();
+          return;
+        }
+
+        const token = ++videoResolutionChangeToken;
+        const media = playbackVideo();
+        const currentTime = media.currentTime || videoSource.currentTime || 0;
+        media.pause();
+        cancelVideoFrameLoop();
+        if (videoRefineTimer) window.clearTimeout(videoRefineTimer);
+        videoRefineTimer = 0;
+
+        state.videoResolution = nextResolution;
+        markProcessedVideoDirty();
+        syncVideoMetrics();
+        syncVideoProcessUi();
+
+        try {
+          if (videoSource.seeking) await waitForVideoEvent("seeked");
+          else await seekVideo(currentTime);
+          if (token !== videoResolutionChangeToken) return;
+          renderCurrentVideoFrame(videoRenderSize(), currentTime);
+          syncVideoTimeline(currentTime);
+        } catch (error) {
+          if (token !== videoResolutionChangeToken) return;
+          syncVideoMetrics();
+          setInputStatus(`分辨率切换失败：${error.message}`);
+        }
       }
 
       function syncVideoProcessUi() {
         const isVideo = isVideoSource();
         const ready = isVideo && hasProcessedVideo();
         const processing = isVideo && state.videoExporting;
+        const paused = processing && videoRenderPaused;
         const failed = isVideo && videoProcessPhase === "error";
-        videoTimeline.dataset.state = ready ? "ready" : processing ? "processing" : failed ? "error" : "idle";
+        videoTimeline.dataset.state = ready ? "ready" : paused ? "paused" : processing ? "processing" : failed ? "error" : "idle";
         videoProcessButton.classList.toggle("is-ready", ready);
         videoProcessButton.classList.toggle("is-processing", processing);
         videoProcessButton.classList.toggle("is-error", failed);
@@ -7285,9 +7425,13 @@
         }
         videoProcessValue.textContent = processing ? `${videoProcessProgress}%` : "";
         videoProcessLabel.textContent = processing
-          ? "Rendering"
+          ? (paused ? "Paused" : "Rendering")
           : (failed ? "Retry" : ready ? "" : "Render");
-        videoPlayToggle.disabled = !isVideo || processing;
+        videoPlayToggle.disabled = !isVideo;
+        if (processing) {
+          videoPlayToggle.setAttribute("aria-label", paused ? "继续渲染" : "暂停渲染");
+          videoPlayToggle.setAttribute("aria-pressed", String(paused));
+        }
         videoProgress.disabled = !isVideo || processing;
         document.querySelectorAll("[data-export-png]").forEach((button) => {
           const disabled = !state.source || processing || (isVideo && !ready);
@@ -7329,7 +7473,10 @@
         videoTime.textContent = `${formatVideoTime(current, showMinutes)}/${formatVideoTime(duration, showMinutes)}`;
         const paused = media.paused || media.ended;
         videoPlayToggle.classList.toggle("is-paused", paused);
-        if (hasProcessedVideo()) {
+        if (state.videoExporting) {
+          videoPlayToggle.setAttribute("aria-label", videoRenderPaused ? "继续渲染" : "暂停渲染");
+          videoPlayToggle.setAttribute("aria-pressed", String(videoRenderPaused));
+        } else if (hasProcessedVideo()) {
           videoPlayToggle.setAttribute("aria-label", paused ? "播放" : "暂停");
           videoPlayToggle.setAttribute("aria-pressed", String(!paused));
         } else {
@@ -7442,6 +7589,7 @@
         processedVideo.style.setProperty("--fit-height", `${height}px`);
         stageDropOverlay.style.setProperty("--fit-width", `${width}px`);
         stageDropOverlay.style.setProperty("--fit-height", `${height}px`);
+        syncVideoMetricsPosition();
         syncMobileResult();
       }
 
@@ -8157,22 +8305,95 @@
           button.type = "button";
           button.className = "history-item";
           button.classList.toggle("is-selected", entry.id === activeRecipeHistoryId);
+          button.classList.toggle("is-video", entry.sourceType === "video");
+          button.dataset.sourceType = entry.sourceType;
           button.style.aspectRatio = String(clamp(entry.aspect, 0.1, 10));
-          button.setAttribute("aria-label", `Restore history ${entry.index}`);
-          button.title = "Restore this result";
+          const videoTimeLabel = entry.sourceType === "video" ? formatVideoTime(entry.videoTime, true) : "";
+          button.setAttribute(
+            "aria-label",
+            entry.sourceType === "video"
+              ? `Restore video history ${entry.index} at ${videoTimeLabel}`
+              : `Restore history ${entry.index}`,
+          );
+          button.title = entry.sourceType === "video"
+            ? `Restore this video result at ${videoTimeLabel}`
+            : "Restore this result";
           const image = document.createElement("img");
           image.src = entry.thumbnailUrl;
           image.alt = "";
           button.appendChild(image);
-          button.addEventListener("click", () => restoreRecipeHistoryEntry(entry.id));
+          if (entry.sourceType === "video") {
+            const kind = document.createElement("span");
+            kind.className = "history-video-kind";
+            kind.setAttribute("aria-hidden", "true");
+            const time = document.createElement("span");
+            time.className = "history-video-time";
+            time.textContent = videoTimeLabel;
+            button.append(kind, time);
+          }
+          button.addEventListener("click", () => void restoreRecipeHistoryEntry(entry.id));
           columns[index % 2].appendChild(button);
         });
         historyCount.textContent = `${recipeHistory.length}/${recipeHistoryLimit}`;
       }
 
-      function restoreRecipeHistoryEntry(id) {
+      let recipeHistoryRestoreToken = 0;
+
+      async function restoreRecipeHistoryEntry(id) {
         const entry = recipeHistory.find((item) => item.id === id);
         if (!entry) return;
+        if (state.videoExporting) {
+          setInputStatus("视频渲染中：完成后再切换历史");
+          return;
+        }
+
+        const restoreToken = ++recipeHistoryRestoreToken;
+        if (entry.sourceType === "video") {
+          if (!entry.sourceFile) {
+            setInputStatus("无法恢复视频：源文件已不可用");
+            return;
+          }
+          try {
+            const sameVideo = isVideoSource() && videoSourceFile === entry.sourceFile;
+            if (!sameVideo) {
+              await loadVideoFile(entry.sourceFile, {
+                commitHistory: false,
+                recipeState: entry.recipeState,
+                carrier: entry.recipeCarrier,
+                initialTime: entry.videoTime,
+              });
+            } else {
+              applyRecipeState(entry.recipeState, {
+                carrier: entry.recipeCarrier,
+                remember: true,
+              });
+              state.recipeCarrierCode = entry.recipeCarrier ? entry.recipeCarrierCode : "";
+              renderAll(false);
+              playbackVideo().pause();
+              await seekVideo(entry.videoTime || 0);
+              if (hasProcessedVideo()) {
+                processedVideo.currentTime = entry.videoTime || 0;
+                syncVideoTimeline(entry.videoTime || 0);
+              } else {
+                renderCurrentVideoFrame(videoRenderSize(), entry.videoTime || 0);
+              }
+            }
+            if (restoreToken !== recipeHistoryRestoreToken) return;
+            playbackVideo().pause();
+            state.recipeCarrierCode = entry.recipeCarrier ? entry.recipeCarrierCode : "";
+            activeRecipeHistoryId = entry.id;
+            setInputStatus(`已恢复视频历史 · ${formatVideoTime(entry.videoTime, true)}`);
+            syncVideoTimeline(entry.videoTime || 0);
+            renderRecipeHistory();
+          } catch (error) {
+            if (restoreToken === recipeHistoryRestoreToken) {
+              setInputStatus(`视频历史恢复失败：${error.message}`);
+            }
+          }
+          return;
+        }
+
+        if (isVideoSource()) resetVideoSource();
         state.source = entry.source;
         state.sourceType = entry.sourceType;
         state.sourceAspect = entry.sourceAspect;
@@ -8191,22 +8412,33 @@
       }
 
       function canvasThumbnailBlob() {
-        if (!result.width || !result.height) return Promise.resolve(null);
+        const source = isVideoSource() && hasProcessedVideo() && processedVideo.readyState >= 2
+          ? processedVideo
+          : result;
+        const sourceWidth = source.videoWidth || source.width || 0;
+        const sourceHeight = source.videoHeight || source.height || 0;
+        if (!sourceWidth || !sourceHeight) return Promise.resolve(null);
         const maxSide = 360;
-        const scale = Math.min(1, maxSide / Math.max(result.width, result.height));
+        const scale = Math.min(1, maxSide / Math.max(sourceWidth, sourceHeight));
         const thumbnail = document.createElement("canvas");
-        thumbnail.width = Math.max(1, Math.round(result.width * scale));
-        thumbnail.height = Math.max(1, Math.round(result.height * scale));
-        thumbnail.getContext("2d").drawImage(result, 0, 0, thumbnail.width, thumbnail.height);
+        thumbnail.width = Math.max(1, Math.round(sourceWidth * scale));
+        thumbnail.height = Math.max(1, Math.round(sourceHeight * scale));
+        thumbnail.getContext("2d").drawImage(source, 0, 0, thumbnail.width, thumbnail.height);
         return new Promise((resolve) => thumbnail.toBlob(resolve, "image/webp", 0.76));
       }
 
       async function commitRecipeHistory(token) {
-        if (!state.source || token !== recipeHistoryCommitToken || isVideoSource() || isMobileCaptureSource()) return;
+        if (!state.source || token !== recipeHistoryCommitToken || isMobileCaptureSource()) return;
+        const videoEntry = isVideoSource();
+        if (videoEntry && !videoSourceFile) return;
         const code = currentRecipeCode();
-        const sourceId = getSourceIdentity(state.source);
+        const sourceReference = videoEntry ? videoSourceFile : state.source;
+        const sourceId = getSourceIdentity(sourceReference);
+        const videoTime = videoEntry ? playbackVideo().currentTime || videoSource.currentTime || 0 : 0;
         const latest = recipeHistory[recipeHistory.length - 1];
-        if (latest?.code === code && latest?.sourceId === sourceId) {
+        const sameVideoFrame = !videoEntry
+          || Math.abs((latest?.videoTime || 0) - videoTime) < 1 / Math.max(1, state.videoFps);
+        if (latest?.code === code && latest?.sourceId === sourceId && sameVideoFrame) {
           activeRecipeHistoryId = latest.id;
           renderRecipeHistory();
           return;
@@ -8219,7 +8451,8 @@
           index: id,
           code,
           sourceId,
-          source: state.source,
+          source: videoEntry ? null : state.source,
+          sourceFile: videoEntry ? videoSourceFile : null,
           sourceType: state.sourceType,
           sourceAspect: state.sourceAspect,
           sourceHasTransparency: state.sourceHasTransparency,
@@ -8227,6 +8460,8 @@
           recipeCarrier: state.recipeCarrier,
           recipeCarrierCode: state.recipeCarrierCode,
           aspect: result.width / Math.max(1, result.height),
+          videoTime,
+          videoDuration: videoEntry ? state.videoDuration : 0,
           thumbnailUrl: URL.createObjectURL(blob),
         };
         recipeHistory.push(entry);
@@ -10098,6 +10333,7 @@
 
       function resetVideoSource() {
         const wasCurrentSource = isVideoSource();
+        releaseVideoRenderPause();
         if (videoRefineTimer) window.clearTimeout(videoRefineTimer);
         videoRefineTimer = 0;
         videoProcessProgress = 0;
@@ -10109,6 +10345,7 @@
         videoSource.load();
         if (videoObjectUrl) URL.revokeObjectURL(videoObjectUrl);
         videoObjectUrl = "";
+        videoSourceFile = null;
         state.videoDuration = 0;
         state.videoExporting = false;
         lastRenderedVideoTime = -Infinity;
@@ -10160,6 +10397,8 @@
 
       async function loadVideoFile(file, options = {}) {
         resetVideoSource();
+        state.videoResolution = state.videoTuneSize;
+        videoSourceFile = file;
         videoObjectUrl = URL.createObjectURL(file);
         const metadataReady = waitForVideoEvent("loadedmetadata");
         videoSource.src = videoObjectUrl;
@@ -10167,6 +10406,14 @@
         await metadataReady;
         if (videoSource.readyState < 2) await waitForVideoEvent("loadeddata");
         state.videoDuration = Number.isFinite(videoSource.duration) ? videoSource.duration : 0;
+        const safeVideoEnd = Math.max(0, state.videoDuration - 0.04);
+        const defaultPosterTime = state.videoDuration < 1.25
+          ? state.videoDuration * 0.25
+          : 1;
+        const initialTime = Number.isFinite(options.initialTime)
+          ? Math.min(Math.max(0, options.initialTime), safeVideoEnd)
+          : Math.min(defaultPosterTime, safeVideoEnd);
+        if (initialTime > 0) await seekVideo(initialTime);
         applyLoadedSource(
           videoSource,
           videoSource.videoWidth / Math.max(1, videoSource.videoHeight),
@@ -10174,7 +10421,7 @@
           "视频已载入：可继续拖入文件替换",
           options,
         );
-        syncVideoTimeline(0);
+        syncVideoTimeline(initialTime);
       }
 
       async function loadFile(file, options = {}) {
@@ -10259,7 +10506,53 @@
         document.querySelectorAll("[data-export-png]").forEach((button) => {
           button.setAttribute("aria-busy", String(busy));
         });
+        syncVideoMetrics();
         syncVideoProcessUi();
+      }
+
+      function releaseVideoRenderPause() {
+        videoRenderPaused = false;
+        const resume = videoRenderResumeResolve;
+        videoRenderResumePromise = null;
+        videoRenderResumeResolve = null;
+        if (resume) resume();
+      }
+
+      function setVideoRenderPaused(paused) {
+        if (!state.videoExporting) return;
+        const nextPaused = Boolean(paused);
+        if (nextPaused === videoRenderPaused) return;
+        if (nextPaused) {
+          videoRenderPaused = true;
+          videoRenderResumePromise = new Promise((resolve) => {
+            videoRenderResumeResolve = resolve;
+          });
+        } else {
+          releaseVideoRenderPause();
+        }
+        syncVideoProcessUi();
+        syncVideoTimeline();
+        setInputStatus(
+          nextPaused
+            ? `视频渲染已暂停 ${videoProcessProgress}%`
+            : `正在渲染视频 ${videoProcessProgress}%`,
+        );
+      }
+
+      async function waitForVideoRenderResume(recorder = null) {
+        if (!videoRenderPaused || !videoRenderResumePromise) return;
+        const resumePromise = videoRenderResumePromise;
+        if (recorder?.state === "recording") {
+          const paused = new Promise((resolve) => recorder.addEventListener("pause", resolve, { once: true }));
+          recorder.pause();
+          await paused;
+        }
+        await resumePromise;
+        if (recorder?.state === "paused") {
+          const resumed = new Promise((resolve) => recorder.addEventListener("resume", resolve, { once: true }));
+          recorder.resume();
+          await resumed;
+        }
       }
 
       function waitForProcessedVideoReady() {
@@ -10385,6 +10678,7 @@
 
         try {
           for (let frame = 0; frame < frameCount; frame++) {
+            await waitForVideoRenderResume();
             if (signature !== videoSettingsSignature()) return null;
             const time = Math.min(duration > 0 ? duration - 0.001 : 0, frame / state.videoFps);
             const seekStarted = performance.now();
@@ -10424,6 +10718,7 @@
           videoProcessPhase = "encoding";
           syncVideoProcessUi();
           setInputStatus("正在完成视频编码...");
+          await waitForVideoRenderResume();
           await encoder.flush();
           if (encoderError) throw encoderError;
           muxer.finalize();
@@ -10448,6 +10743,7 @@
         try {
           videoProcessPhase = "render";
           for (let frame = 0; frame < frameCount; frame++) {
+            await waitForVideoRenderResume();
             if (signature !== videoSettingsSignature()) return null;
             const time = Math.min(duration > 0 ? duration - 0.001 : 0, frame / state.videoFps);
             const seekStarted = performance.now();
@@ -10460,6 +10756,7 @@
           }
 
           if (signature !== videoSettingsSignature()) return null;
+          await waitForVideoRenderResume();
           await drawCachedFrame(frameBlobs[0]);
           stream = result.captureStream(0);
           let videoTrack = stream.getVideoTracks()[0];
@@ -10486,15 +10783,18 @@
           videoProcessPhase = "encoding";
           syncVideoProcessUi();
           setInputStatus("正在整理视频缓存...");
+          await waitForVideoRenderResume(recorder);
           if (manualFrames) videoTrack.requestFrame();
           await new Promise((resolve) => window.setTimeout(resolve, frameDuration));
           for (let frame = 1; frame < frameBlobs.length; frame++) {
+            await waitForVideoRenderResume(recorder);
             const started = performance.now();
             await drawCachedFrame(frameBlobs[frame]);
             if (manualFrames) videoTrack.requestFrame();
             const elapsed = performance.now() - started;
             await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, frameDuration - elapsed)));
           }
+          await waitForVideoRenderResume(recorder);
           await new Promise((resolve) => window.setTimeout(resolve, frameDuration));
           recorder.stop();
           await stopped;
@@ -10540,6 +10840,7 @@
             resetVideoRenderProfile();
             videoProcessProgress = 0;
             videoProcessPhase = "render";
+            releaseVideoRenderPause();
             setVideoExportBusy(true);
             app.classList.add("video-processing");
             renderingVideoBatch = true;
@@ -10567,6 +10868,7 @@
             videoSource.pause();
             cancelVideoFrameLoop();
             app.classList.remove("video-processing");
+            releaseVideoRenderPause();
             setVideoExportBusy(false);
             videoProcessPhase = "idle";
             processedBuildPromise = null;
@@ -10605,6 +10907,16 @@
       }
 
       videoProcessButton.addEventListener("click", startVideoRendering);
+      videoResolutionButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const value = button.dataset.videoResolution;
+          if (videoResolutionRequestFrame) cancelAnimationFrame(videoResolutionRequestFrame);
+          videoResolutionRequestFrame = requestAnimationFrame(() => {
+            videoResolutionRequestFrame = 0;
+            changeVideoResolution(value);
+          });
+        });
+      });
 
       function clearRenderIconReturnAnimation() {
         videoPlayToggle.classList.remove("is-render-icon-returning");
@@ -10620,7 +10932,11 @@
       });
 
       videoPlayToggle.addEventListener("click", () => {
-        if (!isVideoSource() || state.videoExporting) return;
+        if (!isVideoSource()) return;
+        if (state.videoExporting) {
+          setVideoRenderPaused(!videoRenderPaused);
+          return;
+        }
         if (!hasProcessedVideo()) {
           startVideoRendering();
           return;
