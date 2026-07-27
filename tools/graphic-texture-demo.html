@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" sizes="24x24" href="../assets/browser-icon-figma.png?v=20260721" />
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="79bb69d5-2b32-4ab4-b7ae-b4f61d34bee1"
+      data-domains="synthub.art,www.synthub.art"
+    ></script>
     <title>Synthub Graphic Texture V1.9</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
@@ -5382,6 +5388,12 @@
         outline: 0;
       }
 
+      .recipe-section,
+      .history-section,
+      .stage-drop-overlay {
+        display: none;
+      }
+
       @media (min-width: 641px) {
         :root {
           --desktop-ui-scale: 0.8;
@@ -5534,53 +5546,326 @@
         }
 
         .input-panel.is-dragging {
-          width: 344px;
-          min-height: 224px;
-          height: 224px;
-          margin: 8px;
-          padding: 20px;
-          border: 1px dashed #87e3ff;
-          border-radius: 4px;
+          overflow: hidden;
+          border: 0;
           background: #222227;
         }
 
-        .input-panel.is-dragging h2 {
-          position: relative;
+        .input-panel.is-dragging::after {
+          position: absolute;
           z-index: 2;
-          margin: 0;
+          inset: 8px;
+          border: 1px dashed #87e3ff;
+          border-radius: 4px;
+          content: "";
           pointer-events: none;
         }
 
         .input-panel.is-dragging #drop.drop {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          width: 100%;
-          height: 100%;
           border: 0;
           background: transparent;
           transform: none;
         }
 
+        .input-panel.is-dragging h2,
         .input-panel.is-dragging #drop .drop-content,
         .input-panel.is-dragging #inputStatus,
         .input-panel.is-dragging .side-previews {
-          display: none;
+          visibility: hidden;
         }
 
         .input-panel.is-dragging .input-drop-hint {
           position: absolute;
-          inset: 0;
+          inset: 8px;
           z-index: 3;
-          display: grid;
-          place-items: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
           color: #f4f3ef;
           font-family: var(--font-mono);
+          font-weight: 300;
+          pointer-events: none;
+        }
+
+        .input-panel.is-dragging .input-drop-hint strong {
           font-size: 20px;
           font-weight: 300;
           line-height: 26px;
           letter-spacing: -1px;
+        }
+
+        .input-panel.is-dragging .input-drop-hint span {
+          margin-top: 7px;
+          color: #9296a0;
+          font-family: var(--font-cn);
+          font-size: 12px;
+          font-weight: 300;
+          line-height: 18px;
+        }
+
+        .app.has-source .recipe-section,
+        .app.has-source .history-section {
+          display: block;
+        }
+
+        .recipe-section,
+        .history-section {
+          position: relative;
+          margin-top: 24px;
+        }
+
+        .recipe-section h2,
+        .history-section h2 {
+          margin-bottom: 10px;
+        }
+
+        .recipe-control {
+          position: relative;
+          display: grid;
+          grid-template-columns: 24px minmax(0, 1fr) 1px 30px;
+          align-items: center;
+          width: 100%;
+          height: 48px;
+          padding: 0 8px 0 16px;
+          background: #222227;
+        }
+
+        .recipe-mark {
+          grid-area: 1 / 1;
+          display: block;
+          width: 18px;
+          height: 18px;
+          object-fit: contain;
           pointer-events: none;
+        }
+
+        .recipe-mark-button {
+          display: grid;
+          width: 24px;
+          height: 36px;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          place-items: center;
+          cursor: pointer;
+        }
+
+        .recipe-mark-active,
+        .recipe-confirm {
+          display: none;
+        }
+
+        .recipe-control.is-edited .recipe-mark-idle,
+        .recipe-control.is-editing .recipe-copy {
+          display: none;
+        }
+
+        .recipe-control.is-edited .recipe-mark-active,
+        .recipe-control.is-editing .recipe-confirm {
+          display: block;
+        }
+
+        .recipe-control.show-copied .recipe-copy {
+          display: none;
+        }
+
+        .recipe-control.show-copied .recipe-confirm {
+          display: block;
+        }
+
+        .recipe-control.is-edited .recipe-confirm {
+          filter: brightness(0) saturate(100%) invert(88%) sepia(35%) saturate(730%) hue-rotate(164deg) brightness(105%);
+        }
+
+        .recipe-input {
+          min-width: 0;
+          width: 100%;
+          height: 32px;
+          padding: 0 8px;
+          border: 0;
+          outline: 0;
+          background: transparent;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-size: 16px;
+          font-weight: 300;
+          line-height: 32px;
+          letter-spacing: -0.45px;
+          text-overflow: ellipsis;
+        }
+
+        .recipe-input[readonly] {
+          cursor: text;
+        }
+
+        .recipe-input:not([readonly]) {
+          caret-color: #edff75;
+          text-overflow: clip;
+        }
+
+        .recipe-divider {
+          width: 1px;
+          height: 20px;
+          background: #9296a0;
+        }
+
+        .recipe-action {
+          display: grid;
+          width: 30px;
+          height: 36px;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          place-items: center;
+          cursor: pointer;
+        }
+
+        .recipe-action img {
+          width: 18px;
+          height: 18px;
+          object-fit: contain;
+          pointer-events: none;
+        }
+
+        .recipe-copied {
+          position: absolute;
+          right: 8px;
+          bottom: calc(100% + 6px);
+          display: none;
+          box-sizing: border-box;
+          width: max-content;
+          padding: 10px;
+          background: #edff75;
+          color: #222227;
+          font-family: var(--font-mono);
+          font-size: 20px;
+          line-height: 26px;
+          letter-spacing: -1px;
+          text-align: center;
+          white-space: nowrap;
+          pointer-events: none;
+        }
+
+        .recipe-copied::after {
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-top: 10px solid #edff75;
+          border-right: 10px solid transparent;
+          border-left: 10px solid transparent;
+          content: "";
+          transform: translateX(-50%);
+        }
+
+        .recipe-control.show-copied .recipe-copied {
+          display: block;
+        }
+
+        .history-grid {
+          display: flex;
+          gap: 8px;
+          width: 100%;
+        }
+
+        .history-column {
+          display: flex;
+          flex: 1 1 0;
+          flex-direction: column;
+          min-width: 0;
+          gap: 8px;
+        }
+
+        .history-item {
+          position: relative;
+          display: block;
+          min-width: 0;
+          padding: 0;
+          overflow: hidden;
+          border: 1px solid transparent;
+          background: #222227;
+          cursor: pointer;
+        }
+
+        .history-item::after {
+          position: absolute;
+          inset: 0;
+          border: 2px solid transparent;
+          content: "";
+          pointer-events: none;
+        }
+
+        .history-item:not(.is-selected):hover::after {
+          border-color: #222227;
+        }
+
+        .history-item.is-selected {
+          border-color: #87e3ff;
+        }
+
+        .history-item img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .history-count {
+          margin-top: 8px;
+          color: #9296a0;
+          font-family: var(--font-mono);
+          font-size: 11px;
+          font-weight: 300;
+          line-height: 14px;
+          text-align: right;
+        }
+
+        .stage-drop-overlay {
+          position: absolute;
+          z-index: 6;
+          top: 50%;
+          left: 50%;
+          display: none;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: var(--fit-width, 1px);
+          height: var(--fit-height, 1px);
+          background: rgba(135, 227, 255, 0.9);
+          color: #f4f3ef;
+          font-weight: 300;
+          pointer-events: none;
+          transform: translate(-50%, -50%);
+        }
+
+        .stage-drop-overlay strong {
+          font-family: var(--font-mono);
+          font-size: 24px;
+          font-weight: 300;
+          line-height: 31px;
+          letter-spacing: -1.2px;
+        }
+
+        .stage-drop-overlay span {
+          margin-top: 6px;
+          font-family: var(--font-cn);
+          font-size: 10px;
+          font-weight: 300;
+          line-height: 15px;
+        }
+
+        .app.has-source.is-file-dragging .stage-drop-overlay {
+          display: flex;
+        }
+
+        .app.has-source.is-file-dragging.drag-target-new .stage-drop-overlay {
+          opacity: 0.45;
+        }
+
+        .app.has-source.is-file-dragging.drag-target-keep .stage-drop-overlay {
+          opacity: 1;
         }
 
         .color-popover {
@@ -5729,7 +6014,10 @@
               <span class="input-guidance-or">or</span>
               <span class="input-guidance-copy" aria-live="polite">Drag &amp; Drop Copy &amp; Paste</span>
             </div>
-            <div class="input-drop-hint" id="inputDropHint" aria-hidden="true">Drop here</div>
+            <div class="input-drop-hint" id="inputDropHint" aria-hidden="true">
+              <strong id="inputDropTitle">Drop here</strong>
+              <span id="inputDropSubtitle">上传新图片</span>
+            </div>
             <div id="sidePreviews" class="side-previews">
               <div class="side-preview">
                 <h3>source</h3>
@@ -5746,6 +6034,36 @@
             <h2 data-cn="预设">Presets</h2>
             <div class="preset-grid" id="presetGrid"></div>
             <button class="randomize-button" id="randomize">NICE TRY</button>
+            <section class="recipe-section" id="recipeSection" aria-label="Recipe">
+              <h2 data-cn="配方">Recipe</h2>
+              <div class="recipe-control" id="recipeControl">
+                <button class="recipe-mark-button" id="recipeMarkButton" type="button" aria-label="Edit recipe code">
+                  <img class="recipe-mark recipe-mark-idle" src="../assets/recipe-icon.svg" alt="" />
+                  <img class="recipe-mark recipe-mark-active" src="../assets/recipe-icon-active.svg" alt="" />
+                </button>
+                <input
+                  class="recipe-input"
+                  id="recipeInput"
+                  type="text"
+                  readonly
+                  spellcheck="false"
+                  autocomplete="off"
+                  aria-label="Current recipe code"
+                  title="Double-click to enter a recipe code"
+                />
+                <span class="recipe-divider" aria-hidden="true"></span>
+                <button class="recipe-action" id="recipeAction" type="button" aria-label="Copy recipe code">
+                  <img class="recipe-copy" src="../assets/recipe-copy-icon.svg" alt="" />
+                  <img class="recipe-confirm" src="../assets/recipe-confirm-icon.svg" alt="" />
+                </button>
+                <span class="recipe-copied" id="recipeCopied" role="status">copied</span>
+              </div>
+            </section>
+            <section class="history-section" id="historySection" aria-label="History">
+              <h2 data-cn="回溯">History</h2>
+              <div class="history-grid" id="historyGrid"></div>
+              <div class="history-count" id="historyCount">0/24</div>
+            </section>
             <button class="mobile-export" data-export-png>
               <span class="export-icon"><img src="../assets/download-icon-figma.svg" alt="" /></span>
               <span class="export-label">OUTPUT</span>
@@ -5778,6 +6096,10 @@
           <div class="stage">
             <canvas id="result" class="result" width="1000" height="1000"></canvas>
             <video id="processedVideo" class="processed-video" muted playsinline preload="auto"></video>
+            <div class="stage-drop-overlay" id="stageDropOverlay" aria-hidden="true">
+              <strong>Try another image</strong>
+              <span>使用当前配方</span>
+            </div>
             <div class="video-timeline" id="videoTimeline" aria-label="Video playback">
               <button class="video-play-toggle is-paused" id="videoPlayToggle" type="button" aria-label="播放" aria-pressed="false">
                 <span class="video-play-indicator" aria-hidden="true">
@@ -6045,6 +6367,8 @@
         nodes: clone(presets.thermalMap.nodes),
         outputReverse: false,
         flyoutOpen: false,
+        recipeCarrier: false,
+        recipeCarrierCode: "",
       };
 
       const fileInput = document.getElementById("file");
@@ -6054,7 +6378,18 @@
       const cameraButton = document.getElementById("cameraButton");
       const drop = document.getElementById("drop");
       const inputPanel = document.getElementById("inputPanel");
+      const inputDropTitle = document.getElementById("inputDropTitle");
+      const inputDropSubtitle = document.getElementById("inputDropSubtitle");
       const inputStatus = document.getElementById("inputStatus");
+      const recipeSection = document.getElementById("recipeSection");
+      const recipeControl = document.getElementById("recipeControl");
+      const recipeMarkButton = document.getElementById("recipeMarkButton");
+      const recipeInput = document.getElementById("recipeInput");
+      const recipeAction = document.getElementById("recipeAction");
+      const recipeCopied = document.getElementById("recipeCopied");
+      const historyGrid = document.getElementById("historyGrid");
+      const historyCount = document.getElementById("historyCount");
+      const stageDropOverlay = document.getElementById("stageDropOverlay");
       const work = document.getElementById("work");
       const workCtx = work.getContext("2d", { willReadFrequently: true });
       const result = document.getElementById("result");
@@ -6799,6 +7134,7 @@
             renderFrameQueued = false;
             renderOutput(interactiveRenderSize());
             if (isVideoSource()) scheduleVideoFrameRefine();
+            scheduleRecipeHistoryCommit();
           });
         });
       }
@@ -7104,6 +7440,8 @@
         result.style.setProperty("--fit-height", `${height}px`);
         processedVideo.style.setProperty("--fit-width", `${width}px`);
         processedVideo.style.setProperty("--fit-height", `${height}px`);
+        stageDropOverlay.style.setProperty("--fit-width", `${width}px`);
+        stageDropOverlay.style.setProperty("--fit-height", `${height}px`);
         syncMobileResult();
       }
 
@@ -7422,6 +7760,7 @@
         state.nodes = clone(presets[id].nodes);
         state.flyoutOpen = false;
         renderAll();
+        scheduleRecipeHistoryCommit();
       }
 
       function randInt(min, max) {
@@ -7561,6 +7900,351 @@
         };
       }
 
+      function encodeBase64Url(value) {
+        const bytes = value instanceof Uint8Array ? value : new TextEncoder().encode(value);
+        let binary = "";
+        for (let i = 0; i < bytes.length; i += 0x8000) {
+          binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+        }
+        return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+      }
+
+      function decodeBase64Url(value) {
+        const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+        const binary = atob(normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "="));
+        return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+      }
+
+      function recipeChecksum(value) {
+        let hashValue = 2166136261;
+        const bytes = new TextEncoder().encode(value);
+        bytes.forEach((byte) => {
+          hashValue ^= byte;
+          hashValue = Math.imul(hashValue, 16777619);
+        });
+        return (hashValue >>> 0).toString(36).toUpperCase().padStart(7, "0");
+      }
+
+      const recipeNodeOrder = ["extract", "ink", "screen", "edge", "distress", "texture", "decor", "color"];
+      const recipeNodeKeys = {
+        extract: ["enabled", "threshold", "contrast", "grayKeep", "invert"],
+        ink: ["enabled", "color", "strength", "holes", "colorAlpha"],
+        screen: ["enabled", "dot", "strength", "angle"],
+        edge: ["enabled", "width", "rough", "color", "colorAlpha"],
+        distress: ["enabled", "amount", "size", "seed"],
+        texture: ["enabled", "fabric", "scan", "bleed"],
+        decor: ["enabled", "grid", "gridSize", "blur", "particles"],
+        color: ["enabled", "bg", "transparent", "highlight", "bgAlpha", "highlightAlpha"],
+      };
+
+      function recipeDefaultValue(nodeId, key, template) {
+        if (Object.hasOwn(template, key)) return template[key];
+        if (key.endsWith("Alpha")) return 100;
+        return null;
+      }
+
+      function recipeBytes() {
+        const presetIds = Object.keys(presets);
+        const output = [2, Math.max(0, presetIds.indexOf(state.preset)), state.outputReverse ? 1 : 0];
+        recipeNodeOrder.forEach((nodeId) => {
+          const template = presets[state.preset].nodes[nodeId];
+          recipeNodeKeys[nodeId].forEach((key) => {
+            const defaultValue = recipeDefaultValue(nodeId, key, template);
+            const value = state.nodes[nodeId]?.[key] ?? defaultValue;
+            if (typeof defaultValue === "boolean") {
+              output.push(value ? 1 : 0);
+            } else if (typeof defaultValue === "number") {
+              const integer = Math.round(clamp(Number(value) || 0, -32768, 32767));
+              output.push((integer >> 8) & 0xff, integer & 0xff);
+            } else if (typeof defaultValue === "string") {
+              const rgb = hexToRgb(value);
+              output.push(rgb.r, rgb.g, rgb.b);
+            }
+          });
+        });
+        return Uint8Array.from(output);
+      }
+
+      function currentRecipeCode() {
+        const payload = encodeBase64Url(recipeBytes());
+        return `GT2-${payload}-${recipeChecksum(payload)}`;
+      }
+
+      function decodeRecipeBytes(bytes) {
+        const presetIds = Object.keys(presets);
+        const preset = presetIds[bytes[1]];
+        if (bytes[0] !== 2 || !preset) return null;
+        const template = presets[preset].nodes;
+        const nodes = clone(template);
+        let cursor = 3;
+        recipeNodeOrder.forEach((nodeId) => {
+          const nodeTemplate = template[nodeId];
+          recipeNodeKeys[nodeId].forEach((key) => {
+            const defaultValue = recipeDefaultValue(nodeId, key, nodeTemplate);
+            if (typeof defaultValue === "boolean") {
+              if (cursor >= bytes.length) return;
+              nodes[nodeId][key] = Boolean(bytes[cursor++]);
+            } else if (typeof defaultValue === "number") {
+              if (cursor + 1 >= bytes.length) return;
+              const unsigned = (bytes[cursor] << 8) | bytes[cursor + 1];
+              nodes[nodeId][key] = unsigned & 0x8000 ? unsigned - 0x10000 : unsigned;
+              cursor += 2;
+            } else if (typeof defaultValue === "string") {
+              if (cursor + 2 >= bytes.length) return;
+              nodes[nodeId][key] = `#${[bytes[cursor], bytes[cursor + 1], bytes[cursor + 2]]
+                .map((value) => value.toString(16).padStart(2, "0"))
+                .join("")}`;
+              cursor += 3;
+            }
+          });
+        });
+        if (cursor !== bytes.length) return null;
+        return {
+          preset,
+          selected: presets[preset].selected,
+          nodes,
+          outputReverse: Boolean(bytes[2]),
+        };
+      }
+
+      function decodeLegacyRecipePayload(payload) {
+        if (!payload || payload.v !== 2 || !presets[payload.p] || !payload.n) return null;
+        const template = presets[payload.p].nodes;
+        const nodes = clone(template);
+        recipeNodeOrder.forEach((nodeId, nodeIndex) => {
+          const nodeTemplate = template[nodeId];
+          const candidate = Array.isArray(payload.n) ? payload.n[nodeIndex] : payload.n[nodeId];
+          if (!candidate || typeof candidate !== "object") return;
+          recipeNodeKeys[nodeId].forEach((key, keyIndex) => {
+            const defaultValue = recipeDefaultValue(nodeId, key, nodeTemplate);
+            const value = Array.isArray(candidate) ? candidate[keyIndex] : candidate[key];
+            if (typeof defaultValue === "number" && Number.isFinite(Number(value))) {
+              nodes[nodeId][key] = clamp(Number(value), -32768, 32767);
+            } else if (typeof defaultValue === "boolean" && typeof value === "boolean") {
+              nodes[nodeId][key] = value;
+            } else if (typeof defaultValue === "string" && typeof value === "string") {
+              nodes[nodeId][key] = /^#[0-9a-f]{3,8}$/i.test(value) ? value : defaultValue;
+            }
+          });
+        });
+        return {
+          preset: payload.p,
+          selected: presets[payload.p].selected,
+          nodes,
+          outputReverse: Boolean(payload.r),
+        };
+      }
+
+      function decodeRecipeCode(code) {
+        const normalized = String(code || "").trim();
+        const match = normalized.match(/^GT2-([A-Za-z0-9_-]+)-([A-Z0-9]{7})$/i);
+        if (!match || recipeChecksum(match[1]) !== match[2].toUpperCase()) return null;
+        try {
+          const bytes = decodeBase64Url(match[1]);
+          const compactRecipe = decodeRecipeBytes(bytes);
+          if (compactRecipe) return compactRecipe;
+          return decodeLegacyRecipePayload(JSON.parse(new TextDecoder().decode(bytes)));
+        } catch (_error) {
+          return null;
+        }
+      }
+
+      function applyRecipeState(recipeState, { carrier = false, remember = true } = {}) {
+        if (!recipeState?.nodes || !presets[recipeState.preset]) return false;
+        if (remember) rememberNiceTryState();
+        state.preset = recipeState.preset;
+        state.selected = recipeState.selected || presets[recipeState.preset].selected;
+        state.nodes = clone(recipeState.nodes);
+        state.outputReverse = Boolean(recipeState.outputReverse);
+        state.flyoutOpen = false;
+        state.recipeCarrier = Boolean(carrier);
+        state.recipeCarrierCode = carrier ? currentRecipeCode() : "";
+        return true;
+      }
+
+      let recipeCopiedTimer = 0;
+      let recipeEditingOriginal = "";
+
+      function syncRecipeUi() {
+        if (!recipeInput || !state.source) return;
+        const code = currentRecipeCode();
+        if (recipeInput.readOnly || document.activeElement !== recipeInput) recipeInput.value = code;
+        recipeControl.classList.toggle("is-edited", !recipeInput.readOnly && recipeInput.value.trim() !== recipeEditingOriginal);
+      }
+
+      function beginRecipeEditing() {
+        if (!state.source || !recipeInput.readOnly) return;
+        recipeEditingOriginal = currentRecipeCode();
+        recipeInput.readOnly = false;
+        recipeInput.value = recipeEditingOriginal;
+        recipeControl.classList.add("is-editing");
+        recipeControl.classList.remove("show-copied");
+        recipeAction.setAttribute("aria-label", "Apply recipe code");
+        recipeInput.focus();
+        recipeInput.select();
+      }
+
+      function cancelRecipeEditing() {
+        recipeInput.value = currentRecipeCode();
+        recipeInput.readOnly = true;
+        recipeControl.classList.remove("is-editing", "is-edited");
+        recipeAction.setAttribute("aria-label", "Copy recipe code");
+      }
+
+      function confirmRecipeEditing() {
+        const decoded = decodeRecipeCode(recipeInput.value);
+        if (!decoded) {
+          recipeControl.classList.add("is-invalid");
+          setInputStatus("配方码无效：请检查是否完整");
+          recipeInput.focus();
+          return false;
+        }
+        recipeControl.classList.remove("is-invalid");
+        applyRecipeState(decoded);
+        recipeInput.readOnly = true;
+        recipeControl.classList.remove("is-editing", "is-edited");
+        recipeAction.setAttribute("aria-label", "Copy recipe code");
+        renderAll();
+        scheduleRecipeHistoryCommit();
+        setInputStatus("配方已应用");
+        return true;
+      }
+
+      async function copyRecipeCode() {
+        const code = currentRecipeCode();
+        try {
+          await navigator.clipboard.writeText(code);
+        } catch (_error) {
+          recipeInput.readOnly = false;
+          recipeInput.value = code;
+          recipeInput.select();
+          document.execCommand("copy");
+          recipeInput.readOnly = true;
+        }
+        window.clearTimeout(recipeCopiedTimer);
+        recipeControl.classList.add("show-copied");
+        recipeAction.setAttribute("aria-label", "Recipe code copied");
+        recipeCopiedTimer = window.setTimeout(() => {
+          recipeControl.classList.remove("show-copied");
+          recipeAction.setAttribute("aria-label", "Copy recipe code");
+        }, 1200);
+      }
+
+      const recipeHistoryLimit = 24;
+      const recipeHistory = [];
+      let activeRecipeHistoryId = 0;
+      let recipeHistorySequence = 0;
+      let recipeHistoryCommitToken = 0;
+      const sourceIdentity = new WeakMap();
+      let sourceIdentitySequence = 0;
+
+      function getSourceIdentity(source) {
+        if (!source || (typeof source !== "object" && typeof source !== "function")) return "none";
+        if (!sourceIdentity.has(source)) sourceIdentity.set(source, ++sourceIdentitySequence);
+        return sourceIdentity.get(source);
+      }
+
+      function renderRecipeHistory() {
+        if (!historyGrid) return;
+        historyGrid.replaceChildren();
+        const columns = [document.createElement("div"), document.createElement("div")];
+        columns.forEach((column) => {
+          column.className = "history-column";
+          historyGrid.appendChild(column);
+        });
+        recipeHistory.slice().reverse().forEach((entry, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "history-item";
+          button.classList.toggle("is-selected", entry.id === activeRecipeHistoryId);
+          button.style.aspectRatio = String(clamp(entry.aspect, 0.1, 10));
+          button.setAttribute("aria-label", `Restore history ${entry.index}`);
+          button.title = "Restore this result";
+          const image = document.createElement("img");
+          image.src = entry.thumbnailUrl;
+          image.alt = "";
+          button.appendChild(image);
+          button.addEventListener("click", () => restoreRecipeHistoryEntry(entry.id));
+          columns[index % 2].appendChild(button);
+        });
+        historyCount.textContent = `${recipeHistory.length}/${recipeHistoryLimit}`;
+      }
+
+      function restoreRecipeHistoryEntry(id) {
+        const entry = recipeHistory.find((item) => item.id === id);
+        if (!entry) return;
+        state.source = entry.source;
+        state.sourceType = entry.sourceType;
+        state.sourceAspect = entry.sourceAspect;
+        state.sourceHasTransparency = entry.sourceHasTransparency;
+        applyRecipeState(entry.recipeState, {
+          carrier: entry.recipeCarrier,
+          remember: true,
+        });
+        state.recipeCarrierCode = entry.recipeCarrier ? entry.recipeCarrierCode : "";
+        activeRecipeHistoryId = entry.id;
+        invalidateSourceImageCache();
+        sidePreviews.classList.add("has-preview");
+        setInputStatus("已恢复历史效果");
+        renderAll();
+        renderRecipeHistory();
+      }
+
+      function canvasThumbnailBlob() {
+        if (!result.width || !result.height) return Promise.resolve(null);
+        const maxSide = 360;
+        const scale = Math.min(1, maxSide / Math.max(result.width, result.height));
+        const thumbnail = document.createElement("canvas");
+        thumbnail.width = Math.max(1, Math.round(result.width * scale));
+        thumbnail.height = Math.max(1, Math.round(result.height * scale));
+        thumbnail.getContext("2d").drawImage(result, 0, 0, thumbnail.width, thumbnail.height);
+        return new Promise((resolve) => thumbnail.toBlob(resolve, "image/webp", 0.76));
+      }
+
+      async function commitRecipeHistory(token) {
+        if (!state.source || token !== recipeHistoryCommitToken || isVideoSource() || isMobileCaptureSource()) return;
+        const code = currentRecipeCode();
+        const sourceId = getSourceIdentity(state.source);
+        const latest = recipeHistory[recipeHistory.length - 1];
+        if (latest?.code === code && latest?.sourceId === sourceId) {
+          activeRecipeHistoryId = latest.id;
+          renderRecipeHistory();
+          return;
+        }
+        const blob = await canvasThumbnailBlob();
+        if (!blob || token !== recipeHistoryCommitToken) return;
+        const id = ++recipeHistorySequence;
+        const entry = {
+          id,
+          index: id,
+          code,
+          sourceId,
+          source: state.source,
+          sourceType: state.sourceType,
+          sourceAspect: state.sourceAspect,
+          sourceHasTransparency: state.sourceHasTransparency,
+          recipeState: captureNiceTryState(),
+          recipeCarrier: state.recipeCarrier,
+          recipeCarrierCode: state.recipeCarrierCode,
+          aspect: result.width / Math.max(1, result.height),
+          thumbnailUrl: URL.createObjectURL(blob),
+        };
+        recipeHistory.push(entry);
+        activeRecipeHistoryId = id;
+        while (recipeHistory.length > recipeHistoryLimit) {
+          const removed = recipeHistory.shift();
+          URL.revokeObjectURL(removed.thumbnailUrl);
+        }
+        renderRecipeHistory();
+      }
+
+      function scheduleRecipeHistoryCommit(delay = 0) {
+        const token = ++recipeHistoryCommitToken;
+        window.setTimeout(() => {
+          requestAnimationFrame(() => commitRecipeHistory(token));
+        }, delay);
+      }
+
       function rememberNiceTryState() {
         niceTryHistory.push(captureNiceTryState());
         if (niceTryHistory.length > 24) niceTryHistory.shift();
@@ -7579,6 +8263,7 @@
           scheduleNiceTryHistoryPersist();
           renderAll(!previewFirst);
           if (previewFirst) scheduleNiceTryPreviewRender();
+          else scheduleRecipeHistoryCommit();
           return true;
         }
         scheduleNiceTryHistoryPersist();
@@ -7610,6 +8295,7 @@
         state.selected = preset.selected;
         renderAll(!previewFirst);
         if (previewFirst) scheduleNiceTryPreviewRender();
+        else scheduleRecipeHistoryCommit();
       }
 
       function presetIcon(id) {
@@ -8960,6 +9646,17 @@
         const source = buildSourceImage(renderSize);
         const sourceReady = measuring ? performance.now() : 0;
         const { data, width: w, height: h } = source;
+        if (state.recipeCarrier && !isVideoSource() && !isMobileCaptureSource()) {
+          result.width = w;
+          result.height = h;
+          resultCtx.putImageData(source, 0, 0);
+          if (!renderingVideoBatch) {
+            const carrierMask = createMask(source);
+            renderMaskMini(carrierMask, w, h);
+          }
+          syncResultFit();
+          return;
+        }
         const baseMask = createMask(source);
         const roughMask = createRoughEdgeMask(baseMask, w, h, state.nodes.edge);
         const outputMask = applyOutputReverseMask(roughMask, w, h);
@@ -9183,6 +9880,10 @@
 
       function renderAll(shouldRenderOutput = true) {
         cancelScheduledRenderOutput();
+        if (state.recipeCarrier && state.recipeCarrierCode && currentRecipeCode() !== state.recipeCarrierCode) {
+          state.recipeCarrier = false;
+          state.recipeCarrierCode = "";
+        }
         app.classList.toggle("has-source", Boolean(state.source));
         app.classList.toggle("has-video", isVideoSource());
         if (isVideoSource()) {
@@ -9197,6 +9898,7 @@
         renderMobileEffects();
         renderMobileParams();
         renderMobileColorPanel();
+        syncRecipeUi();
         if (shouldRenderOutput) renderOutput(isVideoSource() ? interactiveRenderSize() : finalRenderSize());
         if (isVideoSource()) syncVideoTimeline();
         syncResultFit();
@@ -9241,6 +9943,124 @@
         inputStatus.append(mark, document.createTextNode(` ${text}`));
         if (mobileStatus) mobileStatus.textContent = `* ${text}`;
         syncMobileTopOffset();
+      }
+
+      const pngSignature = [137, 80, 78, 71, 13, 10, 26, 10];
+      const recipePngKeyword = "graphic-texture:recipe";
+      let pngCrcTable = null;
+
+      function getPngCrcTable() {
+        if (pngCrcTable) return pngCrcTable;
+        pngCrcTable = new Uint32Array(256);
+        for (let n = 0; n < 256; n++) {
+          let value = n;
+          for (let bit = 0; bit < 8; bit++) value = value & 1 ? 0xedb88320 ^ (value >>> 1) : value >>> 1;
+          pngCrcTable[n] = value >>> 0;
+        }
+        return pngCrcTable;
+      }
+
+      function pngCrc32(bytes) {
+        const table = getPngCrcTable();
+        let crc = 0xffffffff;
+        bytes.forEach((byte) => {
+          crc = table[(crc ^ byte) & 0xff] ^ (crc >>> 8);
+        });
+        return (crc ^ 0xffffffff) >>> 0;
+      }
+
+      function writeUint32(target, offset, value) {
+        target[offset] = (value >>> 24) & 0xff;
+        target[offset + 1] = (value >>> 16) & 0xff;
+        target[offset + 2] = (value >>> 8) & 0xff;
+        target[offset + 3] = value & 0xff;
+      }
+
+      function readUint32(bytes, offset) {
+        return ((bytes[offset] << 24) | (bytes[offset + 1] << 16) | (bytes[offset + 2] << 8) | bytes[offset + 3]) >>> 0;
+      }
+
+      function createPngChunk(type, data) {
+        const typeBytes = new TextEncoder().encode(type);
+        const chunk = new Uint8Array(12 + data.length);
+        writeUint32(chunk, 0, data.length);
+        chunk.set(typeBytes, 4);
+        chunk.set(data, 8);
+        const crcBytes = new Uint8Array(typeBytes.length + data.length);
+        crcBytes.set(typeBytes);
+        crcBytes.set(data, typeBytes.length);
+        writeUint32(chunk, 8 + data.length, pngCrc32(crcBytes));
+        return chunk;
+      }
+
+      async function embedRecipeInPng(blob, code) {
+        const source = new Uint8Array(await blob.arrayBuffer());
+        if (!pngSignature.every((byte, index) => source[index] === byte)) return blob;
+        const encoder = new TextEncoder();
+        const keyword = encoder.encode(recipePngKeyword);
+        const text = encoder.encode(code);
+        const data = new Uint8Array(keyword.length + text.length + 5);
+        data.set(keyword, 0);
+        let cursor = keyword.length;
+        data[cursor++] = 0;
+        data[cursor++] = 0;
+        data[cursor++] = 0;
+        data[cursor++] = 0;
+        data[cursor++] = 0;
+        data.set(text, cursor);
+        const recipeChunk = createPngChunk("iTXt", data);
+
+        let offset = 8;
+        while (offset + 12 <= source.length) {
+          const length = readUint32(source, offset);
+          const type = new TextDecoder().decode(source.subarray(offset + 4, offset + 8));
+          if (type === "IEND") {
+            return new Blob(
+              [source.subarray(0, offset), recipeChunk, source.subarray(offset)],
+              { type: "image/png" },
+            );
+          }
+          offset += 12 + length;
+        }
+        return blob;
+      }
+
+      async function extractRecipeFromPng(file) {
+        if (!(file.type === "image/png" || /\.png$/i.test(file.name))) return "";
+        try {
+          const source = new Uint8Array(await file.arrayBuffer());
+          if (!pngSignature.every((byte, index) => source[index] === byte)) return "";
+          const decoder = new TextDecoder();
+          let offset = 8;
+          while (offset + 12 <= source.length) {
+            const length = readUint32(source, offset);
+            if (length > 1024 * 1024 || offset + length + 12 > source.length) return "";
+            const type = decoder.decode(source.subarray(offset + 4, offset + 8));
+            const data = source.subarray(offset + 8, offset + 8 + length);
+            if (type === "iTXt") {
+              const keywordEnd = data.indexOf(0);
+              const keyword = decoder.decode(data.subarray(0, keywordEnd));
+              if (keyword === recipePngKeyword && data[keywordEnd + 1] === 0) {
+                let textStart = keywordEnd + 3;
+                const languageEnd = data.indexOf(0, textStart);
+                const translatedEnd = data.indexOf(0, languageEnd + 1);
+                textStart = translatedEnd + 1;
+                const code = decoder.decode(data.subarray(textStart)).trim();
+                if (decodeRecipeCode(code)) return code;
+              }
+            } else if (type === "tEXt") {
+              const keywordEnd = data.indexOf(0);
+              const keyword = decoder.decode(data.subarray(0, keywordEnd));
+              const code = decoder.decode(data.subarray(keywordEnd + 1)).trim();
+              if (keyword === recipePngKeyword && decodeRecipeCode(code)) return code;
+            }
+            if (type === "IEND") break;
+            offset += 12 + length;
+          }
+        } catch (_error) {
+          // A malformed or ordinary PNG should still load normally.
+        }
+        return "";
       }
 
       function isSvgFile(file) {
@@ -9319,19 +10139,26 @@
         return canvas;
       }
 
-      function applyLoadedSource(source, aspect, type, status) {
+      function applyLoadedSource(source, aspect, type, status, options = {}) {
+        const { recipeState = null, carrier = false, commitHistory = true } = options;
         state.source = source;
         state.sourceType = type;
         state.sourceAspect = aspect || 1;
         state.sourceHasTransparency = (type === "image" || type === "svg") && sourceHasTransparency(source, state.sourceAspect);
+        if (recipeState) applyRecipeState(recipeState, { carrier, remember: false });
+        else {
+          state.recipeCarrier = false;
+          state.recipeCarrierCode = "";
+        }
         window.scrollTo(0, 0);
         invalidateSourceImageCache();
         sidePreviews.classList.add("has-preview");
         setInputStatus(state.sourceHasTransparency ? `${status} · 已识别透明轮廓` : status);
         renderAll();
+        if (commitHistory) scheduleRecipeHistoryCommit();
       }
 
-      async function loadVideoFile(file) {
+      async function loadVideoFile(file, options = {}) {
         resetVideoSource();
         videoObjectUrl = URL.createObjectURL(file);
         const metadataReady = waitForVideoEvent("loadedmetadata");
@@ -9345,22 +10172,34 @@
           videoSource.videoWidth / Math.max(1, videoSource.videoHeight),
           "video",
           "视频已载入：可继续拖入文件替换",
+          options,
         );
         syncVideoTimeline(0);
       }
 
-      async function loadFile(file) {
-        if (!file) return;
+      async function loadFile(file, options = {}) {
+        if (!file) return { loaded: false, embeddedRecipe: false };
+        const {
+          commitHistory = true,
+          detectRecipe = true,
+        } = options;
         if (mobileCapture.state !== "idle" || isMobileCaptureSource()) {
           await closeMobileCapture({ resetSource: true });
         }
         setInputStatus("正在读取文件...");
 
         try {
+          const embeddedCode = detectRecipe ? await extractRecipeFromPng(file) : "";
+          const embeddedRecipe = embeddedCode ? decodeRecipeCode(embeddedCode) : null;
+          const sourceOptions = {
+            recipeState: embeddedRecipe,
+            carrier: Boolean(embeddedRecipe),
+            commitHistory,
+          };
           if (isVideoFile(file)) {
             setInputStatus("正在读取视频...");
-            await loadVideoFile(file);
-            return;
+            await loadVideoFile(file, { commitHistory });
+            return { loaded: true, embeddedRecipe: false };
           }
 
           if (isVideoSource()) resetVideoSource();
@@ -9368,29 +10207,38 @@
           if (isPdfFile(file)) {
             setInputStatus("正在读取 PDF 首页...");
             const pdfCanvas = await renderPdfFirstPage(file);
-            applyLoadedSource(pdfCanvas, pdfCanvas.width / pdfCanvas.height, "pdf", "PDF 已载入：已使用第一页生成图形");
-            return;
+            applyLoadedSource(pdfCanvas, pdfCanvas.width / pdfCanvas.height, "pdf", "PDF 已载入：已使用第一页生成图形", { commitHistory });
+            return { loaded: true, embeddedRecipe: false };
           }
 
           if (!isRasterImageFile(file) && !isSvgFile(file)) {
             setInputStatus("格式不支持：请上传 PNG、JPG、视频、SVG 或 PDF");
-            return;
+            return { loaded: false, embeddedRecipe: false };
           }
 
           const url = URL.createObjectURL(file);
           const img = new Image();
-          img.onload = () => {
-            const type = isSvgFile(file) ? "svg" : "image";
-            const label = type === "svg" ? "SVG 已载入" : "图片已载入";
-            applyLoadedSource(img, img.naturalWidth / img.naturalHeight, type, `${label}：可继续拖入文件替换`);
-          };
-          img.onerror = () => {
-            URL.revokeObjectURL(url);
-            setInputStatus("读取失败：这个文件无法作为图像处理");
-          };
-          img.src = url;
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = () => reject(new Error("这个文件无法作为图像处理"));
+            img.src = url;
+          });
+          URL.revokeObjectURL(url);
+          const type = isSvgFile(file) ? "svg" : "image";
+          const label = embeddedRecipe
+            ? "已识别图片内的配方码"
+            : type === "svg" ? "SVG 已载入" : "图片已载入";
+          applyLoadedSource(
+            img,
+            img.naturalWidth / img.naturalHeight,
+            type,
+            `${label}：可继续拖入文件替换`,
+            sourceOptions,
+          );
+          return { loaded: true, embeddedRecipe: Boolean(embeddedRecipe) };
         } catch (error) {
           setInputStatus(`读取失败：${error.message}`);
+          return { loaded: false, embeddedRecipe: false };
         }
       }
 
@@ -9917,6 +10765,7 @@
       drop.addEventListener("click", (event) => {
         if (event.target === fileInput) return;
         event.preventDefault();
+        fileInput.value = "";
         fileInput.click();
       });
 
@@ -9933,35 +10782,93 @@
       });
       scheduleInputGuidanceRotation();
 
+      recipeMarkButton?.addEventListener("click", beginRecipeEditing);
+      recipeInput?.addEventListener("dblclick", beginRecipeEditing);
+      recipeInput?.addEventListener("input", () => {
+        recipeControl.classList.remove("is-invalid");
+        recipeControl.classList.toggle("is-edited", recipeInput.value.trim() !== recipeEditingOriginal);
+      });
+      recipeInput?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !recipeInput.readOnly) {
+          event.preventDefault();
+          confirmRecipeEditing();
+        } else if (event.key === "Escape" && !recipeInput.readOnly) {
+          event.preventDefault();
+          cancelRecipeEditing();
+        }
+      });
+      recipeAction?.addEventListener("click", () => {
+        if (recipeInput.readOnly) copyRecipeCode();
+        else confirmRecipeEditing();
+      });
+
       function hasDraggedFiles(event) {
         return Array.from(event.dataTransfer?.types || []).includes("Files");
       }
 
-      function setDropDragging(active) {
+      function getDropMode(event) {
+        if (!state.source) return "new";
+        const point = { x: event.clientX, y: event.clientY };
+        const contains = (element) => {
+          const rect = element.getBoundingClientRect();
+          return point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom;
+        };
+        if (contains(inputPanel) || contains(document.querySelector(".side"))) return "new";
+        if (contains(result) || contains(document.querySelector(".main"))) return "keep";
+        return "";
+      }
+
+      function setDropDragging(active, mode = "") {
         drop.classList.toggle("drag", active);
         inputPanel.classList.toggle("is-dragging", active);
+        app.classList.toggle("is-file-dragging", active);
+        app.classList.toggle("drag-target-new", active && mode === "new");
+        app.classList.toggle("drag-target-keep", active && mode === "keep");
+        if (active) {
+          inputDropTitle.textContent = state.source ? "Drop New" : "Drop here";
+          inputDropSubtitle.textContent = "上传新图片";
+        }
       }
 
       window.addEventListener("dragenter", (event) => {
         if (!hasDraggedFiles(event)) return;
         event.preventDefault();
-        setDropDragging(true);
+        setDropDragging(true, getDropMode(event));
       });
       window.addEventListener("dragover", (event) => {
         if (!hasDraggedFiles(event)) return;
         event.preventDefault();
         if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
-        setDropDragging(true);
+        setDropDragging(true, getDropMode(event));
       });
       window.addEventListener("dragleave", (event) => {
         if (event.relatedTarget === null) setDropDragging(false);
       });
-      window.addEventListener("drop", (event) => {
+      window.addEventListener("drop", async (event) => {
         if (!hasDraggedFiles(event)) return;
         event.preventDefault();
+        const mode = getDropMode(event);
+        const hadSource = Boolean(state.source);
+        const currentRecipe = hadSource ? captureNiceTryState() : null;
         setDropDragging(false);
         const file = event.dataTransfer?.files?.[0];
-        if (file) loadFile(file);
+        if (!file || !mode) return;
+        const loaded = await loadFile(file, {
+          commitHistory: false,
+          detectRecipe: mode === "new",
+        });
+        if (!loaded.loaded) return;
+        if (mode === "keep" && currentRecipe) {
+          applyRecipeState(currentRecipe, { remember: false });
+          renderAll();
+          scheduleRecipeHistoryCommit();
+          setInputStatus("已使用当前配方处理新图片");
+        } else if (hadSource && !loaded.embeddedRecipe) {
+          randomizeChain(true);
+          setInputStatus("已上传新图片并生成新的配方");
+        } else {
+          scheduleRecipeHistoryCommit();
+        }
       });
       async function exportOutput() {
         if (!state.source) return;
@@ -9974,10 +10881,19 @@
           return;
         }
         flushRenderOutput();
+        const pngBlob = await new Promise((resolve, reject) => {
+          result.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("无法生成 PNG"));
+          }, "image/png");
+        });
+        const outputBlob = await embedRecipeInPng(pngBlob, currentRecipeCode());
+        const outputUrl = URL.createObjectURL(outputBlob);
         const a = document.createElement("a");
-        a.href = result.toDataURL("image/png");
+        a.href = outputUrl;
         a.download = `graphic-texture-chain-${state.preset}.png`;
         a.click();
+        window.setTimeout(() => URL.revokeObjectURL(outputUrl), 1000);
       }
 
       document.querySelectorAll("[data-export-png]").forEach((button) => {
@@ -10009,6 +10925,7 @@
       window.addEventListener("scroll", scheduleMobileScrollSync, { passive: true });
       window.addEventListener("pagehide", () => {
         persistNiceTryHistory();
+        recipeHistory.forEach((entry) => URL.revokeObjectURL(entry.thumbnailUrl));
         cancelMobileCaptureRenderLoop();
         [mobileCapture.rawRecorder, mobileCapture.renderedRecorder].forEach((recorder) => {
           if (!recorder) return;
