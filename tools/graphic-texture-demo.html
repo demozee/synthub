@@ -2,7 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="icon" type="image/png" sizes="24x24" href="../assets/browser-icon-figma.png?v=20260721" />
     <script
       defer
@@ -4321,6 +4321,16 @@
           --mobile-page-width: min(390px, 100%);
           --mobile-preview-size: min(390px, 100vw);
           --mobile-preview-height: min(520px, 133.333vw);
+          --mobile-viewport-height: 100svh;
+          --mobile-upload-preview-height: clamp(
+            390px,
+            calc(var(--mobile-viewport-height) - 228px),
+            520px
+          );
+          --mobile-camera-preview-height: min(
+            calc(var(--mobile-preview-size) * 0.75),
+            max(300px, calc(var(--mobile-viewport-height) - 228px))
+          );
         }
 
         html,
@@ -4978,8 +4988,187 @@
           object-fit: cover;
         }
 
+        .mobile-capture-playback {
+          position: absolute;
+          inset: 0;
+          z-index: 3;
+          display: none;
+          width: 100%;
+          height: 100%;
+          background: #1d1d20;
+          object-fit: cover;
+        }
+
+        .app.mobile-capture-reviewing .mobile-capture-playback,
+        .app.mobile-capture-ready .mobile-capture-playback {
+          display: block;
+        }
+
         .app.mobile-camera-session .mobile-shell {
           padding-top: var(--mobile-preview-height);
+        }
+
+        .app.mobile-camera-session {
+          height: 100dvh;
+          overflow: hidden;
+        }
+
+        .mobile-camera-nice {
+          display: none;
+        }
+
+        .app.mobile-camera-session .mobile-scroll {
+          padding: 15px 16px 22px;
+        }
+
+        .app.mobile-camera-session .mobile-section-title {
+          display: none;
+        }
+
+        .app.mobile-camera-session .mobile-preset-grid {
+          grid-template-columns: repeat(4, 60px) 98px;
+          gap: 0 4px;
+          width: 358px;
+          height: 60px;
+        }
+
+        .app.mobile-camera-session .mobile-preset {
+          display: grid;
+          grid-template-columns: 1fr;
+          place-items: center;
+          width: 60px;
+          height: 60px;
+          min-height: 60px;
+          padding: 0;
+        }
+
+        .app.mobile-camera-session .mobile-preset > span:last-child {
+          display: none;
+        }
+
+        .app.mobile-camera-session .mobile-camera-nice {
+          display: grid;
+          place-items: center;
+          width: 98px;
+          height: 60px;
+          margin-left: 4px;
+          padding: 0;
+          border: 0;
+          background: #edff87;
+        }
+
+        .app.mobile-camera-session .mobile-camera-nice img {
+          display: block;
+          width: 28px;
+          height: 32px;
+          object-fit: contain;
+          filter: brightness(0);
+        }
+
+        .app.mobile-camera-session .mobile-section + .mobile-section {
+          margin-top: 4px;
+        }
+
+        .app.mobile-camera-session .mobile-color-row {
+          position: relative;
+          display: block;
+          width: 358px;
+          height: 60px;
+        }
+
+        .app.mobile-camera-session .mobile-color-card {
+          position: absolute;
+          top: 0;
+          display: block;
+          width: 60px;
+          height: 60px;
+          border: 0;
+          background: #1d1d20;
+        }
+
+        .app.mobile-camera-session .mobile-color-card:nth-child(1) {
+          left: 0;
+        }
+
+        .app.mobile-camera-session .mobile-color-card:nth-child(2) {
+          left: 64px;
+        }
+
+        .app.mobile-camera-session .mobile-color-label {
+          position: absolute;
+          top: 1px;
+          left: 2px;
+          display: block;
+          width: auto;
+          height: 16px;
+          background: transparent !important;
+          color: #f4f3ef !important;
+          font-size: 12px;
+          line-height: 16px;
+          letter-spacing: 0;
+        }
+
+        .app.mobile-camera-session .mobile-color-card::after {
+          content: "";
+          position: absolute;
+          top: 2px;
+          right: 2px;
+          width: 12px;
+          height: 12px;
+          background: var(--mobile-color);
+        }
+
+        .app.mobile-camera-session .mobile-color-card.transparent::after {
+          background:
+            repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.26) 0 3px, transparent 3px 6px),
+            #1d1d20;
+        }
+
+        .app.mobile-camera-session .mobile-color-hash,
+        .app.mobile-camera-session .mobile-color-value {
+          position: absolute;
+          bottom: 1px;
+          display: block;
+          height: 13px;
+          padding: 0;
+          color: #515257;
+          font-size: 10px;
+          font-weight: 400;
+          line-height: 13px;
+          letter-spacing: -0.5px;
+        }
+
+        .app.mobile-camera-session .mobile-color-hash {
+          left: 2px;
+        }
+
+        .app.mobile-camera-session .mobile-color-value {
+          left: 8px;
+          width: 49px;
+        }
+
+        .app.mobile-camera-session .mobile-alpha-toggle {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          display: block;
+          width: 20px;
+          height: 20px;
+          background-size: 20px 20px;
+          filter: brightness(0) invert(1);
+        }
+
+        .app.mobile-camera-session .mobile-alpha-toggle.active {
+          filter: brightness(0) saturate(100%) invert(92%) sepia(30%) saturate(633%) hue-rotate(31deg) brightness(103%) contrast(102%);
+        }
+
+        .app.mobile-camera-session .mobile-re-card {
+          position: absolute;
+          top: 0;
+          left: 278px;
+          width: 80px;
+          height: 60px;
+          border: 0;
         }
 
         .app.mobile-camera-session.mobile-capture-requesting .mobile-preview-fixed,
@@ -5007,7 +5196,11 @@
         .mobile-camera-error,
         .mobile-record-control,
         .mobile-review-controls,
-        .mobile-playback-controls {
+        .mobile-playback-controls,
+        .mobile-camera-close,
+        .mobile-camera-preset,
+        .mobile-camera-switch,
+        .mobile-camera-ready-logo {
           display: none;
         }
 
@@ -5026,10 +5219,125 @@
           height: 150px;
         }
 
+        .mobile-camera-close,
+        .mobile-camera-switch {
+          position: absolute;
+          z-index: 2;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          pointer-events: auto;
+        }
+
+        .mobile-camera-close {
+          top: 40px;
+          left: 16px;
+          width: 32px;
+          height: 32px;
+        }
+
+        .mobile-camera-switch {
+          top: 304px;
+          right: 32px;
+          width: 40px;
+          height: 32px;
+        }
+
+        .mobile-camera-close img,
+        .mobile-camera-switch img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+
+        .mobile-camera-preset {
+          position: absolute;
+          z-index: 2;
+          top: 21px;
+          left: 50%;
+          color: #fff;
+          text-align: center;
+          transform: translateX(-50%);
+          pointer-events: none;
+        }
+
+        .mobile-camera-preset strong,
+        .mobile-camera-preset span {
+          display: block;
+          white-space: nowrap;
+        }
+
+        .mobile-camera-preset strong {
+          font-family: var(--font-mono);
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 20px;
+          letter-spacing: -0.8px;
+        }
+
+        .mobile-camera-preset span {
+          margin-top: 1px;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+          letter-spacing: 0.56px;
+        }
+
+        .app.mobile-capture-previewing .mobile-camera-close,
+        .app.mobile-capture-previewing .mobile-camera-preset,
+        .app.mobile-capture-previewing .mobile-camera-switch,
+        .app.mobile-capture-recording .mobile-camera-preset,
+        .app.mobile-capture-reviewing .mobile-camera-preset {
+          display: block;
+        }
+
+        .mobile-camera-ready-logo {
+          position: absolute;
+          z-index: 2;
+          top: 16px;
+          left: 16px;
+          width: 50px;
+          height: 50px;
+          pointer-events: none;
+        }
+
+        .mobile-camera-ready-logo img {
+          position: absolute;
+          display: block;
+        }
+
+        .mobile-camera-ready-logo .vertical {
+          top: 0;
+          left: 22.5px;
+          width: 5px;
+          height: 50px;
+        }
+
+        .mobile-camera-ready-logo .horizontal {
+          top: 22.5px;
+          left: 0;
+          width: 50px;
+          height: 5px;
+        }
+
+        .mobile-camera-ready-logo .diagonal-a,
+        .mobile-camera-ready-logo .diagonal-b {
+          top: 5.5px;
+          left: 5.5px;
+          width: 39px;
+          height: 39px;
+        }
+
+        .app.mobile-capture-ready .mobile-camera-ready-logo {
+          display: block;
+        }
+
         .mobile-record-control {
           position: absolute;
           left: 50%;
-          bottom: 30px;
+          top: 280px;
           width: 80px;
           height: 80px;
           padding: 0;
@@ -5114,10 +5422,10 @@
 
         .mobile-review-button {
           position: absolute;
-          bottom: 91px;
-          width: 44px;
-          height: 44px;
-          padding: 9px;
+          top: 40px;
+          width: 32px;
+          height: 32px;
+          padding: 0;
           border: 0;
           border-radius: 0;
           background: transparent;
@@ -5132,21 +5440,11 @@
         }
 
         .mobile-review-button.return {
-          left: 10px;
+          left: 16px;
         }
 
         .mobile-review-button.confirm {
-          right: 10px;
-        }
-
-        .mobile-review-line {
-          position: absolute;
-          left: 50%;
-          bottom: 30px;
-          width: 134px;
-          height: 3px;
-          background: rgba(255, 255, 255, 0.3);
-          transform: translateX(-50%);
+          right: 16px;
         }
 
         .mobile-playback-controls {
@@ -5155,13 +5453,14 @@
           pointer-events: none;
         }
 
+        .app.mobile-capture-reviewing .mobile-playback-controls,
         .app.mobile-capture-ready .mobile-playback-controls {
           display: block;
         }
 
         .mobile-playback-toggle {
           position: absolute;
-          top: 238px;
+          top: 157px;
           left: 50%;
           width: 52px;
           height: 52px;
@@ -5170,6 +5469,10 @@
           background: transparent;
           transform: translateX(-50%);
           pointer-events: auto;
+        }
+
+        .app.mobile-capture-reviewing .mobile-playback-toggle {
+          display: none;
         }
 
         .mobile-playback-toggle::before,
@@ -5208,7 +5511,7 @@
         .mobile-playback-time {
           position: absolute;
           right: 16px;
-          bottom: 45px;
+          bottom: 42px;
           left: 16px;
           display: flex;
           justify-content: space-between;
@@ -5222,7 +5525,7 @@
         input.mobile-playback-progress {
           position: absolute;
           right: 16px;
-          bottom: 27px;
+          bottom: 16px;
           left: 16px;
           width: calc(100% - 32px);
           height: 14px;
@@ -5335,6 +5638,98 @@
         .app.mobile-capture-ready .mobile-dock-button.output {
           background: var(--mobile-acid);
           color: #08080a;
+        }
+
+        .mobile-camera-dock {
+          position: fixed;
+          right: auto;
+          bottom: 0;
+          left: 50%;
+          z-index: 1200;
+          display: none;
+          width: var(--mobile-page-width);
+          max-width: 390px;
+          height: calc(88px + env(safe-area-inset-bottom));
+          background: var(--mobile-bg);
+          transform: translateX(-50%);
+        }
+
+        .app.mobile-camera-session .mobile-bottom-dock {
+          display: none;
+        }
+
+        .app.mobile-camera-session .mobile-camera-dock {
+          display: block;
+        }
+
+        .mobile-camera-dock-button {
+          position: absolute;
+          bottom: calc(24px + env(safe-area-inset-bottom));
+          display: grid;
+          place-items: center;
+          padding: 0;
+          border-radius: 24px;
+          background: #1d1d20;
+        }
+
+        .mobile-camera-dock-button img {
+          display: block;
+          width: 16px;
+          height: 23px;
+          object-fit: contain;
+        }
+
+        .mobile-camera-dock-button.upload {
+          left: 24px;
+          width: 48px;
+          height: 64px;
+          border: 0;
+          background: #87e3ff;
+        }
+
+        .mobile-camera-dock-button.rec {
+          left: 50%;
+          width: 64px;
+          height: 64px;
+          border: 1.5px solid #edff87;
+          background: #1d1d20;
+          transform: translateX(-50%);
+          pointer-events: none;
+        }
+
+        .mobile-camera-dock-button.rec img {
+          width: 29px;
+          height: 15px;
+        }
+
+        .mobile-camera-dock-button.output {
+          right: 24px;
+          width: 48px;
+          height: 64px;
+          border: 1.5px solid #050506;
+          background: #1d1d20;
+        }
+
+        .mobile-camera-dock-button.output img {
+          width: 16px;
+          height: 21px;
+        }
+
+        .app.mobile-capture-recording .mobile-camera-dock-button.rec {
+          border-color: #ff4a00;
+        }
+
+        .app.mobile-capture-ready .mobile-camera-dock-button.output {
+          border-color: #edff87;
+          background: #edff87;
+        }
+
+        .app.mobile-capture-ready .mobile-camera-dock-button.output img {
+          filter: brightness(0);
+        }
+
+        .app:not(.mobile-capture-ready) .mobile-camera-dock-button.output {
+          pointer-events: none;
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -6040,6 +6435,771 @@
           display: none;
         }
       }
+
+      .mobile-entry-screen {
+        display: none;
+      }
+
+      @media (max-width: 640px) {
+        .app:not(.has-source):not(.mobile-camera-session) .mobile-entry-screen {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 50%;
+          z-index: 1300;
+          display: block;
+          width: min(390px, 100vw);
+          min-height: 700px;
+          overflow: hidden;
+          background: var(--mobile-bg);
+          color: #fff;
+          transform: translateX(-50%);
+        }
+
+        .app:not(.has-source):not(.mobile-camera-session) .mobile-fixed-top,
+        .app:not(.has-source):not(.mobile-camera-session) .mobile-scroll,
+        .app:not(.has-source):not(.mobile-camera-session) .mobile-bottom-dock {
+          display: none;
+        }
+
+        .app:not(.has-source):not(.mobile-camera-session) .mobile-shell {
+          min-height: 100dvh;
+          padding: 0;
+          overflow: hidden;
+        }
+
+        .mobile-entry-mosaic {
+          position: absolute;
+          inset: -10px 0 auto;
+          display: grid;
+          grid-template-columns: repeat(12, minmax(0, 1fr));
+          grid-auto-flow: dense;
+          grid-auto-rows: 24px;
+          gap: 8px;
+          width: 100%;
+          min-height: calc(100% + 20px);
+          overflow: hidden;
+          background: #242528;
+        }
+
+        .mobile-entry-tile {
+          grid-column: span 4;
+          grid-row: span 5;
+          min-width: 0;
+          overflow: hidden;
+          background: #1d1d20;
+        }
+
+        .mobile-entry-tile img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .mobile-entry-tile:nth-child(1) { grid-column: span 3; grid-row: span 3; }
+        .mobile-entry-tile:nth-child(2) { grid-column: span 3; grid-row: span 3; }
+        .mobile-entry-tile:nth-child(3) { grid-column: span 6; grid-row: span 3; }
+        .mobile-entry-tile:nth-child(4) { grid-column: span 5; grid-row: span 4; }
+        .mobile-entry-tile:nth-child(5) { grid-column: span 7; grid-row: span 4; }
+        .mobile-entry-tile:nth-child(6) { grid-column: span 5; grid-row: span 7; }
+        .mobile-entry-tile:nth-child(7) { grid-column: span 5; grid-row: span 5; }
+        .mobile-entry-tile:nth-child(8) { grid-column: span 2; grid-row: span 7; }
+        .mobile-entry-tile:nth-child(9) { grid-column: span 5; grid-row: span 7; }
+        .mobile-entry-tile:nth-child(10) { grid-column: span 5; grid-row: span 7; }
+        .mobile-entry-tile:nth-child(11) { grid-column: span 2; grid-row: span 3; }
+        .mobile-entry-tile:nth-child(12) { grid-column: span 5; grid-row: span 4; }
+        .mobile-entry-tile:nth-child(13) { grid-column: span 5; grid-row: span 5; }
+        .mobile-entry-tile:nth-child(14) { grid-column: span 2; grid-row: span 3; }
+        .mobile-entry-tile:nth-child(15) { grid-column: span 2; grid-row: span 3; }
+        .mobile-entry-tile:nth-child(n + 16):nth-child(6n + 1) { grid-column: span 5; grid-row: span 6; }
+        .mobile-entry-tile:nth-child(n + 16):nth-child(6n + 2) { grid-column: span 7; grid-row: span 4; }
+        .mobile-entry-tile:nth-child(n + 16):nth-child(6n + 3) { grid-column: span 4; grid-row: span 7; }
+        .mobile-entry-tile:nth-child(n + 16):nth-child(6n + 4) { grid-column: span 3; grid-row: span 4; }
+        .mobile-entry-tile:nth-child(n + 16):nth-child(6n + 5) { grid-column: span 5; grid-row: span 5; }
+        .mobile-entry-tile:nth-child(n + 16):nth-child(6n) { grid-column: span 4; grid-row: span 4; }
+
+        .mobile-entry-shade {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            180deg,
+            rgba(36, 37, 40, 0.2) 0%,
+            rgba(36, 37, 40, 0.68) 31%,
+            #242528 57%,
+            #242528 100%
+          );
+          pointer-events: none;
+        }
+
+        .mobile-entry-brand {
+          position: absolute;
+          top: clamp(178px, 25.85dvh, 224px);
+          left: 50%;
+          display: flex;
+          gap: 20px;
+          width: 235px;
+          height: 50px;
+          transform: translateX(-50%);
+        }
+
+        .mobile-entry-mark {
+          position: relative;
+          flex: 0 0 50px;
+          width: 50px;
+          height: 50px;
+        }
+
+        .mobile-entry-mark img {
+          position: absolute;
+          display: block;
+          object-fit: fill;
+        }
+
+        .mobile-entry-mark-a {
+          top: 0;
+          left: 22.5px;
+          width: 5px;
+          height: 50px;
+        }
+
+        .mobile-entry-mark-b,
+        .mobile-entry-mark-d {
+          top: 5.5px;
+          left: 5.5px;
+          width: 39px;
+          height: 39px;
+        }
+
+        .mobile-entry-mark-c {
+          top: 22.5px;
+          left: 0;
+          width: 50px;
+          height: 5px;
+        }
+
+        .mobile-entry-title {
+          display: block;
+          width: 165px;
+          height: 50px;
+        }
+
+        .mobile-entry-upload-trigger {
+          position: absolute;
+          top: 50%;
+          left: calc(50% + 10.5px);
+          width: 105px;
+          height: 105px;
+          padding: 0;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          transform: translateX(-50%);
+          cursor: pointer;
+        }
+
+        .mobile-entry-upload-trigger img {
+          position: absolute;
+          display: block;
+        }
+
+        .mobile-entry-upload-main {
+          top: 25px;
+          left: 0;
+          width: 80px;
+          height: 80px;
+        }
+
+        .mobile-entry-upload-accent {
+          top: 0;
+          right: 0;
+          width: 30px;
+          height: 30px;
+        }
+
+        .mobile-entry-copy {
+          position: absolute;
+          right: 16px;
+          bottom: calc(158px + env(safe-area-inset-bottom));
+          left: 24px;
+        }
+
+        .mobile-entry-copy-en {
+          width: 350px;
+          max-width: 100%;
+          margin: 0;
+          color: #fff;
+          font-family: var(--font-mono);
+          font-size: 24px;
+          font-weight: 300;
+          line-height: normal;
+          letter-spacing: -1.2px;
+        }
+
+        .mobile-entry-copy-en strong {
+          font-weight: 400;
+        }
+
+        .mobile-entry-copy-cn {
+          display: flex;
+          justify-content: space-between;
+          width: 350px;
+          max-width: 100%;
+          margin: 8px 0 0;
+          color: #fff;
+          font-family: var(--font-cn);
+          font-size: 16px;
+          font-weight: 300;
+          line-height: 24px;
+          letter-spacing: 0.64px;
+        }
+
+        .mobile-entry-lines {
+          position: absolute;
+          right: 0;
+          bottom: calc(98px + env(safe-area-inset-bottom));
+          left: 0;
+          height: 53px;
+          pointer-events: none;
+        }
+
+        .mobile-entry-line-upload,
+        .mobile-entry-line-camera {
+          position: absolute;
+          top: 0;
+          display: block;
+          height: 53px;
+        }
+
+        .mobile-entry-line-upload {
+          left: calc(50% - 147px);
+          width: 59px;
+        }
+
+        .mobile-entry-line-camera {
+          left: 50%;
+          width: 102px;
+        }
+
+        .mobile-entry-actions {
+          position: absolute;
+          right: 0;
+          bottom: calc(24px + env(safe-area-inset-bottom));
+          left: 0;
+          height: 64px;
+        }
+
+        .mobile-entry-action {
+          position: absolute;
+          top: 0;
+          display: grid;
+          place-items: center;
+          height: 64px;
+          padding: 0;
+          border: 1.5px solid #000;
+          border-radius: 24px;
+          background: #1d1d20;
+          cursor: pointer;
+        }
+
+        .mobile-entry-action img {
+          display: block;
+          object-fit: contain;
+        }
+
+        .mobile-entry-action.upload {
+          left: 24px;
+          width: 48px;
+          border-color: transparent;
+          background: #87e3ff;
+        }
+
+        .mobile-entry-action.upload img {
+          width: 16px;
+          height: 23px;
+        }
+
+        .mobile-entry-action.camera {
+          left: 50%;
+          width: 64px;
+          transform: translateX(-50%);
+        }
+
+        .mobile-entry-action.camera img {
+          width: 29px;
+          height: 15px;
+        }
+
+        .mobile-entry-action.output {
+          right: 24px;
+          width: 48px;
+        }
+
+        .mobile-entry-action.output img {
+          width: 16px;
+          height: 20.5px;
+        }
+
+        .mobile-entry-toast {
+          position: absolute;
+          right: 16px;
+          bottom: calc(104px + env(safe-area-inset-bottom));
+          z-index: 3;
+          max-width: calc(100% - 32px);
+          padding: 9px 12px;
+          background: #0d0d11;
+          color: #f4f3ef;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 20px;
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(4px);
+          transition: opacity 120ms ease, transform 120ms ease;
+        }
+
+        .mobile-entry-toast.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        @media (max-height: 760px) {
+          .mobile-entry-brand {
+            top: 150px;
+          }
+
+          .mobile-entry-upload-trigger {
+            top: 47%;
+          }
+
+          .mobile-entry-copy {
+            bottom: calc(150px + env(safe-area-inset-bottom));
+          }
+        }
+
+        /* Uploaded mobile workspace: Figma nodes 6030:53, 6475:279 and 3609:1499. */
+        .app.has-source:not(.mobile-camera-session) {
+          height: 100dvh;
+          overflow: hidden;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-shell {
+          width: min(390px, 100vw);
+          height: 100dvh;
+          min-height: 0;
+          padding: 0;
+          overflow: hidden;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-fixed-top {
+          --mobile-collapse-offset: 0px;
+          position: fixed;
+          top: 0;
+          left: 50%;
+          width: min(390px, 100vw);
+          height: 520px;
+          overflow: hidden;
+          background: var(--mobile-bg);
+          transform: translateX(-50%);
+          will-change: auto;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-hero,
+        .app.has-source:not(.mobile-camera-session) .mobile-input-section {
+          display: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preview-fixed {
+          top: 0;
+          display: grid;
+          width: 100%;
+          height: 520px;
+          background: var(--mobile-bg);
+          place-items: center;
+        }
+
+        .app.has-source:not(.mobile-camera-session) #mobileResult {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          background: var(--mobile-bg);
+        }
+
+        .mobile-uploaded-mark {
+          position: absolute;
+          top: 16px;
+          left: 16px;
+          z-index: 4;
+          display: none;
+          width: 50px;
+          height: 50px;
+          pointer-events: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-uploaded-mark {
+          display: block;
+        }
+
+        .mobile-uploaded-mark img {
+          position: absolute;
+          display: block;
+          object-fit: fill;
+        }
+
+        .mobile-uploaded-mark-a {
+          top: 0;
+          left: 22.5px;
+          width: 5px;
+          height: 50px;
+        }
+
+        .mobile-uploaded-mark-b,
+        .mobile-uploaded-mark-d {
+          top: 5.5px;
+          left: 5.5px;
+          width: 39px;
+          height: 39px;
+        }
+
+        .mobile-uploaded-mark-c {
+          top: 22.5px;
+          left: 0;
+          width: 50px;
+          height: 5px;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-scroll {
+          position: fixed;
+          top: 520px;
+          bottom: 0;
+          left: 50%;
+          z-index: 1050;
+          width: min(390px, 100vw);
+          min-height: 300px;
+          margin: 0;
+          padding: 16px;
+          overflow: hidden;
+          background: var(--mobile-bg);
+          transform: translateX(-50%);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-section,
+        .app.has-source:not(.mobile-camera-session) .mobile-section + .mobile-section {
+          margin: 0;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-section-title {
+          display: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preset-grid,
+        .app.has-source:not(.mobile-camera-session) .mobile-color-row {
+          display: grid;
+          grid-template-columns:
+            repeat(4, minmax(0, 60fr))
+            minmax(0, 102fr);
+          gap: 4px;
+          width: 100%;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preset-grid {
+          height: 60px;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preset {
+          display: grid;
+          grid-template-columns: 1fr;
+          width: 100%;
+          height: 60px;
+          min-height: 60px;
+          padding: 0;
+          border: 1px solid transparent;
+          background: var(--mobile-card);
+          place-items: center;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preset.active {
+          border-color: var(--mobile-acid);
+          background: var(--mobile-card);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preset > span:last-child {
+          display: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preset-icon,
+        .app.has-source:not(.mobile-camera-session) .mobile-preset-icon img {
+          width: 28px;
+          height: 28px;
+          margin: 0;
+          object-fit: contain;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-nice {
+          display: grid;
+          grid-column: 5;
+          width: 100%;
+          height: 60px;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          background: var(--mobile-acid);
+          place-items: center;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-nice img {
+          display: block;
+          width: 28px;
+          height: 32px;
+          object-fit: contain;
+          filter: brightness(0);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-section + .mobile-section {
+          position: absolute;
+          top: 80px;
+          right: 16px;
+          left: 16px;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-row {
+          height: 60px;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-card {
+          position: relative;
+          display: block;
+          width: 100%;
+          height: 60px;
+          min-width: 0;
+          overflow: hidden;
+          border: 0;
+          background: var(--mobile-card);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-card:nth-child(1) {
+          grid-column: 1;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-card:nth-child(2) {
+          grid-column: 2;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-card::after {
+          position: absolute;
+          top: 2px;
+          right: 2px;
+          width: 12px;
+          height: 12px;
+          background: var(--mobile-color);
+          content: "";
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-card.transparent::after {
+          background:
+            repeating-linear-gradient(135deg, #515257 0 2px, #1d1d20 2px 4px);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-label {
+          position: absolute;
+          top: 0;
+          left: 2px;
+          display: block;
+          width: auto;
+          height: 16px;
+          background: transparent !important;
+          color: #f4f3ef !important;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 16px;
+          letter-spacing: 0;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-hash,
+        .app.has-source:not(.mobile-camera-session) .mobile-color-value {
+          position: absolute;
+          bottom: 1px;
+          display: block;
+          height: 13px;
+          padding: 0;
+          overflow: visible;
+          color: #515257;
+          font-size: 10px;
+          font-weight: 300;
+          line-height: 13px;
+          letter-spacing: -0.5px;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-hash {
+          left: 2px;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-color-value {
+          left: 8px;
+          white-space: nowrap;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-alpha-toggle {
+          position: absolute;
+          top: 20px;
+          left: 50%;
+          display: block;
+          width: 20px;
+          height: 20px;
+          padding: 0;
+          border: 0;
+          background: url("../assets/png-alpha-icon-figma.svg") center / 20px 20px no-repeat;
+          transform: translateX(-50%);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-alpha-toggle.active {
+          background: url("../assets/png-alpha-icon-figma.svg") center / 20px 20px no-repeat;
+          filter: brightness(0) saturate(100%) invert(92%) sepia(30%) saturate(633%) hue-rotate(31deg) brightness(103%) contrast(102%);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-re-card {
+          position: relative;
+          grid-column: 5;
+          width: 100%;
+          height: 60px;
+          padding: 0;
+          border: 1px solid transparent;
+          background: var(--mobile-card);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-re-card::before {
+          width: 24px;
+          height: 24px;
+          background-image: url("../assets/mobile-upload-re.svg");
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-re-card.active {
+          border-color: var(--mobile-acid);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-bottom-dock {
+          display: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-dock {
+          display: block;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-dock-button.rec {
+          border-color: #050506;
+          pointer-events: auto;
+        }
+
+        .mobile-camera-dock-button .mobile-upload-rec-icon {
+          display: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-dock-button.rec > img:first-child {
+          display: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-dock-button .mobile-upload-rec-icon {
+          display: block;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-dock-button.output {
+          border-color: var(--mobile-acid);
+          background: var(--mobile-acid);
+          pointer-events: auto;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-dock-button.output img {
+          filter: brightness(0);
+        }
+
+        /*
+         * iOS Safari uses a visual viewport that changes as browser chrome expands
+         * and collapses. Keep every mobile state inside the same measured viewport
+         * so fixed controls are never hidden behind the address bar.
+         */
+        .app:not(.has-source):not(.mobile-camera-session) .mobile-entry-screen {
+          bottom: auto;
+          height: var(--mobile-viewport-height);
+          min-height: 0;
+        }
+
+        .app:not(.has-source):not(.mobile-camera-session) .mobile-shell {
+          height: var(--mobile-viewport-height);
+          min-height: 0;
+        }
+
+        .app.has-source:not(.mobile-camera-session),
+        .app.mobile-camera-session {
+          height: var(--mobile-viewport-height);
+          min-height: 0;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-shell,
+        .app.mobile-camera-session .mobile-shell {
+          position: fixed;
+          top: 0;
+          left: 50%;
+          width: var(--mobile-page-width);
+          height: var(--mobile-viewport-height);
+          min-height: 0;
+          max-height: none;
+          overflow: hidden;
+          transform: translateX(-50%);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-fixed-top,
+        .app.mobile-camera-session .mobile-fixed-top {
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-fixed-top,
+        .app.has-source:not(.mobile-camera-session) .mobile-preview-fixed {
+          height: var(--mobile-upload-preview-height);
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-scroll {
+          position: absolute;
+          top: var(--mobile-upload-preview-height);
+          bottom: 0;
+          left: 0;
+          min-height: 0;
+          transform: none;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-dock,
+        .app.mobile-camera-session .mobile-camera-dock {
+          position: absolute;
+          right: auto;
+          bottom: 0;
+          left: 0;
+          transform: none;
+        }
+
+        .app.mobile-camera-session .mobile-shell {
+          padding-top: 0;
+        }
+
+        .app.mobile-camera-session .mobile-fixed-top,
+        .app.mobile-camera-session .mobile-preview-fixed {
+          height: var(--mobile-camera-preview-height);
+        }
+
+        .app.mobile-camera-session .mobile-scroll {
+          position: absolute;
+          top: var(--mobile-camera-preview-height);
+          right: 0;
+          bottom: 0;
+          left: 0;
+          min-height: 0;
+          margin: 0;
+          overflow-y: auto;
+          overscroll-behavior-y: contain;
+        }
+      }
     </style>
   </head>
   <body>
@@ -6228,6 +7388,49 @@
       </aside>
 
       <section class="mobile-shell" aria-label="Synthub mobile interface">
+        <section class="mobile-entry-screen" id="mobileEntryScreen" aria-label="Choose a photo or record a video">
+          <div class="mobile-entry-mosaic" id="mobileEntryMosaic" aria-hidden="true"></div>
+          <div class="mobile-entry-shade" aria-hidden="true"></div>
+
+          <div class="mobile-entry-brand" aria-label="Graphic Texture 印花">
+            <span class="mobile-entry-mark" aria-hidden="true">
+              <img class="mobile-entry-mark-a" src="../assets/mobile-entry/mobile-entry-mark-a.svg" alt="" />
+              <img class="mobile-entry-mark-b" src="../assets/mobile-entry/mobile-entry-mark-b.svg" alt="" />
+              <img class="mobile-entry-mark-c" src="../assets/mobile-entry/mobile-entry-mark-c.svg" alt="" />
+              <img class="mobile-entry-mark-d" src="../assets/mobile-entry/mobile-entry-mark-d.svg" alt="" />
+            </span>
+            <img class="mobile-entry-title" src="../assets/mobile-entry/mobile-entry-title.svg" alt="Graphic Texture 印花" />
+          </div>
+
+          <button class="mobile-entry-upload-trigger" id="mobileEntryUploadTrigger" type="button" aria-label="从相册中添加图片">
+            <img class="mobile-entry-upload-main" src="../assets/mobile-entry/mobile-entry-upload-main.svg" alt="" />
+            <img class="mobile-entry-upload-accent" src="../assets/mobile-entry/mobile-entry-upload-accent.svg" alt="" />
+          </button>
+
+          <div class="mobile-entry-copy">
+            <p class="mobile-entry-copy-en">Choose a photo from your <strong>library</strong> or <strong>take one</strong>.</p>
+            <p class="mobile-entry-copy-cn"><span>从相册中添加一张图片</span><span>或</span><span>录制一段视频</span></p>
+          </div>
+
+          <div class="mobile-entry-lines" aria-hidden="true">
+            <img class="mobile-entry-line-upload" src="../assets/mobile-entry/mobile-entry-line-upload.svg" alt="" />
+            <img class="mobile-entry-line-camera" src="../assets/mobile-entry/mobile-entry-line-camera.svg" alt="" />
+          </div>
+
+          <div class="mobile-entry-actions">
+            <button class="mobile-entry-action upload" id="mobileEntryUpload" type="button" aria-label="打开相册">
+              <img src="../assets/mobile-entry/mobile-entry-input.svg" alt="" />
+            </button>
+            <button class="mobile-entry-action camera" id="mobileEntryCamera" type="button" aria-label="打开摄像头">
+              <img src="../assets/mobile-entry/mobile-entry-rec.svg" alt="" />
+            </button>
+            <button class="mobile-entry-action output" id="mobileEntryOutput" type="button" aria-label="输出">
+              <img src="../assets/mobile-entry/mobile-entry-output.svg" alt="" />
+            </button>
+          </div>
+          <div class="mobile-entry-toast" id="mobileEntryToast" role="status" aria-live="polite">请先上传素材</div>
+        </section>
+
         <div class="mobile-fixed-top">
           <div class="mobile-hero">
             <div class="mobile-title-row">
@@ -6266,13 +7469,37 @@
                 <span>REC</span>
               </button>
             </div>
-            <div class="mobile-status" id="mobileStatus">* PNG / JPG / SVG / PDF</div>
+            <div class="mobile-status" id="mobileStatus">* PNG / JPG</div>
           </div>
           <div class="mobile-preview-fixed" aria-label="Result preview">
             <canvas id="mobileResult" width="1000" height="1000"></canvas>
+            <span class="mobile-uploaded-mark" aria-hidden="true">
+              <img class="mobile-uploaded-mark-a" src="../assets/mobile-entry/mobile-entry-mark-a.svg" alt="" />
+              <img class="mobile-uploaded-mark-b" src="../assets/mobile-entry/mobile-entry-mark-b.svg" alt="" />
+              <img class="mobile-uploaded-mark-c" src="../assets/mobile-entry/mobile-entry-mark-c.svg" alt="" />
+              <img class="mobile-uploaded-mark-d" src="../assets/mobile-entry/mobile-entry-mark-d.svg" alt="" />
+            </span>
+            <video id="mobileCapturePlayback" class="mobile-capture-playback" muted playsinline preload="metadata"></video>
             <div class="mobile-camera-layer" id="mobileCameraLayer" aria-live="polite">
               <div class="mobile-camera-loading" aria-label="正在连接摄像头">
                 <img src="../assets/mobile-camera-loading.svg" alt="" />
+              </div>
+
+              <button class="mobile-camera-close" id="mobileCameraClose" type="button" aria-label="关闭摄像头">
+                <img src="../assets/mobile-camera-close.svg" alt="" />
+              </button>
+              <div class="mobile-camera-preset" aria-live="polite">
+                <strong id="mobileCameraPresetName">Thermal Map</strong>
+                <span id="mobileCameraPresetSub">热感构成</span>
+              </div>
+              <button class="mobile-camera-switch" id="mobileCameraSwitch" type="button" aria-label="切换前后摄像头">
+                <img src="../assets/mobile-camera-switch.svg" alt="" />
+              </button>
+              <div class="mobile-camera-ready-logo" aria-hidden="true">
+                <img class="vertical" src="../assets/mobile-camera-ready-mark-a.svg" alt="" />
+                <img class="diagonal-a" src="../assets/mobile-camera-ready-mark-b.svg" alt="" />
+                <img class="horizontal" src="../assets/mobile-camera-ready-mark-c.svg" alt="" />
+                <img class="diagonal-b" src="../assets/mobile-camera-ready-mark-d.svg" alt="" />
               </div>
 
               <button class="mobile-record-control" id="mobileRecordControl" type="button" aria-label="按住录制，最长 5 秒">
@@ -6285,12 +7512,11 @@
 
               <div class="mobile-review-controls" aria-label="确认录制效果">
                 <button class="mobile-review-button return" id="mobileRecordReturn" type="button" aria-label="返回重新录制">
-                  <img src="../assets/mobile-record-return.svg" alt="" />
+                  <img src="../assets/mobile-record-return-figma.svg" alt="" />
                 </button>
                 <button class="mobile-review-button confirm" id="mobileRecordConfirm" type="button" aria-label="确认效果">
-                  <img src="../assets/mobile-record-confirm.svg" alt="" />
+                  <img src="../assets/mobile-record-confirm-figma.svg" alt="" />
                 </button>
-                <span class="mobile-review-line" aria-hidden="true"></span>
               </div>
 
               <div class="mobile-playback-controls" aria-label="录制回放控制">
@@ -6330,6 +7556,18 @@
           <button class="mobile-dock-button output" data-export-png>
             <span class="mobile-dock-icon" aria-hidden="true"></span>
             <span class="mobile-dock-label">OUTPUT</span>
+          </button>
+        </div>
+        <div class="mobile-camera-dock" aria-label="摄像工具">
+          <button class="mobile-camera-dock-button upload" id="mobileCameraDockUpload" type="button" aria-label="从相册上传">
+            <img src="../assets/mobile-camera-dock-upload.svg" alt="" />
+          </button>
+          <button class="mobile-camera-dock-button rec" id="mobileCameraDockRec" type="button" aria-label="摄像模式">
+            <img src="../assets/mobile-camera-dock-rec.svg" alt="" />
+            <img class="mobile-upload-rec-icon" src="../assets/mobile-upload-rec.svg" alt="" />
+          </button>
+          <button class="mobile-camera-dock-button output" id="mobileCameraDockOutput" type="button" aria-label="输出录制视频">
+            <img src="../assets/mobile-camera-dock-output.svg" alt="" />
           </button>
         </div>
       </section>
@@ -6486,8 +7724,22 @@
       const mobileFixedTop = document.querySelector(".mobile-fixed-top");
       const mobileBrandMark = document.getElementById("mobileBrandMark");
       const mobileTitle = document.getElementById("mobileTitle");
+      const mobileEntryMosaic = document.getElementById("mobileEntryMosaic");
+      const mobileEntryUploadTrigger = document.getElementById("mobileEntryUploadTrigger");
+      const mobileEntryUpload = document.getElementById("mobileEntryUpload");
+      const mobileEntryCamera = document.getElementById("mobileEntryCamera");
+      const mobileEntryOutput = document.getElementById("mobileEntryOutput");
+      const mobileEntryToast = document.getElementById("mobileEntryToast");
       const mobileCameraLayer = document.getElementById("mobileCameraLayer");
       const mobileCameraSource = document.getElementById("mobileCameraSource");
+      const mobileCapturePlayback = document.getElementById("mobileCapturePlayback");
+      const mobileCameraClose = document.getElementById("mobileCameraClose");
+      const mobileCameraSwitch = document.getElementById("mobileCameraSwitch");
+      const mobileCameraPresetName = document.getElementById("mobileCameraPresetName");
+      const mobileCameraPresetSub = document.getElementById("mobileCameraPresetSub");
+      const mobileCameraDockUpload = document.getElementById("mobileCameraDockUpload");
+      const mobileCameraDockRec = document.getElementById("mobileCameraDockRec");
+      const mobileCameraDockOutput = document.getElementById("mobileCameraDockOutput");
       const mobileRecordControl = document.getElementById("mobileRecordControl");
       const mobileRecordCountdown = document.getElementById("mobileRecordCountdown");
       const mobileRecordReturn = document.getElementById("mobileRecordReturn");
@@ -6508,6 +7760,76 @@
       const videoMetricFps = document.getElementById("videoMetricFps");
       const videoMetricResolution = document.getElementById("videoMetricResolution");
       const videoResolutionButtons = Array.from(document.querySelectorAll("[data-video-resolution]"));
+
+      const mobileEntryImages = [
+        "01-xerox.webp",
+        "39-thermalMap.webp",
+        "40-penTrace.webp",
+        "41-dotShirt.webp",
+        "42-xerox.webp",
+        "44-dotShirt.webp",
+        "45-xerox.webp",
+        "46-thermalMap.webp",
+        "47-dotShirt.webp",
+        "48-xerox.webp",
+        "49-thermalMap.webp",
+        "50-penTrace.webp",
+        "51-xerox.webp",
+        "52-thermalMap.webp",
+        "53-penTrace.webp",
+        "54-dotShirt.webp",
+        "55-thermalMap.webp",
+        "56-penTrace.webp",
+        "57-dotShirt.webp",
+        "58-xerox.webp",
+        "59-thermalMap.webp",
+        "60-penTrace.webp",
+        "61-dotShirt.webp",
+        "62-xerox.webp",
+        "63-thermalMap.webp",
+        "64-penTrace.webp",
+        "65-dotShirt.webp",
+        "66-xerox.webp",
+        "67-thermalMap.webp",
+        "68-penTrace.webp",
+        "graphic-texture-chain-dotShirt (6).png",
+        "graphic-texture-chain-thermalMap (10).png",
+        "graphic-texture-chain-thermalMap (22).png",
+        "graphic-texture-chain-thermalMap (29).png",
+        "graphic-texture-chain-xerox (10).png",
+        "graphic-texture-chain-xerox (15).png",
+        "graphic-texture-chain-xerox (7).png",
+      ];
+      let mobileEntryToastTimer = 0;
+
+      function populateMobileEntryMosaic() {
+        if (!mobileEntryMosaic || mobileEntryMosaic.childElementCount) return;
+        const fragment = document.createDocumentFragment();
+        mobileEntryImages.forEach((filename, index) => {
+          const tile = document.createElement("div");
+          tile.className = "mobile-entry-tile";
+          const image = document.createElement("img");
+          image.src = `../assets/idle-animation/loading-images-review/${encodeURIComponent(filename).replaceAll("%2F", "/")}`;
+          image.alt = "";
+          image.decoding = "async";
+          image.loading = index < 18 ? "eager" : "lazy";
+          tile.appendChild(image);
+          fragment.appendChild(tile);
+        });
+        mobileEntryMosaic.appendChild(fragment);
+      }
+
+      function showMobileEntryToast(message) {
+        if (!mobileEntryToast) return;
+        window.clearTimeout(mobileEntryToastTimer);
+        mobileEntryToast.textContent = message;
+        mobileEntryToast.classList.add("visible");
+        mobileEntryToastTimer = window.setTimeout(() => {
+          mobileEntryToast.classList.remove("visible");
+        }, 1800);
+      }
+
+      populateMobileEntryMosaic();
       const videoProcessButton = document.getElementById("videoProcessButton");
       const videoProcessValue = document.getElementById("videoProcessValue");
       const videoProcessLabel = document.getElementById("videoProcessLabel");
@@ -6547,26 +7869,23 @@
       let renderBufferCache = null;
       let paperToneCache = { signature: "", maps: new Map() };
       let videoRenderProfile = null;
+      let renderingMobileCaptureFrame = false;
       const mobileCapture = {
         state: "idle",
         stream: null,
-        rawRecorder: null,
         renderedRecorder: null,
-        rawChunks: [],
         renderedChunks: [],
-        rawBlob: null,
         renderedBlob: null,
-        rawUrl: "",
         renderedUrl: "",
-        recordedSettings: "",
-        renderedSettings: "",
         startedAt: 0,
         duration: 0,
         maxDuration: 5,
-        fps: 10,
-        renderSize: 540,
-        outputAspect: 3 / 4,
-        sourceAspect: 3 / 4,
+        fps: 12,
+        renderSize: 420,
+        outputAspect: 4 / 3,
+        sourceAspect: 1,
+        focusRatio: 96 / 390,
+        facingMode: "environment",
         renderRequest: 0,
         fallbackRequest: 0,
         lastRenderAt: 0,
@@ -6580,6 +7899,27 @@
         frameCost: 0,
       };
       const renderDebugEnabled = new URLSearchParams(window.location.search).has("debugRender");
+      let mobileViewportSyncFrame = 0;
+
+      function syncMobileVisualViewport() {
+        mobileViewportSyncFrame = 0;
+        if (window.innerWidth > 640) {
+          document.documentElement.style.removeProperty("--mobile-viewport-height");
+          return;
+        }
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        document.documentElement.style.setProperty(
+          "--mobile-viewport-height",
+          `${Math.max(1, Math.round(viewportHeight))}px`
+        );
+      }
+
+      function scheduleMobileVisualViewportSync() {
+        if (mobileViewportSyncFrame) return;
+        mobileViewportSyncFrame = window.requestAnimationFrame(syncMobileVisualViewport);
+      }
+
+      syncMobileVisualViewport();
 
       if (window.pdfjsLib) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -6680,14 +8020,39 @@
         return `mobile-capture-${name}`;
       }
 
+      function mobileCaptureControlsLocked() {
+        return ["requesting", "recording", "finalizing", "reviewing", "ready", "error"].includes(mobileCapture.state);
+      }
+
+      function syncMobileCaptureEditingControls() {
+        const locked = mobileCaptureControlsLocked();
+        mobilePresetGrid?.querySelectorAll("button").forEach((button) => {
+          button.disabled = locked;
+          button.setAttribute("aria-disabled", String(locked));
+        });
+        mobileColorPanel?.querySelectorAll("button").forEach((button) => {
+          button.disabled = locked;
+          button.setAttribute("aria-disabled", String(locked));
+        });
+        if (mobileCameraPresetName && mobileCameraPresetSub) {
+          const preset = presets[state.preset];
+          mobileCameraPresetName.textContent = preset?.label || "";
+          mobileCameraPresetSub.textContent = preset?.sub || "";
+        }
+      }
+
       function syncMobileCaptureUi() {
         const captureStates = ["requesting", "previewing", "recording", "finalizing", "reviewing", "ready", "error"];
         captureStates.forEach((name) => app.classList.remove(mobileCaptureClassName(name)));
-        app.classList.toggle("mobile-camera-session", ["requesting", "previewing", "recording", "finalizing", "reviewing", "error"].includes(mobileCapture.state));
+        app.classList.toggle("mobile-camera-session", captureStates.includes(mobileCapture.state));
         if (mobileCapture.state !== "idle") app.classList.add(mobileCaptureClassName(mobileCapture.state));
 
         const outputEnabled = mobileCapture.state === "ready" && Boolean(mobileCapture.renderedBlob);
-        const niceEnabled = ["previewing", "reviewing", "ready"].includes(mobileCapture.state);
+        const niceEnabled = mobileCapture.state === "previewing";
+        mobileCameraDockOutput?.setAttribute(
+          "aria-label",
+          mobileCapture.state === "ready" ? "输出录制视频" : "输出图片",
+        );
         mobileRandomize.disabled = !niceEnabled && mobileCapture.state !== "idle";
         mobileRandomize.setAttribute("aria-disabled", String(mobileRandomize.disabled));
         document.querySelectorAll(".mobile-bottom-dock [data-export-png]").forEach((button) => {
@@ -6698,6 +8063,7 @@
         if (mobileRecordControl) {
           mobileRecordControl.setAttribute("aria-pressed", String(mobileCapture.state === "recording"));
         }
+        syncMobileCaptureEditingControls();
         syncMobilePlaybackUi();
         syncMobileTopOffset();
       }
@@ -6714,16 +8080,14 @@
       }
 
       function clearMobileCaptureMedia({ keepRendered = false } = {}) {
-        revokeMobileCaptureUrl("rawUrl");
         if (!keepRendered) {
           revokeMobileCaptureUrl("renderedUrl");
           mobileCapture.renderedBlob = null;
-          mobileCapture.renderedSettings = "";
+          mobileCapturePlayback.pause();
+          mobileCapturePlayback.removeAttribute("src");
+          mobileCapturePlayback.load();
         }
-        mobileCapture.rawBlob = null;
-        mobileCapture.rawChunks = [];
         mobileCapture.renderedChunks = [];
-        mobileCapture.recordedSettings = "";
         mobileCapture.duration = 0;
       }
 
@@ -6743,26 +8107,77 @@
         mobileCapture.fallbackRequest = 0;
       }
 
+      function compositeMobileCameraFocusWindow() {
+        if (!isMobileCaptureSource() || mobileCameraSource.readyState < 2 || !result.width || !result.height) return;
+        const sourceWidth = mobileCameraSource.videoWidth || 1;
+        const sourceHeight = mobileCameraSource.videoHeight || 1;
+        const targetAspect = result.width / Math.max(1, result.height);
+        let sx = 0;
+        let sy = 0;
+        let sw = sourceWidth;
+        let sh = sourceHeight;
+        if (sourceWidth / sourceHeight > targetAspect) {
+          sw = sourceHeight * targetAspect;
+          sx = (sourceWidth - sw) / 2;
+        } else {
+          sh = sourceWidth / targetAspect;
+          sy = (sourceHeight - sh) / 2;
+        }
+
+        const ratio = mobileCapture.focusRatio;
+        const focusSourceWidth = sw * ratio;
+        const focusSourceHeight = sh * ratio;
+        const focusSize = result.width * ratio;
+        const dx = (result.width - focusSize) / 2;
+        const dy = (result.height - focusSize) / 2;
+        sx += (sw - focusSourceWidth) / 2;
+        sy += (sh - focusSourceHeight) / 2;
+
+        resultCtx.save();
+        if (mobileCapture.facingMode === "user") {
+          resultCtx.translate(result.width, 0);
+          resultCtx.scale(-1, 1);
+        }
+        resultCtx.drawImage(
+          mobileCameraSource,
+          sx,
+          sy,
+          focusSourceWidth,
+          focusSourceHeight,
+          dx,
+          dy,
+          focusSize,
+          focusSize,
+        );
+        resultCtx.restore();
+      }
+
       function renderMobileCaptureFrame() {
         if (!isMobileCaptureSource() || mobileCameraSource.readyState < 2) return;
         const startedAt = performance.now();
         invalidateSourceImageCache();
-        renderOutput(mobileCapture.renderSize);
+        renderingMobileCaptureFrame = true;
+        try {
+          renderOutput(mobileCapture.renderSize);
+        } finally {
+          renderingMobileCaptureFrame = false;
+        }
+        compositeMobileCameraFocusWindow();
+        syncResultFit(true);
         const cost = performance.now() - startedAt;
         mobileCapture.frameCost = mobileCapture.frameCost ? lerp(mobileCapture.frameCost, cost, 0.18) : cost;
         mobileCapture.frameSamples += 1;
         if (
           mobileCapture.state === "previewing" &&
           mobileCapture.frameSamples > 8 &&
-          mobileCapture.frameCost > 78 &&
-          mobileCapture.renderSize > 420
+          mobileCapture.frameCost > 70 &&
+          mobileCapture.renderSize > 360
         ) {
-          mobileCapture.renderSize = 420;
-          mobileCapture.fps = 8;
+          mobileCapture.renderSize = 360;
+          mobileCapture.fps = 10;
           mobileCapture.frameSamples = 0;
           mobileCapture.frameCost = 0;
         }
-        syncMobilePlaybackUi();
       }
 
       function scheduleMobileCaptureRenderLoop() {
@@ -6850,10 +8265,10 @@
           const stream = await navigator.mediaDevices.getUserMedia({
             audio: false,
             video: {
-              facingMode: { ideal: "environment" },
+              facingMode: { ideal: mobileCapture.facingMode },
               width: { ideal: 720 },
-              height: { ideal: 960 },
-              aspectRatio: { ideal: 0.75 },
+              height: { ideal: 540 },
+              aspectRatio: { ideal: 4 / 3 },
             },
           });
           mobileCapture.stream = stream;
@@ -6864,8 +8279,8 @@
           mobileCameraSource.muted = true;
           if (mobileCameraSource.readyState < 1) await waitForMobileVideoEvent("loadedmetadata");
           await mobileCameraSource.play();
-          mobileCapture.renderSize = 540;
-          mobileCapture.fps = 10;
+          mobileCapture.renderSize = 420;
+          mobileCapture.fps = 12;
           mobileCapture.frameSamples = 0;
           mobileCapture.frameCost = 0;
           applyMobileCaptureSource("mobile-live");
@@ -6873,9 +8288,14 @@
           setInputStatus("实时预览中 · 按住圆形按钮录制，最长 5 秒");
         } catch (error) {
           stopMobileCameraTracks();
-          mobileCameraErrorText.textContent = error?.name === "NotAllowedError"
-            ? "摄像头权限未开启，请在浏览器设置中允许访问后重试。"
-            : `无法使用摄像头：${error.message || "未知错误"}`;
+          const cameraErrorMessages = {
+            NotAllowedError: "摄像头权限未开启。请在 Safari 的页面设置中允许摄像头；微信内打开时请改用 Safari。",
+            NotFoundError: "未检测到可用摄像头。",
+            NotReadableError: "摄像头正被其他应用占用，请关闭占用摄像头的应用后重试。",
+            AbortError: "摄像头启动被中断，请稍后重试。",
+          };
+          mobileCameraErrorText.textContent = cameraErrorMessages[error?.name]
+            || `无法使用摄像头：${error.message || "未知错误"}`;
           setMobileCaptureState("error");
           setInputStatus("摄像头无法使用");
         }
@@ -6936,24 +8356,16 @@
         try {
           renderMobileCaptureFrame();
           clearMobileCaptureMedia();
-          mobileCapture.rawChunks = [];
           mobileCapture.renderedChunks = [];
-          const rawStream = new MediaStream(mobileCapture.stream.getVideoTracks().map((track) => track.clone()));
           const renderedStream = result.captureStream(mobileCapture.fps);
-          mobileCapture.rawRecorder = createMobileRecorder(rawStream, mobileCapture.rawChunks);
           mobileCapture.renderedRecorder = createMobileRecorder(renderedStream, mobileCapture.renderedChunks);
           mobileCapture.pointerId = pointerId;
           mobileCapture.startedAt = performance.now();
-          mobileCapture.rawRecorder.start(250);
           mobileCapture.renderedRecorder.start(250);
           setMobileCaptureState("recording");
           startMobileRecordTimers();
         } catch (error) {
-          await Promise.all([
-            stopMobileRecorder(mobileCapture.rawRecorder),
-            stopMobileRecorder(mobileCapture.renderedRecorder),
-          ]).catch(() => {});
-          mobileCapture.rawRecorder = null;
+          await stopMobileRecorder(mobileCapture.renderedRecorder).catch(() => {});
           mobileCapture.renderedRecorder = null;
           cancelMobileCaptureRenderLoop();
           stopMobileCameraTracks();
@@ -6963,25 +8375,26 @@
       }
 
       async function installMobileReview() {
-        revokeMobileCaptureUrl("rawUrl");
-        mobileCapture.rawUrl = URL.createObjectURL(mobileCapture.rawBlob);
-        mobileCameraSource.pause();
-        mobileCameraSource.srcObject = null;
-        mobileCameraSource.src = mobileCapture.rawUrl;
-        mobileCameraSource.loop = true;
-        mobileCameraSource.muted = true;
-        mobileCameraSource.load();
-        if (mobileCameraSource.readyState < 1) await waitForMobileVideoEvent("loadedmetadata");
-        if (mobileCameraSource.readyState < 2) await waitForMobileVideoEvent("loadeddata");
+        revokeMobileCaptureUrl("renderedUrl");
+        mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
+        mobileCapturePlayback.pause();
+        mobileCapturePlayback.src = mobileCapture.renderedUrl;
+        mobileCapturePlayback.loop = true;
+        mobileCapturePlayback.muted = true;
+        mobileCapturePlayback.load();
+        if (mobileCapturePlayback.readyState < 1) {
+          await new Promise((resolve, reject) => {
+            mobileCapturePlayback.addEventListener("loadedmetadata", resolve, { once: true });
+            mobileCapturePlayback.addEventListener("error", () => reject(new Error("录制片段无法读取")), { once: true });
+          });
+        }
         mobileCapture.duration = Math.min(
           mobileCapture.maxDuration,
-          Number.isFinite(mobileCameraSource.duration) ? mobileCameraSource.duration : mobileCapture.duration,
+          Number.isFinite(mobileCapturePlayback.duration) ? mobileCapturePlayback.duration : mobileCapture.duration,
         );
-        applyMobileCaptureSource("mobile-review");
         setMobileCaptureState("reviewing");
-        await mobileCameraSource.play().catch(() => {});
-        scheduleMobileCaptureRenderLoop();
-        setInputStatus("录制完成：可切换效果，返回重录或确认");
+        await mobileCapturePlayback.play().catch(() => {});
+        setInputStatus("录制完成：返回重录或确认当前效果");
       }
 
       async function finishMobileRecording() {
@@ -6995,19 +8408,28 @@
         mobileCapture.pointerId = null;
         setMobileCaptureState("finalizing");
 
+        if (mobileCapture.duration < 0.25) {
+          mobileCapture.stopPromise = (async () => {
+            await stopMobileRecorder(mobileCapture.renderedRecorder).catch(() => {});
+            mobileCapture.renderedRecorder = null;
+            mobileCapture.renderedChunks = [];
+            mobileCapture.duration = 0;
+            mobileCapture.stopPromise = null;
+            mobileCapture.lastRenderAt = 0;
+            setMobileCaptureState("previewing");
+            scheduleMobileCaptureRenderLoop();
+            setInputStatus("请按住圆形按钮录制，最长 5 秒");
+          })();
+          return mobileCapture.stopPromise;
+        }
+
         mobileCapture.stopPromise = (async () => {
           try {
-            await Promise.all([
-              stopMobileRecorder(mobileCapture.rawRecorder),
-              stopMobileRecorder(mobileCapture.renderedRecorder),
-            ]);
-            const rawType = mobileCapture.rawRecorder?.mimeType || mobileCapture.rawChunks[0]?.type || "video/webm";
+            await stopMobileRecorder(mobileCapture.renderedRecorder);
             const renderedType = mobileCapture.renderedRecorder?.mimeType || mobileCapture.renderedChunks[0]?.type || "video/webm";
-            mobileCapture.rawBlob = new Blob(mobileCapture.rawChunks, { type: rawType });
             mobileCapture.renderedBlob = new Blob(mobileCapture.renderedChunks, { type: renderedType });
-            if (!mobileCapture.rawBlob.size || !mobileCapture.renderedBlob.size) throw new Error("浏览器没有生成有效的视频数据");
-            mobileCapture.recordedSettings = mobileCaptureSettingsSignature();
-            mobileCapture.renderedSettings = mobileCapture.recordedSettings;
+            if (!mobileCapture.renderedBlob.size) throw new Error("浏览器没有生成有效的视频数据");
+            cancelMobileCaptureRenderLoop();
             stopMobileCameraTracks();
             await installMobileReview();
           } catch (error) {
@@ -7016,7 +8438,6 @@
             mobileCameraErrorText.textContent = `录制失败：${error.message}`;
             setMobileCaptureState("error");
           } finally {
-            mobileCapture.rawRecorder = null;
             mobileCapture.renderedRecorder = null;
             mobileCapture.stopPromise = null;
           }
@@ -7025,61 +8446,21 @@
       }
 
       function seekMobileReview(time) {
-        const duration = mobileCapture.duration || mobileCameraSource.duration || 0;
+        const duration = mobileCapture.duration || mobileCapturePlayback.duration || 0;
         const target = Math.min(Math.max(0, time), duration || 0);
-        if (Math.abs((mobileCameraSource.currentTime || 0) - target) < 0.005) return Promise.resolve();
+        if (Math.abs((mobileCapturePlayback.currentTime || 0) - target) < 0.005) return Promise.resolve();
         return new Promise((resolve) => {
-          mobileCameraSource.addEventListener("seeked", resolve, { once: true });
-          mobileCameraSource.currentTime = target;
+          mobileCapturePlayback.addEventListener("seeked", resolve, { once: true });
+          mobileCapturePlayback.currentTime = target;
         });
-      }
-
-      async function renderMobileReviewToBlob() {
-        if (!mobileCapture.rawBlob || !result.captureStream) throw new Error("没有可处理的录制片段");
-        const chunks = [];
-        mobileCameraSource.pause();
-        mobileCameraSource.loop = false;
-        await seekMobileReview(0);
-        renderMobileCaptureFrame();
-        const recorder = createMobileRecorder(result.captureStream(mobileCapture.fps), chunks);
-        const ended = new Promise((resolve) => mobileCameraSource.addEventListener("ended", resolve, { once: true }));
-        recorder.start(250);
-        mobileCapture.lastRenderAt = 0;
-        await mobileCameraSource.play();
-        scheduleMobileCaptureRenderLoop();
-        await Promise.race([
-          ended,
-          new Promise((resolve) => window.setTimeout(resolve, (mobileCapture.duration + 1) * 1000)),
-        ]);
-        await stopMobileRecorder(recorder);
-        const type = recorder.mimeType || chunks[0]?.type || "video/webm";
-        const blob = new Blob(chunks, { type });
-        if (!blob.size) throw new Error("效果视频生成失败");
-        mobileCapture.renderedBlob = blob;
-        mobileCapture.renderedSettings = mobileCaptureSettingsSignature();
-        mobileCameraSource.loop = true;
-        await seekMobileReview(0);
-        await mobileCameraSource.play().catch(() => {});
-        scheduleMobileCaptureRenderLoop();
       }
 
       async function confirmMobileRecording() {
         if (mobileCapture.state !== "reviewing") return;
-        try {
-          if (mobileCapture.renderedSettings !== mobileCaptureSettingsSignature()) {
-            setMobileCaptureState("finalizing");
-            setInputStatus("正在确认实时效果...");
-            await renderMobileReviewToBlob();
-          }
-          setMobileCaptureState("ready");
-          renderAll(false);
-          syncMobilePlaybackUi();
-          setInputStatus("效果已确认：可回放或输出");
-          mobileStatus.textContent = "Drag & Drop Copy & Paste";
-        } catch (error) {
-          mobileCameraErrorText.textContent = `确认失败：${error.message}`;
-          setMobileCaptureState("error");
-        }
+        setMobileCaptureState("ready");
+        syncMobilePlaybackUi();
+        setInputStatus("效果已确认：可回放或输出");
+        mobileStatus.textContent = "Drag & Drop Copy & Paste";
       }
 
       async function restartMobileRecording() {
@@ -7088,36 +8469,28 @@
       }
 
       function syncMobilePlaybackUi() {
-        if (!mobilePlaybackProgress || !mobileCameraSource) return;
-        const duration = mobileCapture.duration || (Number.isFinite(mobileCameraSource.duration) ? mobileCameraSource.duration : 0) || 0;
-        const current = Math.min(mobileCameraSource.currentTime || 0, duration || 0);
+        if (!mobilePlaybackProgress || !mobileCapturePlayback) return;
+        const duration = mobileCapture.duration || (Number.isFinite(mobileCapturePlayback.duration) ? mobileCapturePlayback.duration : 0) || 0;
+        const current = Math.min(mobileCapturePlayback.currentTime || 0, duration || 0);
         const progress = duration > 0 ? current / duration * 100 : 0;
         mobilePlaybackProgress.max = String(duration || mobileCapture.maxDuration);
         if (!mobileCapture.seeking) mobilePlaybackProgress.value = String(current);
         mobilePlaybackProgress.style.setProperty("--mobile-playback-progress", `${progress}%`);
         mobilePlaybackCurrent.textContent = String(Math.floor(current)).padStart(2, "0");
         mobilePlaybackDuration.textContent = String(Math.max(1, Math.ceil(duration || mobileCapture.maxDuration))).padStart(2, "0");
-        const paused = mobileCameraSource.paused || mobileCameraSource.ended;
+        const paused = mobileCapturePlayback.paused || mobileCapturePlayback.ended;
         mobilePlaybackToggle.classList.toggle("is-paused", paused);
         mobilePlaybackToggle.setAttribute("aria-label", paused ? "播放" : "暂停");
       }
 
       async function ensureMobileRenderedBlob() {
-        if (!mobileCapture.rawBlob) return false;
-        if (mobileCapture.renderedBlob && mobileCapture.renderedSettings === mobileCaptureSettingsSignature()) return true;
-        setMobileCaptureState("finalizing");
-        setInputStatus("正在生成当前效果视频...");
-        await renderMobileReviewToBlob();
-        setMobileCaptureState("ready");
-        renderAll(false);
-        return true;
+        return Boolean(mobileCapture.renderedBlob);
       }
 
       async function downloadMobileRecording() {
         try {
           if (!await ensureMobileRenderedBlob()) return;
-          revokeMobileCaptureUrl("renderedUrl");
-          mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
+          if (!mobileCapture.renderedUrl) mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
           const type = mobileCapture.renderedBlob.type || "video/webm";
           const extension = type.includes("mp4") ? "mp4" : "webm";
           const a = document.createElement("a");
@@ -7137,17 +8510,16 @@
         mobileCapture.countdownTimer = 0;
         mobileCapture.stopTimer = 0;
         cancelMobileCaptureRenderLoop();
-        await Promise.all([
-          stopMobileRecorder(mobileCapture.rawRecorder),
-          stopMobileRecorder(mobileCapture.renderedRecorder),
-        ]).catch(() => {});
-        mobileCapture.rawRecorder = null;
+        await stopMobileRecorder(mobileCapture.renderedRecorder).catch(() => {});
         mobileCapture.renderedRecorder = null;
         stopMobileCameraTracks();
         mobileCameraSource.pause();
         mobileCameraSource.srcObject = null;
         mobileCameraSource.removeAttribute("src");
         mobileCameraSource.load();
+        mobileCapturePlayback.pause();
+        mobileCapturePlayback.removeAttribute("src");
+        mobileCapturePlayback.load();
         clearMobileCaptureMedia();
         if (resetSource && isMobileCaptureSource()) {
           state.source = null;
@@ -7272,7 +8644,7 @@
 
       function syncMobileScrollPosition() {
         if (!mobileFixedTop || window.innerWidth > 640) return;
-        if (app.classList.contains("mobile-camera-session")) {
+        if (app.classList.contains("mobile-camera-session") || state.source) {
           mobileFixedTop.style.setProperty("--mobile-collapse-offset", "0px");
           app.classList.remove("mobile-header-collapsed");
           return;
@@ -7296,7 +8668,9 @@
         if (!mobileFixedTop) return;
         requestAnimationFrame(() => {
           const previewSize = Math.ceil(mobileFixedTop.getBoundingClientRect().width);
-          const previewHeight = Math.round(previewSize * 4 / 3);
+          const previewHeight = app.classList.contains("mobile-camera-session")
+            ? Math.round(previewSize * 3 / 4)
+            : 520;
           app.style.setProperty("--mobile-preview-size", `${previewSize}px`);
           app.style.setProperty("--mobile-preview-height", `${previewHeight}px`);
           const topHeight = Math.ceil(mobileFixedTop.getBoundingClientRect().height);
@@ -7569,6 +8943,7 @@
 
       function syncResultFit(force = false) {
         if (renderingVideoBatch && !force) return;
+        if (renderingMobileCaptureFrame && !force) return;
         const stage = result.parentElement;
         if (!stage) return;
         const stageW = stage.clientWidth;
@@ -7906,6 +9281,35 @@
         state.preset = id;
         state.selected = presets[id].selected;
         state.nodes = clone(presets[id].nodes);
+        state.flyoutOpen = false;
+        renderAll();
+        scheduleRecipeHistoryCommit();
+      }
+
+      function setMobilePreset(id) {
+        const colors = {
+          ink: state.nodes.ink.color,
+          edge: state.nodes.edge.color,
+          background: state.nodes.color.bg,
+          highlight: state.nodes.color.highlight,
+          inkAlpha: state.nodes.ink.colorAlpha,
+          edgeAlpha: state.nodes.edge.colorAlpha,
+          backgroundAlpha: state.nodes.color.bgAlpha,
+          highlightAlpha: state.nodes.color.highlightAlpha,
+          transparent: state.nodes.color.transparent,
+        };
+        state.preset = id;
+        state.selected = presets[id].selected;
+        state.nodes = clone(presets[id].nodes);
+        state.nodes.ink.color = colors.ink;
+        state.nodes.edge.color = colors.edge;
+        state.nodes.color.bg = colors.background;
+        state.nodes.color.highlight = colors.highlight;
+        state.nodes.ink.colorAlpha = colors.inkAlpha;
+        state.nodes.edge.colorAlpha = colors.edgeAlpha;
+        state.nodes.color.bgAlpha = colors.backgroundAlpha;
+        state.nodes.color.highlightAlpha = colors.highlightAlpha;
+        state.nodes.color.transparent = colors.transparent;
         state.flyoutOpen = false;
         renderAll();
         scheduleRecipeHistoryCommit();
@@ -8505,9 +9909,20 @@
         return false;
       }
 
-      function randomizeChain(previewFirst = false) {
+      function randomizeChain(previewFirst = false, { preserveColors = false } = {}) {
         const preset = presets[state.preset];
         const profile = presetRandomProfiles[state.preset];
+        const colors = preserveColors ? {
+          ink: state.nodes.ink.color,
+          edge: state.nodes.edge.color,
+          background: state.nodes.color.bg,
+          highlight: state.nodes.color.highlight,
+          inkAlpha: state.nodes.ink.colorAlpha,
+          edgeAlpha: state.nodes.edge.colorAlpha,
+          backgroundAlpha: state.nodes.color.bgAlpha,
+          highlightAlpha: state.nodes.color.highlightAlpha,
+          transparent: state.nodes.color.transparent,
+        } : null;
         rememberNiceTryState();
         state.nodes = clone(preset.nodes);
         state.outputReverse = chance(0.5);
@@ -8527,6 +9942,17 @@
         state.nodes.ink.colorAlpha = 100;
         state.nodes.edge.colorAlpha = 100;
         state.nodes.color.transparent = false;
+        if (colors) {
+          state.nodes.ink.color = colors.ink;
+          state.nodes.edge.color = colors.edge;
+          state.nodes.color.bg = colors.background;
+          state.nodes.color.highlight = colors.highlight;
+          state.nodes.ink.colorAlpha = colors.inkAlpha;
+          state.nodes.edge.colorAlpha = colors.edgeAlpha;
+          state.nodes.color.bgAlpha = colors.backgroundAlpha;
+          state.nodes.color.highlightAlpha = colors.highlightAlpha;
+          state.nodes.color.transparent = colors.transparent;
+        }
         state.selected = preset.selected;
         renderAll(!previewFirst);
         if (previewFirst) scheduleNiceTryPreviewRender();
@@ -8562,7 +9988,11 @@
         mobilePresetGrid.innerHTML = "";
         Object.entries(presets).forEach(([id, preset]) => {
           const button = document.createElement("button");
+          const locked = mobileCaptureControlsLocked();
           button.type = "button";
+          button.disabled = locked;
+          button.setAttribute("aria-disabled", String(locked));
+          button.setAttribute("aria-label", `${preset.label} ${preset.sub}`);
           button.className = `mobile-preset${state.preset === id ? " active" : ""}`;
           button.innerHTML = `
             <span class="mobile-preset-icon">${presetIcon(id)}</span>
@@ -8571,9 +10001,24 @@
               <small>${preset.sub}</small>
             </span>
           `;
-          button.addEventListener("click", () => setPreset(id));
+          button.addEventListener("click", () => {
+            if (!mobileCaptureControlsLocked()) setMobilePreset(id);
+          });
           mobilePresetGrid.appendChild(button);
         });
+        const cameraNice = document.createElement("button");
+        const cameraNiceLocked = mobileCaptureControlsLocked();
+        cameraNice.type = "button";
+        cameraNice.className = "mobile-camera-nice";
+        cameraNice.disabled = cameraNiceLocked;
+        cameraNice.setAttribute("aria-disabled", String(cameraNiceLocked));
+        cameraNice.setAttribute("aria-label", "NICE TRY");
+        cameraNice.innerHTML = '<img src="../assets/desktop-nice-try-icon-active.svg" alt="" />';
+        cameraNice.addEventListener("click", () => {
+          if (!mobileCaptureControlsLocked()) randomizeChain(false, { preserveColors: true });
+        });
+        mobilePresetGrid.appendChild(cameraNice);
+        syncMobileCaptureEditingControls();
       }
 
       function renderNodeList() {
@@ -8809,12 +10254,14 @@
         if (!mobileColorPanel) return;
         mobileColorPanel.querySelectorAll("[data-mobile-alpha]").forEach((button) => {
           button.addEventListener("click", () => {
+            if (mobileCaptureControlsLocked()) return;
             const { nodeId, key } = mobileColorDescriptor(button.dataset.mobileAlpha);
             toggleUiColorAlpha(nodeId, key);
           });
         });
 
         mobileColorPanel.querySelector("[data-mobile-re]")?.addEventListener("click", () => {
+          if (mobileCaptureControlsLocked()) return;
           state.outputReverse = !state.outputReverse;
           renderAll();
         });
@@ -8829,7 +10276,7 @@
               const alpha = getMobileColorAlpha(target);
               const color = getMobileColor(target);
               return `
-                <div class="mobile-color-card${alpha <= 0 ? " transparent" : ""}" data-mobile-color-target="${target}">
+                <div class="mobile-color-card${alpha <= 0 ? " transparent" : ""}" data-mobile-color-target="${target}" style="--mobile-color:${color}">
                   <span class="mobile-color-label" style="background-color:${color};color:${mobileColorTextColor(color)}">${descriptor.label}</span>
                   <span class="mobile-color-hash">#</span>
                   <span class="mobile-color-value">${color.replace("#", "").toUpperCase()}</span>
@@ -8841,6 +10288,7 @@
           </div>
         `;
         bindMobileColorPanel();
+        syncMobileCaptureEditingControls();
       }
 
       function renderMobileEffects() {
@@ -9071,7 +10519,13 @@
         work.height = height;
         workCtx.clearRect(0, 0, width, height);
         if (isMobileCaptureSource()) {
+          workCtx.save();
+          if (mobileCapture.facingMode === "user") {
+            workCtx.translate(width, 0);
+            workCtx.scale(-1, 1);
+          }
           drawCover(workCtx, state.source, mediaAspect, width, height, "#ffffff");
+          workCtx.restore();
         } else {
           drawContain(workCtx, state.source, aspect, width, height, state.sourceHasTransparency ? null : "#ffffff");
         }
@@ -11008,15 +12462,43 @@
         cameraFile.value = "";
         cameraFile.click();
       });
-      mobileInputButton?.addEventListener("click", async () => {
+
+      async function openMobileGallery() {
         if (mobileCapture.state !== "idle" || isMobileCaptureSource()) {
           await closeMobileCapture({ resetSource: true });
         }
         mobileGalleryFile.value = "";
         mobileGalleryFile.click();
+      }
+
+      mobileInputButton?.addEventListener("click", openMobileGallery);
+      mobileEntryUploadTrigger?.addEventListener("click", openMobileGallery);
+      mobileEntryUpload?.addEventListener("click", openMobileGallery);
+      mobileEntryCamera?.addEventListener("click", openMobileCamera);
+      mobileEntryOutput?.addEventListener("click", () => {
+        showMobileEntryToast("请先上传素材");
       });
       mobileCameraButton?.addEventListener("click", () => {
         openMobileCamera();
+      });
+      mobileCameraClose?.addEventListener("click", () => {
+        closeMobileCapture({ resetSource: true });
+      });
+      mobileCameraSwitch?.addEventListener("click", async () => {
+        if (mobileCapture.state !== "previewing") return;
+        mobileCapture.facingMode = mobileCapture.facingMode === "environment" ? "user" : "environment";
+        await openMobileCamera();
+      });
+      mobileCameraDockUpload?.addEventListener("click", openMobileGallery);
+      mobileCameraDockRec?.addEventListener("click", () => {
+        if (mobileCapture.state === "idle") openMobileCamera();
+      });
+      mobileCameraDockOutput?.addEventListener("click", () => {
+        if (mobileCapture.state === "ready") {
+          downloadMobileRecording();
+          return;
+        }
+        if (mobileCapture.state === "idle" && state.source) exportOutput();
       });
       mobileRecordControl?.addEventListener("pointerdown", (event) => {
         if (mobileCapture.state !== "previewing") return;
@@ -11040,44 +12522,30 @@
       mobileCameraRetry?.addEventListener("click", openMobileCamera);
       mobilePlaybackToggle?.addEventListener("click", () => {
         if (mobileCapture.state !== "ready") return;
-        if (mobileCameraSource.ended) mobileCameraSource.currentTime = 0;
-        if (mobileCameraSource.paused) mobileCameraSource.play().catch(() => {});
-        else mobileCameraSource.pause();
+        if (mobileCapturePlayback.ended) mobileCapturePlayback.currentTime = 0;
+        if (mobileCapturePlayback.paused) mobileCapturePlayback.play().catch(() => {});
+        else mobileCapturePlayback.pause();
       });
       mobilePlaybackProgress?.addEventListener("pointerdown", () => {
-        if (mobileCapture.state !== "ready") return;
+        if (!["reviewing", "ready"].includes(mobileCapture.state)) return;
         mobileCapture.seeking = true;
-        mobileCameraSource.pause();
+        mobileCapturePlayback.pause();
       });
       mobilePlaybackProgress?.addEventListener("input", () => {
-        if (mobileCapture.state !== "ready") return;
-        mobileCameraSource.currentTime = Number(mobilePlaybackProgress.value) || 0;
+        if (!["reviewing", "ready"].includes(mobileCapture.state)) return;
+        mobileCapturePlayback.currentTime = Number(mobilePlaybackProgress.value) || 0;
         syncMobilePlaybackUi();
       });
       mobilePlaybackProgress?.addEventListener("change", () => {
-        if (mobileCapture.state !== "ready") return;
+        if (!["reviewing", "ready"].includes(mobileCapture.state)) return;
         mobileCapture.seeking = false;
-        renderMobileCaptureFrame();
-        mobileCameraSource.play().catch(() => {});
+        mobileCapturePlayback.play().catch(() => {});
       });
-      mobileCameraSource?.addEventListener("play", () => {
-        mobileCapture.lastRenderAt = 0;
-        scheduleMobileCaptureRenderLoop();
-        syncMobilePlaybackUi();
-      });
-      mobileCameraSource?.addEventListener("pause", () => {
-        cancelMobileCaptureRenderLoop();
-        syncMobilePlaybackUi();
-      });
-      mobileCameraSource?.addEventListener("seeked", () => {
-        renderMobileCaptureFrame();
-        syncMobilePlaybackUi();
-      });
-      mobileCameraSource?.addEventListener("timeupdate", syncMobilePlaybackUi);
-      mobileCameraSource?.addEventListener("ended", () => {
-        cancelMobileCaptureRenderLoop();
-        syncMobilePlaybackUi();
-      });
+      mobileCapturePlayback?.addEventListener("play", syncMobilePlaybackUi);
+      mobileCapturePlayback?.addEventListener("pause", syncMobilePlaybackUi);
+      mobileCapturePlayback?.addEventListener("seeked", syncMobilePlaybackUi);
+      mobileCapturePlayback?.addEventListener("timeupdate", syncMobilePlaybackUi);
+      mobileCapturePlayback?.addEventListener("ended", syncMobilePlaybackUi);
       drop.addEventListener("click", (event) => {
         if (event.target === fileInput) return;
         event.preventDefault();
@@ -11188,7 +12656,7 @@
       });
       async function exportOutput() {
         if (!state.source) return;
-        if (mobileCapture.state === "ready" && mobileCapture.rawBlob) {
+        if (mobileCapture.state === "ready" && mobileCapture.renderedBlob) {
           await downloadMobileRecording();
           return;
         }
@@ -11225,7 +12693,7 @@
         randomizeChain(true);
       });
       mobileRandomize?.addEventListener("click", () => {
-        randomizeChain();
+        randomizeChain(false, { preserveColors: true });
       });
       reverseToggle.addEventListener("click", () => {
         state.outputReverse = !state.outputReverse;
@@ -11233,17 +12701,21 @@
         renderAll();
       });
       window.addEventListener("resize", () => {
+        scheduleMobileVisualViewportSync();
         positionParamFlyout();
         syncResultFit();
         syncMobileTopOffset();
         scheduleMobileScrollSync();
       });
+      window.visualViewport?.addEventListener("resize", scheduleMobileVisualViewportSync, { passive: true });
+      window.visualViewport?.addEventListener("scroll", scheduleMobileVisualViewportSync, { passive: true });
+      window.addEventListener("orientationchange", scheduleMobileVisualViewportSync, { passive: true });
       window.addEventListener("scroll", scheduleMobileScrollSync, { passive: true });
       window.addEventListener("pagehide", () => {
         persistNiceTryHistory();
         recipeHistory.forEach((entry) => URL.revokeObjectURL(entry.thumbnailUrl));
         cancelMobileCaptureRenderLoop();
-        [mobileCapture.rawRecorder, mobileCapture.renderedRecorder].forEach((recorder) => {
+        [mobileCapture.renderedRecorder].forEach((recorder) => {
           if (!recorder) return;
           try {
             if (recorder.state !== "inactive") recorder.stop();
@@ -11251,7 +12723,6 @@
           recorder.stream?.getTracks().forEach((track) => track.stop());
         });
         stopMobileCameraTracks();
-        revokeMobileCaptureUrl("rawUrl");
         revokeMobileCaptureUrl("renderedUrl");
       });
 
@@ -11342,6 +12813,13 @@
         invalidateSourceImageCache();
         renderBufferCache = null;
         paperToneCache = { signature: "", maps: new Map() };
+      }
+
+      if (window.matchMedia("(max-width: 640px)").matches) {
+        state.nodes.ink.color = "#FF4848";
+        state.nodes.edge.color = "#FF4848";
+        state.nodes.color.bg = "#B8CFDB";
+        state.nodes.color.highlight = "#B8CFDB";
       }
 
       renderAll(false);
