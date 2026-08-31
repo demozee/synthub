@@ -7177,6 +7177,77 @@
           overflow-y: auto;
           overscroll-behavior-y: contain;
         }
+
+        .mobile-output-preview {
+          position: fixed;
+          inset: 0;
+          z-index: 1800;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          padding: max(20px, env(safe-area-inset-top)) 16px max(108px, calc(env(safe-area-inset-bottom) + 92px));
+          background: #0d0d11;
+        }
+
+        .mobile-output-preview.is-open {
+          display: flex;
+        }
+
+        .mobile-output-preview-media {
+          display: block;
+          width: auto;
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+
+        .mobile-output-preview-close,
+        .mobile-output-preview-save {
+          position: absolute;
+          display: grid;
+          place-items: center;
+          border: 1px solid #050506;
+          border-radius: 0;
+          font-family: var(--font-mono);
+          letter-spacing: 0;
+          cursor: pointer;
+        }
+
+        .mobile-output-preview-close {
+          top: max(16px, env(safe-area-inset-top));
+          right: 16px;
+          width: 42px;
+          height: 42px;
+          background: #202024;
+          color: #f4f3ef;
+          font-size: 28px;
+          font-weight: 300;
+        }
+
+        .mobile-output-preview-save {
+          right: 16px;
+          bottom: max(24px, calc(env(safe-area-inset-bottom) + 12px));
+          left: 16px;
+          min-height: 58px;
+          background: var(--mobile-acid);
+          color: #111115;
+          font-size: 20px;
+          font-weight: 400;
+        }
+
+        .mobile-output-preview-hint {
+          position: absolute;
+          right: 32px;
+          bottom: max(88px, calc(env(safe-area-inset-bottom) + 76px));
+          left: 32px;
+          margin: 0;
+          color: #f4f3ef;
+          font-family: var(--font-cn);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 20px;
+          text-align: center;
+        }
       }
     </style>
   </head>
@@ -8598,11 +8669,17 @@
         return Boolean(mobileCapture.renderedBlob);
       }
 
-      async function deliverMobileOutput(blob, filename, label) {
-        const isMobile = window.matchMedia("(max-width: 640px)").matches;
-        if (!isMobile) return false;
+      function closeMobileOutputPreview() {
+        const preview = document.getElementById("mobileOutputPreview");
+        if (!preview) return;
+        const outputUrl = preview.dataset.outputUrl;
+        if (outputUrl) URL.revokeObjectURL(outputUrl);
+        preview.dataset.outputUrl = "";
+        preview.classList.remove("is-open");
+        preview.remove();
+      }
 
-        const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
+      async function shareMobileOutputFile(file, label, preview) {
         const shareData = {
           files: [file],
           title: "Graphic Texture",
@@ -8610,23 +8687,56 @@
         if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
           try {
             await navigator.share(shareData);
-            setInputStatus(`已打开系统分享面板：可存储${label}或保存到文件`);
-            return true;
+            closeMobileOutputPreview();
+            setInputStatus(`已打开系统相册保存菜单：选择“存储${label}”即可保存`);
+            return;
           } catch (error) {
-            if (error?.name === "AbortError") {
-              setInputStatus("已取消输出");
-              return true;
-            }
+            if (error?.name === "AbortError") return;
           }
         }
+        preview.querySelector(".mobile-output-preview-hint").textContent = `当前浏览器不支持相册保存菜单，请长按${label}保存到相册`;
+      }
 
+      function presentMobileOutput(blob, filename, label) {
+        if (!window.matchMedia("(max-width: 640px)").matches) return false;
+        closeMobileOutputPreview();
+        const preview = document.createElement("section");
+        preview.className = "mobile-output-preview";
+        preview.id = "mobileOutputPreview";
+        preview.setAttribute("aria-label", "输出预览");
         const outputUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = outputUrl;
-        a.download = filename;
-        a.click();
-        window.setTimeout(() => URL.revokeObjectURL(outputUrl), 30000);
-        setInputStatus(`${label}已下载：请在浏览器下载列表或“文件”App 中查看`);
+        const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
+        const isVideo = file.type.startsWith("video/");
+        const media = document.createElement(isVideo ? "video" : "img");
+        media.className = "mobile-output-preview-media";
+        media.src = outputUrl;
+        media.alt = isVideo ? "" : "Graphic Texture output";
+        if (isVideo) {
+          media.controls = true;
+          media.playsInline = true;
+        }
+
+        const close = document.createElement("button");
+        close.className = "mobile-output-preview-close";
+        close.type = "button";
+        close.setAttribute("aria-label", "关闭输出预览");
+        close.textContent = "×";
+        close.addEventListener("click", closeMobileOutputPreview);
+
+        const hint = document.createElement("p");
+        hint.className = "mobile-output-preview-hint";
+        hint.textContent = `点击下方按钮，在系统菜单中选择“存储${label}”`;
+
+        const save = document.createElement("button");
+        save.className = "mobile-output-preview-save";
+        save.type = "button";
+        save.textContent = `SAVE ${label === "图片" ? "IMAGE" : "VIDEO"}`;
+        save.addEventListener("click", () => shareMobileOutputFile(file, label, preview));
+
+        preview.append(close, media, hint, save);
+        preview.dataset.outputUrl = outputUrl;
+        document.body.appendChild(preview);
+        requestAnimationFrame(() => preview.classList.add("is-open"));
         return true;
       }
 
@@ -8636,7 +8746,7 @@
           const type = mobileCapture.renderedBlob.type || "video/webm";
           const extension = type.includes("mp4") ? "mp4" : "webm";
           const filename = `graphic-texture-mobile-${state.preset}.${extension}`;
-          if (await deliverMobileOutput(mobileCapture.renderedBlob, filename, "视频")) return;
+          if (presentMobileOutput(mobileCapture.renderedBlob, filename, "视频")) return;
           if (!mobileCapture.renderedUrl) mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
           const a = document.createElement("a");
           a.href = mobileCapture.renderedUrl;
@@ -12857,7 +12967,7 @@
         });
         const outputBlob = await embedRecipeInPng(pngBlob, currentRecipeCode());
         const filename = `graphic-texture-chain-${state.preset}.png`;
-        if (await deliverMobileOutput(outputBlob, filename, "图片")) return;
+        if (presentMobileOutput(outputBlob, filename, "图片")) return;
         const outputUrl = URL.createObjectURL(outputBlob);
         const a = document.createElement("a");
         a.href = outputUrl;
