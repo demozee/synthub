@@ -8598,15 +8598,49 @@
         return Boolean(mobileCapture.renderedBlob);
       }
 
+      async function deliverMobileOutput(blob, filename, label) {
+        const isMobile = window.matchMedia("(max-width: 640px)").matches;
+        if (!isMobile) return false;
+
+        const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
+        const shareData = {
+          files: [file],
+          title: "Graphic Texture",
+        };
+        if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+          try {
+            await navigator.share(shareData);
+            setInputStatus(`已打开系统分享面板：可存储${label}或保存到文件`);
+            return true;
+          } catch (error) {
+            if (error?.name === "AbortError") {
+              setInputStatus("已取消输出");
+              return true;
+            }
+          }
+        }
+
+        const outputUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = outputUrl;
+        a.download = filename;
+        a.click();
+        window.setTimeout(() => URL.revokeObjectURL(outputUrl), 30000);
+        setInputStatus(`${label}已下载：请在浏览器下载列表或“文件”App 中查看`);
+        return true;
+      }
+
       async function downloadMobileRecording() {
         try {
           if (!await ensureMobileRenderedBlob()) return;
-          if (!mobileCapture.renderedUrl) mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
           const type = mobileCapture.renderedBlob.type || "video/webm";
           const extension = type.includes("mp4") ? "mp4" : "webm";
+          const filename = `graphic-texture-mobile-${state.preset}.${extension}`;
+          if (await deliverMobileOutput(mobileCapture.renderedBlob, filename, "视频")) return;
+          if (!mobileCapture.renderedUrl) mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
           const a = document.createElement("a");
           a.href = mobileCapture.renderedUrl;
-          a.download = `graphic-texture-mobile-${state.preset}.${extension}`;
+          a.download = filename;
           a.click();
           setInputStatus("视频已输出");
         } catch (error) {
@@ -12822,10 +12856,12 @@
           }, "image/png");
         });
         const outputBlob = await embedRecipeInPng(pngBlob, currentRecipeCode());
+        const filename = `graphic-texture-chain-${state.preset}.png`;
+        if (await deliverMobileOutput(outputBlob, filename, "图片")) return;
         const outputUrl = URL.createObjectURL(outputBlob);
         const a = document.createElement("a");
         a.href = outputUrl;
-        a.download = `graphic-texture-chain-${state.preset}.png`;
+        a.download = filename;
         a.click();
         window.setTimeout(() => URL.revokeObjectURL(outputUrl), 1000);
       }
