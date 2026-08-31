@@ -10078,7 +10078,7 @@
         const nextPreset = pick(alternatives.length ? alternatives : presetIds);
         state.preset = nextPreset;
         state.selected = presets[nextPreset].selected;
-        randomizeChain(false, { preserveColors: true });
+        randomizeChain(false);
       }
 
       function presetIcon(id) {
