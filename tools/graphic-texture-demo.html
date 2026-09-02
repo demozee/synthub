@@ -2,7 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <link rel="icon" type="image/png" sizes="24x24" href="../assets/browser-icon-figma.png?v=20260721" />
     <script
       defer
@@ -4340,6 +4340,7 @@
         html,
         body {
           scrollbar-width: none;
+          touch-action: manipulation;
         }
 
         body::-webkit-scrollbar {
@@ -7248,6 +7249,140 @@
           line-height: 20px;
           text-align: center;
         }
+
+        /* Mobile 08-31 layout: effect controls are image-first and deliberately sparse. */
+        .mobile-color-section {
+          display: none !important;
+        }
+
+        .mobile-preview-re {
+          position: absolute;
+          z-index: 7;
+          bottom: 48px;
+          left: 24px;
+          display: none;
+          width: 44px;
+          height: 44px;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          cursor: pointer;
+        }
+
+        .mobile-preview-re img {
+          display: block;
+          width: 24px;
+          height: 24px;
+          margin: 10px;
+          object-fit: contain;
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preview-re,
+        .app.mobile-capture-previewing .mobile-preview-re {
+          display: block;
+        }
+
+        .mobile-preview-re.active img {
+          filter: brightness(0) saturate(100%) invert(92%) sepia(30%) saturate(633%) hue-rotate(31deg) brightness(103%) contrast(102%);
+        }
+
+        .app.mobile-camera-session .mobile-scroll,
+        .app.has-source:not(.mobile-camera-session) .mobile-scroll {
+          padding: 16px 24px 112px;
+        }
+
+        .app.mobile-camera-session .mobile-preset-grid,
+        .app.has-source:not(.mobile-camera-session) .mobile-preset-grid {
+          grid-template-columns: repeat(4, 80px);
+          grid-template-rows: 80px 80px;
+          grid-auto-flow: row;
+          gap: 16px 7px;
+          width: 341px;
+          height: 176px;
+        }
+
+        .app.mobile-camera-session .mobile-preset,
+        .app.has-source:not(.mobile-camera-session) .mobile-preset {
+          display: grid;
+          grid-template-columns: 1fr;
+          place-items: center;
+          width: 80px;
+          height: 80px;
+          min-height: 80px;
+          padding: 0;
+          border: 1px solid transparent;
+          background: var(--mobile-card);
+        }
+
+        .app.mobile-camera-session .mobile-preset.active,
+        .app.has-source:not(.mobile-camera-session) .mobile-preset.active {
+          border-color: var(--mobile-acid);
+          background: var(--mobile-card);
+        }
+
+        .app.mobile-camera-session .mobile-preset-icon,
+        .app.mobile-camera-session .mobile-preset-icon img,
+        .app.has-source:not(.mobile-camera-session) .mobile-preset-icon,
+        .app.has-source:not(.mobile-camera-session) .mobile-preset-icon img {
+          width: 38px;
+          height: 38px;
+          margin: 0;
+          object-fit: contain;
+        }
+
+        .app.mobile-camera-session .mobile-camera-nice,
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-nice {
+          display: grid;
+          grid-column: 1 / -1;
+          grid-row: 2;
+          place-items: center;
+          width: 340px;
+          height: 80px;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          background: var(--mobile-acid);
+        }
+
+        .app.mobile-camera-session .mobile-camera-nice img,
+        .app.has-source:not(.mobile-camera-session) .mobile-camera-nice img {
+          width: 40px;
+          height: 46px;
+          filter: brightness(0);
+        }
+
+        .mobile-record-progress-frame {
+          position: absolute;
+          top: -133px;
+          left: -8px;
+          display: none;
+          width: 96px;
+          height: 96px;
+        }
+
+        .mobile-record-ring-progress {
+          fill: none;
+          stroke: #ff4a00;
+          stroke-width: 3px;
+          stroke-dasharray: 372px;
+          stroke-dashoffset: calc(372px * (1 - var(--mobile-record-progress, 0)));
+          stroke-linecap: round;
+        }
+
+        .app.mobile-capture-recording .mobile-record-progress-frame {
+          display: block;
+        }
+
+        .mobile-record-countdown {
+          inset: auto;
+          top: -133px;
+          left: -8px;
+          width: 96px;
+          height: 96px;
+          font-size: 50px;
+          line-height: 65px;
+          letter-spacing: -1.5px;
+        }
       }
     </style>
   </head>
@@ -7520,6 +7655,9 @@
           </div>
           <div class="mobile-preview-fixed" aria-label="Result preview">
             <canvas id="mobileResult" width="1000" height="1000"></canvas>
+            <button class="mobile-preview-re" id="mobilePreviewRe" type="button" aria-label="Reverse mask" aria-pressed="false">
+              <img src="../assets/mobile-upload-re.svg" alt="" />
+            </button>
             <span class="mobile-uploaded-mark" aria-hidden="true">
               <img class="mobile-uploaded-mark-a" src="../assets/mobile-entry/mobile-entry-mark-a.svg" alt="" />
               <img class="mobile-uploaded-mark-b" src="../assets/mobile-entry/mobile-entry-mark-b.svg" alt="" />
@@ -7552,7 +7690,9 @@
               <button class="mobile-record-control" id="mobileRecordControl" type="button" aria-label="点击拍照，按住录像，最长 5 秒">
                 <svg class="mobile-record-ring" viewBox="0 0 80 80" aria-hidden="true">
                   <circle class="mobile-record-ring-track" cx="40" cy="40" r="39"></circle>
-                  <circle class="mobile-record-ring-progress" cx="40" cy="40" r="39"></circle>
+                </svg>
+                <svg class="mobile-record-progress-frame" viewBox="0 0 96 96" aria-hidden="true">
+                  <rect class="mobile-record-ring-progress" x="1.5" y="1.5" width="93" height="93"></rect>
                 </svg>
                 <span class="mobile-record-countdown" id="mobileRecordCountdown">5</span>
               </button>
@@ -7589,7 +7729,7 @@
             <div class="mobile-preset-grid" id="mobilePresetGrid"></div>
           </section>
 
-          <section class="mobile-section">
+          <section class="mobile-section mobile-color-section">
             <h2 class="mobile-section-title">Color <span>颜色</span></h2>
             <div id="mobileColorPanel"></div>
           </section>
@@ -7765,6 +7905,7 @@
       const mobileStatus = document.getElementById("mobileStatus");
       const mobileResult = document.getElementById("mobileResult");
       const mobileResultCtx = mobileResult.getContext("2d", { willReadFrequently: true });
+      const mobilePreviewRe = document.getElementById("mobilePreviewRe");
       const mobilePresetGrid = document.getElementById("mobilePresetGrid");
       const mobileColorPanel = document.getElementById("mobileColorPanel");
       const mobileRandomize = document.getElementById("mobileRandomize");
@@ -10535,25 +10676,7 @@
 
       function renderMobileColorPanel() {
         if (!mobileColorPanel) return;
-        mobileColorPanel.innerHTML = `
-          <div class="mobile-color-row">
-            ${["fg", "bg"].map((target) => {
-              const descriptor = mobileColorDescriptor(target);
-              const alpha = getMobileColorAlpha(target);
-              const color = getMobileColor(target);
-              return `
-                <div class="mobile-color-card${alpha <= 0 ? " transparent" : ""}" data-mobile-color-target="${target}" style="--mobile-color:${color}">
-                  <span class="mobile-color-label" style="background-color:${color};color:${mobileColorTextColor(color)}">${descriptor.label}</span>
-                  <span class="mobile-color-hash">#</span>
-                  <span class="mobile-color-value">${color.replace("#", "").toUpperCase()}</span>
-                  <button class="mobile-alpha-toggle${alpha <= 0 ? " active" : ""}" type="button" data-mobile-alpha="${target}" aria-label="${descriptor.alphaLabel}"></button>
-                </div>
-              `;
-            }).join("")}
-            <button class="mobile-re-card${state.outputReverse ? " active" : ""}" type="button" data-mobile-re aria-label="Reverse mask" aria-pressed="${state.outputReverse}"></button>
-          </div>
-        `;
-        bindMobileColorPanel();
+        mobileColorPanel.replaceChildren();
         syncMobileCaptureEditingControls();
       }
 
@@ -10606,6 +10729,8 @@
       function syncReverseToggle() {
         reverseToggle.classList.toggle("active", state.outputReverse);
         reverseToggle.setAttribute("aria-pressed", String(state.outputReverse));
+        mobilePreviewRe?.classList.toggle("active", state.outputReverse);
+        mobilePreviewRe?.setAttribute("aria-pressed", String(state.outputReverse));
       }
 
       function setPickerVisual(picker) {
@@ -12750,6 +12875,11 @@
       });
       mobileCameraClose?.addEventListener("click", () => {
         closeMobileCapture({ resetSource: true });
+      });
+      mobilePreviewRe?.addEventListener("click", () => {
+        if (mobileCaptureControlsLocked() && mobileCapture.state !== "idle") return;
+        state.outputReverse = !state.outputReverse;
+        renderAll();
       });
       mobileCameraSwitch?.addEventListener("click", async () => {
         if (mobileCapture.state !== "previewing") return;
