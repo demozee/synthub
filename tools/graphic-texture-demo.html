@@ -4364,9 +4364,10 @@
           --mobile-preview-size: min(390px, 100vw);
           --mobile-preview-height: min(520px, 133.333vw);
           --mobile-viewport-height: 100svh;
+          --mobile-dock-height: calc(88px + env(safe-area-inset-bottom));
           --mobile-upload-preview-height: clamp(
-            390px,
-            calc(var(--mobile-viewport-height) - 228px),
+            200px,
+            calc(var(--mobile-viewport-height) - var(--mobile-dock-height) - 224px),
             520px
           );
           --mobile-camera-preview-height: var(--mobile-preview-size);
@@ -7298,6 +7299,10 @@
           display: none !important;
         }
 
+        .app.mobile-capture-ready .mobile-camera-dock-button.rec {
+          pointer-events: auto;
+        }
+
         .mobile-preview-re {
           position: absolute;
           z-index: 7;
@@ -7331,17 +7336,26 @@
 
         .app.mobile-camera-session .mobile-scroll,
         .app.has-source:not(.mobile-camera-session) .mobile-scroll {
-          padding: 16px 24px 112px;
+          bottom: var(--mobile-dock-height);
+          padding: 16px 24px;
+          overflow-x: hidden;
+          overflow-y: auto;
+          overscroll-behavior-y: contain;
+          --mobile-control-row: 80px;
+        }
+
+        .app.mobile-camera-session .mobile-scroll {
+          --mobile-control-row: clamp(48px, calc((var(--mobile-viewport-height) - var(--mobile-camera-preview-height) - var(--mobile-dock-height) - 48px) / 2), 80px);
         }
 
         .app.mobile-camera-session .mobile-preset-grid,
         .app.has-source:not(.mobile-camera-session) .mobile-preset-grid {
-          grid-template-columns: repeat(4, 80px);
-          grid-template-rows: 80px 80px;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-rows: repeat(2, var(--mobile-control-row));
           grid-auto-flow: row;
           gap: 16px 7px;
-          width: 341px;
-          height: 176px;
+          width: 100%;
+          height: auto;
         }
 
         .app.mobile-camera-session .mobile-preset,
@@ -7349,9 +7363,9 @@
           display: grid;
           grid-template-columns: 1fr;
           place-items: center;
-          width: 80px;
-          height: 80px;
-          min-height: 80px;
+          width: 100%;
+          height: var(--mobile-control-row);
+          min-height: 0;
           padding: 0;
           border: 1px solid transparent;
           background: var(--mobile-card);
@@ -7379,8 +7393,8 @@
           grid-column: 1 / -1;
           grid-row: 2;
           place-items: center;
-          width: 340px;
-          height: 80px;
+          width: 100%;
+          height: var(--mobile-control-row);
           margin: 0;
           padding: 0;
           border: 0;
@@ -7396,16 +7410,20 @@
 
         .mobile-record-progress-frame {
           position: absolute;
-          top: -133px;
-          left: -8px;
+          z-index: 8;
+          top: 50%;
+          left: 50%;
           display: none;
-          width: 96px;
-          height: 96px;
+          width: 24.6153846154%;
+          height: auto;
+          aspect-ratio: 1;
+          transform: translate(-50%, -50%);
+          pointer-events: none;
         }
 
         .mobile-record-ring-progress {
           fill: none;
-          stroke: #ff4a00;
+          stroke: var(--mobile-blue);
           stroke-width: 3px;
           stroke-dasharray: 372px;
           stroke-dashoffset: calc(372px * (1 - var(--mobile-record-progress, 0)));
@@ -7418,13 +7436,17 @@
 
         .mobile-record-countdown {
           inset: auto;
-          top: -133px;
-          left: -8px;
-          width: 96px;
-          height: 96px;
+          z-index: 9;
+          top: 50%;
+          left: 50%;
+          width: 24.6153846154%;
+          height: auto;
+          aspect-ratio: 1;
+          transform: translate(-50%, -50%);
+          pointer-events: none;
           font-size: 50px;
           line-height: 65px;
-          letter-spacing: -1.5px;
+          letter-spacing: 0;
         }
       }
     </style>
@@ -7737,11 +7759,11 @@
                 <svg class="mobile-record-ring" viewBox="0 0 80 80" aria-hidden="true">
                   <circle class="mobile-record-ring-track" cx="40" cy="40" r="39"></circle>
                 </svg>
-                <svg class="mobile-record-progress-frame" viewBox="0 0 96 96" aria-hidden="true">
-                  <rect class="mobile-record-ring-progress" x="1.5" y="1.5" width="93" height="93"></rect>
-                </svg>
-                <span class="mobile-record-countdown" id="mobileRecordCountdown">5</span>
               </button>
+              <svg class="mobile-record-progress-frame" viewBox="0 0 96 96" aria-hidden="true">
+                <rect class="mobile-record-ring-progress" x="1.5" y="1.5" width="93" height="93"></rect>
+              </svg>
+              <span class="mobile-record-countdown" id="mobileRecordCountdown" aria-hidden="true">5</span>
 
               <div class="mobile-review-controls" aria-label="确认录制效果">
                 <button class="mobile-review-button return" id="mobileRecordReturn" type="button" aria-label="返回重新录制">
@@ -8176,6 +8198,7 @@
       };
       const renderDebugEnabled = new URLSearchParams(window.location.search).has("debugRender");
       let mobileViewportSyncFrame = 0;
+      let mobileCameraSessionId = 0;
 
       function syncMobileVisualViewport() {
         mobileViewportSyncFrame = 0;
@@ -8329,6 +8352,7 @@
           "aria-label",
           mobileCapture.state === "ready" ? "输出录制视频" : "输出图片",
         );
+        mobileCameraDockRec?.setAttribute("aria-label", mobileCapture.state === "ready" ? "重新拍摄" : "摄像模式");
         mobileRandomize.disabled = !niceEnabled && mobileCapture.state !== "idle";
         mobileRandomize.setAttribute("aria-disabled", String(mobileRandomize.disabled));
         document.querySelectorAll(".mobile-bottom-dock [data-export-png]").forEach((button) => {
@@ -8384,10 +8408,11 @@
       }
 
       function compositeMobileCameraFocusWindow() {
-        if (!isMobileCaptureSource() || mobileCameraSource.readyState < 2 || !result.width || !result.height) return;
+        if (!isMobileCaptureSource() || !["previewing", "recording"].includes(mobileCapture.state) || mobileCameraSource.readyState < 2 || !mobileResult.width || !mobileResult.height) return;
+        // The comparison crop belongs only to the display, never to the encoded canvas.
         const sourceWidth = mobileCameraSource.videoWidth || 1;
         const sourceHeight = mobileCameraSource.videoHeight || 1;
-        const targetAspect = result.width / Math.max(1, result.height);
+        const targetAspect = mobileResult.width / Math.max(1, mobileResult.height);
         let sx = 0;
         let sy = 0;
         let sw = sourceWidth;
@@ -8403,18 +8428,18 @@
         const ratio = mobileCapture.focusRatio;
         const focusSourceWidth = sw * ratio;
         const focusSourceHeight = sh * ratio;
-        const focusSize = result.width * ratio;
-        const dx = (result.width - focusSize) / 2;
-        const dy = (result.height - focusSize) / 2;
+        const focusSize = mobileResult.width * ratio;
+        const dx = (mobileResult.width - focusSize) / 2;
+        const dy = (mobileResult.height - focusSize) / 2;
         sx += (sw - focusSourceWidth) / 2;
         sy += (sh - focusSourceHeight) / 2;
 
-        resultCtx.save();
+        mobileResultCtx.save();
         if (mobileCapture.facingMode === "user") {
-          resultCtx.translate(result.width, 0);
-          resultCtx.scale(-1, 1);
+          mobileResultCtx.translate(mobileResult.width, 0);
+          mobileResultCtx.scale(-1, 1);
         }
-        resultCtx.drawImage(
+        mobileResultCtx.drawImage(
           mobileCameraSource,
           sx,
           sy,
@@ -8425,7 +8450,7 @@
           focusSize,
           focusSize,
         );
-        resultCtx.restore();
+        mobileResultCtx.restore();
       }
 
       function renderMobileCaptureFrame() {
@@ -8438,7 +8463,6 @@
         } finally {
           renderingMobileCaptureFrame = false;
         }
-        compositeMobileCameraFocusWindow();
         syncMobileResult();
         const cost = performance.now() - startedAt;
         mobileCapture.frameCost = mobileCapture.frameCost ? lerp(mobileCapture.frameCost, cost, 0.18) : cost;
@@ -8481,6 +8505,7 @@
       function waitForMobileVideoEvent(name) {
         return new Promise((resolve, reject) => {
           const cleanup = () => {
+            window.clearTimeout(timeout);
             mobileCameraSource.removeEventListener(name, onReady);
             mobileCameraSource.removeEventListener("error", onError);
           };
@@ -8492,6 +8517,7 @@
             cleanup();
             reject(new Error("视频流无法读取"));
           };
+          const timeout = window.setTimeout(onError, 10000);
           mobileCameraSource.addEventListener(name, onReady, { once: true });
           mobileCameraSource.addEventListener("error", onError, { once: true });
         });
@@ -8630,6 +8656,7 @@
 
         if (isVideoSource()) resetVideoSource();
         await closeMobileCapture({ resetSource: true, keepUiIdle: true });
+        const sessionId = ++mobileCameraSessionId;
         state.source = null;
         state.sourceType = "empty";
         state.sourceAspect = 1;
@@ -8647,6 +8674,10 @@
           }
           if (!navigator.mediaDevices?.getUserMedia) throw new Error("当前浏览器不支持实时摄像头");
           const stream = await requestMobileCameraStream();
+          if (sessionId !== mobileCameraSessionId) {
+            stream.getTracks().forEach((track) => track.stop());
+            return;
+          }
           mobileCapture.stream = stream;
           const actualFacingMode = stream.getVideoTracks()[0]?.getSettings?.().facingMode;
           if (["user", "environment"].includes(actualFacingMode)) mobileCapture.facingMode = actualFacingMode;
@@ -8656,26 +8687,28 @@
           mobileCameraSource.loop = false;
           mobileCameraSource.muted = true;
           if (mobileCameraSource.readyState < 1) await waitForMobileVideoEvent("loadedmetadata");
+          if (sessionId !== mobileCameraSessionId) return;
           await mobileCameraSource.play();
+          if (sessionId !== mobileCameraSessionId) return;
           mobileCapture.renderSize = 420;
           mobileCapture.fps = 12;
           mobileCapture.frameSamples = 0;
           mobileCapture.frameCost = 0;
           applyMobileCaptureSource("mobile-live");
           const recordingSupport = await assessMobileRecordingSupport();
+          if (sessionId !== mobileCameraSessionId) return;
           mobileCapture.recordingSupported = recordingSupport.supported;
           mobileCapture.recordingSupportMessage = recordingSupport.message;
-          if (!recordingSupport.supported) {
-            cancelMobileCaptureRenderLoop();
-            stopMobileCameraTracks();
-            mobileCameraErrorText.textContent = recordingSupport.message;
-            setMobileCaptureState("error");
-            setInputStatus("当前浏览器无法完成实时录制");
-            return;
-          }
           setMobileCaptureState("previewing");
-          setInputStatus("实时预览中 · 按住圆形按钮录制，最长 5 秒");
+          mobileRecordControl.setAttribute("aria-label", recordingSupport.supported
+            ? "点击拍照，按住录像，最长 5 秒"
+            : "点击拍照，当前浏览器不支持录像");
+          setInputStatus(recordingSupport.supported
+            ? "实时预览中 · 点击拍照，按住录制，最长 5 秒"
+            : `${recordingSupport.message} 仍可点击拍照。`);
         } catch (error) {
+          if (sessionId !== mobileCameraSessionId) return;
+          cancelMobileCaptureRenderLoop();
           stopMobileCameraTracks();
           const cameraErrorMessages = {
             NotAllowedError: "摄像头权限未开启。请在 Safari 的页面设置中允许摄像头；微信内打开时请改用 Safari。",
@@ -8746,10 +8779,7 @@
       async function startMobileRecording(pointerId = null) {
         if (mobileCapture.state !== "previewing" || !mobileCapture.stream) return;
         if (!mobileCapture.recordingSupported || !result.captureStream) {
-          cancelMobileCaptureRenderLoop();
-          stopMobileCameraTracks();
-          mobileCameraErrorText.textContent = mobileCapture.recordingSupportMessage || "当前浏览器可以实时预览，但不支持录制特效画布。";
-          setMobileCaptureState("error");
+          setInputStatus(mobileCapture.recordingSupportMessage || "当前浏览器支持拍照，但不支持录制特效画布。");
           return;
         }
 
@@ -8891,10 +8921,6 @@
         mobilePlaybackToggle.setAttribute("aria-label", paused ? "播放" : "暂停");
       }
 
-      async function ensureMobileRenderedBlob() {
-        return Boolean(mobileCapture.renderedBlob);
-      }
-
       function closeMobileOutputPreview() {
         const preview = document.getElementById("mobileOutputPreview");
         if (!preview) return;
@@ -8905,33 +8931,83 @@
         preview.remove();
       }
 
-      async function shareMobileOutputFile(file, label, preview) {
+      let mobileSharePending = false;
+      const mobileImageOutput = { source: null, signature: "", blob: null, filename: "", timer: 0, generation: 0 };
+
+      function mobileImageOutputSignature() {
+        return `${currentRecipeCode()}|${fixedImageOutputSize()}|${imageRenderSize()}`;
+      }
+
+      function prepareMobileImageOutput() {
+        if (window.innerWidth > 640 || !state.source || state.sourceType !== "image") return;
+        const signature = mobileImageOutputSignature();
+        if (mobileImageOutput.source === state.source && mobileImageOutput.signature === signature) return;
+        window.clearTimeout(mobileImageOutput.timer);
+        const generation = ++mobileImageOutput.generation;
+        mobileImageOutput.source = state.source;
+        mobileImageOutput.signature = signature;
+        mobileImageOutput.blob = null;
+        const recipe = currentRecipeCode();
+        const filename = `graphic-texture-chain-${state.preset}-${qualityLabel(imageRenderSize())}.png`;
+        // Prepare after edits settle, so OUTPUT can share inside the original tap.
+        mobileImageOutput.timer = window.setTimeout(async () => {
+          mobileImageOutput.timer = 0;
+          if (generation !== mobileImageOutput.generation || mobileCapture.state !== "idle" || mobileImageOutput.source !== state.source) return;
+          const canvas = document.createElement("canvas");
+          drawFixedOutput(result, canvas, canvas.getContext("2d"), fixedImageOutputSize());
+          try {
+            const png = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+            if (!png) throw new Error("PNG encoding failed");
+            const blob = await embedRecipeInPng(png, recipe);
+            if (generation !== mobileImageOutput.generation) return;
+            mobileImageOutput.blob = blob;
+            mobileImageOutput.filename = filename;
+          } catch (_error) {
+            if (generation === mobileImageOutput.generation) mobileImageOutput.signature = "";
+          } finally {
+            canvas.width = canvas.height = 0;
+          }
+        }, 250);
+      }
+
+      async function shareMobileOutputFile(file, label, preview = null) {
+        if (mobileSharePending) return true;
         const shareData = {
           files: [file],
           title: "Graphic Texture",
         };
         if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+          mobileSharePending = true;
           try {
             await navigator.share(shareData);
             closeMobileOutputPreview();
-            setInputStatus(`已打开系统相册保存菜单：选择“存储${label}”即可保存`);
-            return;
+            setInputStatus(`系统分享菜单已关闭；是否存入相册取决于你选择的操作`);
+            return true;
           } catch (error) {
-            if (error?.name === "AbortError") return;
+            if (error?.name === "AbortError") return true;
+          } finally {
+            mobileSharePending = false;
           }
         }
-        preview.querySelector(".mobile-output-preview-hint").textContent = `当前浏览器不支持相册保存菜单，请长按${label}保存到相册`;
+        if (preview) {
+          preview.querySelector(".mobile-output-preview-hint").textContent = label === "图片"
+            ? "无法打开系统分享菜单，可尝试长按图片存储，或在 Safari 中打开"
+            : "无法打开系统分享菜单，请在支持视频分享的 Safari 中重试；网页不能直接写入相册";
+        }
+        return false;
       }
 
-      function presentMobileOutput(blob, filename, label) {
+      async function presentMobileOutput(blob, filename, label) {
         if (!window.matchMedia("(max-width: 640px)").matches) return false;
+        const file = new File([blob], filename, { type: blob.type.split(";")[0] || "application/octet-stream" });
+        // Call share before any asynchronous preview work to retain the tap's activation.
+        if (await shareMobileOutputFile(file, label)) return true;
         closeMobileOutputPreview();
         const preview = document.createElement("section");
         preview.className = "mobile-output-preview";
         preview.id = "mobileOutputPreview";
         preview.setAttribute("aria-label", "输出预览");
         const outputUrl = URL.createObjectURL(blob);
-        const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
         const isVideo = file.type.startsWith("video/");
         const media = document.createElement(isVideo ? "video" : "img");
         media.className = "mobile-output-preview-media";
@@ -8951,7 +9027,7 @@
 
         const hint = document.createElement("p");
         hint.className = "mobile-output-preview-hint";
-        hint.textContent = `点击下方按钮，在系统菜单中选择“存储${label}”`;
+        hint.textContent = `文件已准备好，请打开系统菜单并选择“存储${label}”`;
 
         const save = document.createElement("button");
         save.className = "mobile-output-preview-save";
@@ -8968,11 +9044,11 @@
 
       async function downloadMobileRecording() {
         try {
-          if (!await ensureMobileRenderedBlob()) return;
+          if (!mobileCapture.renderedBlob) return;
           const type = mobileCapture.renderedBlob.type || "video/webm";
           const extension = type.includes("mp4") ? "mp4" : "webm";
           const filename = `graphic-texture-mobile-${state.preset}.${extension}`;
-          if (presentMobileOutput(mobileCapture.renderedBlob, filename, "视频")) return;
+          if (await presentMobileOutput(mobileCapture.renderedBlob, filename, "视频")) return;
           if (!mobileCapture.renderedUrl) mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
           const a = document.createElement("a");
           a.href = mobileCapture.renderedUrl;
@@ -8986,6 +9062,7 @@
       }
 
       async function closeMobileCapture({ resetSource = true, keepUiIdle = false } = {}) {
+        mobileCameraSessionId += 1;
         window.clearInterval(mobileCapture.countdownTimer);
         window.clearTimeout(mobileCapture.stopTimer);
         window.clearTimeout(mobileCapture.holdTimer);
@@ -9580,6 +9657,8 @@
       function syncMobileResult() {
         if (!mobileResult || !mobileResultCtx || !result.width || !result.height) return;
         copyCanvas(result, mobileResult, mobileResultCtx);
+        compositeMobileCameraFocusWindow();
+        prepareMobileImageOutput();
       }
 
       function lerp(a, b, t) {
@@ -13233,6 +13312,7 @@
       mobileCameraDockUpload?.addEventListener("click", openMobileGallery);
       mobileCameraDockRec?.addEventListener("click", () => {
         if (mobileCapture.state === "idle") openMobileCamera();
+        else if (mobileCapture.state === "ready") restartMobileRecording();
       });
       mobileCameraDockOutput?.addEventListener("click", () => {
         if (mobileCapture.state === "ready") {
@@ -13252,6 +13332,7 @@
         mobileCapture.pointerId = event.pointerId;
         mobileRecordControl.setPointerCapture?.(event.pointerId);
         clearMobileCaptureHold();
+        if (!mobileCapture.recordingSupported) return;
         mobileCapture.holdTimer = window.setTimeout(() => {
           mobileCapture.holdTimer = 0;
           if (mobileCapture.state === "previewing" && mobileCapture.pointerId === event.pointerId) {
@@ -13262,7 +13343,7 @@
 
       function finishMobileCaptureGesture(event, { cancelled = false } = {}) {
         if (mobileCapture.pointerId !== null && event.pointerId !== mobileCapture.pointerId) return;
-        if (mobileCapture.holdTimer) {
+        if (mobileCapture.holdTimer || (!mobileCapture.recordingSupported && mobileCapture.pointerId !== null && mobileCapture.state === "previewing")) {
           event.preventDefault();
           clearMobileCaptureHold();
           mobileCapture.pointerId = null;
@@ -13428,6 +13509,10 @@
           await downloadMobileRecording();
           return;
         }
+        if (window.innerWidth <= 640 && state.sourceType === "image" && mobileImageOutput.blob && mobileImageOutput.source === state.source && mobileImageOutput.signature === mobileImageOutputSignature()) {
+          await presentMobileOutput(mobileImageOutput.blob, mobileImageOutput.filename, "图片");
+          return;
+        }
         if (isVideoSource()) {
           exportVideo();
           return;
@@ -13452,7 +13537,7 @@
           });
           const outputBlob = await embedRecipeInPng(pngBlob, exportRecipe);
           const filename = `graphic-texture-chain-${exportPreset}-${textureQuality}.png`;
-          if (presentMobileOutput(outputBlob, filename, "图片")) return;
+          if (await presentMobileOutput(outputBlob, filename, "图片")) return;
           const outputUrl = URL.createObjectURL(outputBlob);
           const a = document.createElement("a");
           a.href = outputUrl;
@@ -13499,7 +13584,19 @@
       window.visualViewport?.addEventListener("scroll", scheduleMobileVisualViewportSync, { passive: true });
       window.addEventListener("orientationchange", scheduleMobileVisualViewportSync, { passive: true });
       window.addEventListener("scroll", scheduleMobileScrollSync, { passive: true });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          clearMobileCaptureHold();
+          mobileCapture.pointerId = null;
+          if (mobileCapture.state === "recording") finishMobileRecording();
+          else cancelMobileCaptureRenderLoop();
+        } else if (mobileCapture.state === "previewing" && mobileCapture.stream) {
+          mobileCapture.lastRenderAt = 0;
+          scheduleMobileCaptureRenderLoop();
+        }
+      });
       window.addEventListener("pagehide", () => {
+        mobileCameraSessionId += 1;
         persistNiceTryHistory();
         recipeHistory.forEach((entry) => URL.revokeObjectURL(entry.thumbnailUrl));
         cancelMobileCaptureRenderLoop();
