@@ -1,9 +1,10 @@
 {
   "name": "synths-lab-graphic-texture",
-  "version": "1.9.0",
+  "version": "2.4.0",
   "private": true,
-  "description": "Synthub Graphic Texture V1.9 - refined mobile layout, color controls, wheel interaction, and responsive image workflow.",
+  "description": "Synthub Graphic Texture V2.4 - desktop L/M/H texture quality and consistent recipe export.",
   "scripts": {
+    "test": "node tools/check-release.cjs",
     "start": "python3 -m http.server 4178",
     "serve": "python3 -m http.server 4178"
   }

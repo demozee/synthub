@@ -1,6 +1,6 @@
 # Synths Lab Graphic Texture
 
-Version: `V2.0`
+Version: `V2.4`
 
 A browser-based graphic texture generator for turning images, video frames, and SVG assets into print-inspired visual styles such as thermal-map compositions, halftone graphics, pen-trace outlines, rough ink, distressed grain, and fabric-like texture.
 
@@ -32,6 +32,15 @@ http://localhost:4178/tools/graphic-texture-demo.html
 ```
 
 ## Version Notes
+
+### V2.4 - Desktop Texture Quality
+
+- Adds L/M/H internal sampling for still images; keeps desktop image/video output at a 1920-pixel longest edge.
+- Keeps NICE TRY at the selected desktop quality without a delayed second render.
+- Includes quality in GT4 recipes and restores it through Undo; retains GT2/GT3 decoding.
+- Hides History thumbnails, keeping Undo. Excludes Light Dots and the experimental Focus Melt renderer and UI.
+- Freezes PNG recipe metadata alongside the exported frame, and cancels stale refinement timers.
+- Preserves the mobile quality interface and legacy recipe format. Run `npm test` for source-level release checks.
 
 ### V2.0 - Mobile Interaction and Responsive UI Refinements
 

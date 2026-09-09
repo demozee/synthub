@@ -10,7 +10,7 @@
       data-website-id="79bb69d5-2b32-4ab4-b7ae-b4f61d34bee1"
       data-domains="synthub.art,www.synthub.art"
     ></script>
-    <title>Synthub Graphic Texture V1.9</title>
+    <title>Synthub Graphic Texture V2.4</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
@@ -488,6 +488,7 @@
         display: none;
       }
 
+
       .video-metrics {
         position: absolute;
         top: var(--video-metrics-top, 30px);
@@ -503,8 +504,21 @@
         font-family: var(--font-mono);
       }
 
-      .app.has-video .video-metrics {
+      .app.has-source .video-metrics {
         display: grid;
+      }
+
+      .app.has-source:not(.has-video) .video-metrics {
+        grid-template-columns: 84px 74px;
+        width: 158px;
+      }
+
+      .app.has-source:not(.has-video) .video-fps-value {
+        display: none;
+      }
+
+      .app.has-source:not(.has-video) .video-resolution-value::after {
+        display: none;
       }
 
       .video-quality-options {
@@ -956,6 +970,34 @@
         display: grid;
         gap: 10px;
       }
+
+      .effects-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .effects-head h2 { margin-bottom: 0; }
+
+      .effects-undo {
+        min-width: 58px;
+        height: 28px;
+        padding: 0 8px;
+        border: 1px solid #4d4d55;
+        border-radius: 0;
+        background: transparent;
+        color: #b6bac4;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .effects-undo:disabled {
+        opacity: 0.28;
+        cursor: default;
+      }
+
 
       .node {
         display: grid;
@@ -6028,10 +6070,11 @@
           line-height: 18px;
         }
 
-        .app.has-source .recipe-section,
-        .app.has-source .history-section {
+        .app.has-source .recipe-section {
           display: block;
         }
+
+        .app.has-source .history-section { display: none; }
 
         .recipe-section,
         .history-section {
@@ -6429,7 +6472,7 @@
 
       @media (max-width: 640px) {
         .app.has-video .video-timeline,
-        .app.has-video .video-metrics {
+        .app.has-source .video-metrics {
           display: none;
         }
       }
@@ -7473,7 +7516,7 @@
                 <span class="recipe-copied" id="recipeCopied" role="status">copied</span>
               </div>
             </section>
-            <section class="history-section" id="historySection" aria-label="History">
+            <section class="history-section" id="historySection" aria-label="History" hidden>
               <h2 data-cn="回溯">History</h2>
               <div class="history-grid" id="historyGrid"></div>
               <div class="history-count" id="historyCount">0/24</div>
@@ -7494,13 +7537,13 @@
             <span class="note-cn">上传素材，选择风格，生成带有印刷感、颗粒感和手工痕迹的图形纹理。</span>
           </div>
         </div>
-        <div class="video-metrics" id="videoMetrics" aria-label="Video data">
-          <div class="video-quality-options" role="group" aria-label="Video resolution">
-            <button class="video-quality-option" type="button" data-video-resolution="720" aria-label="Low resolution, 720 pixels" title="720 PX">L</button>
-            <button class="video-quality-option" type="button" data-video-resolution="1080" aria-label="Medium resolution, 1080 pixels" title="1080 PX">M</button>
-            <button class="video-quality-option" type="button" data-video-resolution="1920" aria-label="High resolution, 1920 pixels" title="1920 PX">H</button>
+        <div class="video-metrics" id="videoMetrics" aria-label="Effect quality">
+          <div class="video-quality-options" role="group" aria-label="Effect quality">
+            <button class="video-quality-option" type="button" data-video-resolution="720" aria-label="Low detail effect, 720 sample grid" title="LOW · COARSE">L</button>
+            <button class="video-quality-option" type="button" data-video-resolution="1080" aria-label="Medium detail effect, 1080 sample grid" title="MEDIUM">M</button>
+            <button class="video-quality-option" type="button" data-video-resolution="1920" aria-label="High detail effect, 1920 sample grid" title="HIGH · FINE">H</button>
           </div>
-          <output class="video-resolution-value" id="videoMetricResolution" aria-label="Selected resolution">720</output>
+          <output class="video-resolution-value" id="videoMetricResolution" aria-label="Effect sample grid">720</output>
           <output class="video-fps-value" id="videoMetricFps" aria-label="Target frames per second">12</output>
         </div>
         <div class="workspace">
@@ -7537,7 +7580,10 @@
       <aside class="right">
         <div class="right-scroll">
           <section class="panel">
-            <h2 data-cn="效果器">Effects</h2>
+            <div class="effects-head">
+              <h2 data-cn="效果器">Effects</h2>
+              <button class="effects-undo" id="effectsUndo" type="button" aria-label="Undo previous effect" disabled>UNDO</button>
+            </div>
             <div class="node-list" id="nodeList"></div>
           </section>
           <section class="panel color-section">
@@ -7841,6 +7887,29 @@
 
       const clone = (value) => JSON.parse(JSON.stringify(value));
 
+
+      const focusMeltDefaults = {
+        enabled: false,
+        sourceCount: 1,
+        strength: 54,
+        softness: 64,
+        halftoneMode: "off",
+        dotSize: 10,
+        inkShift: 3,
+        colorBoost: 76,
+        sources: [
+          { x: 0.44, y: 0.53, radius: 0.34, angle: -0.72 },
+          { x: 0.68, y: 0.34, radius: 0.28, angle: 2.55 },
+        ],
+      };
+
+      const focusMeltMeta = {
+        id: "focusMelt",
+        name: "Focus Melt",
+        hint: "空间虚化",
+        desc: "用清晰中心和虚化范围控制画面空间焦点",
+      };
+
       const state = {
         preset: "thermalMap",
         selected: presets.thermalMap.selected,
@@ -7850,17 +7919,27 @@
         sourceHasTransparency: false,
         size: 1000,
         previewSize: 720,
+        imageResolution: 1080,
+        imageExporting: false,
         videoTuneSize: 720,
         videoResolution: 720,
         videoFps: 12,
         videoDuration: 0,
         videoExporting: false,
         nodes: clone(presets.thermalMap.nodes),
+        focusMelt: clone(focusMeltDefaults),
         outputReverse: false,
         flyoutOpen: false,
         recipeCarrier: false,
         recipeCarrierCode: "",
       };
+
+      try {
+        const savedImageResolution = Math.round(Number(localStorage.getItem("graphicTextureImageResolution")));
+        if ([720, 1080, 1920].includes(savedImageResolution)) state.imageResolution = savedImageResolution;
+      } catch (_error) {
+        // Private browsing can disable storage; the default resolution remains available.
+      }
 
       const fileInput = document.getElementById("file");
       const app = document.querySelector(".app");
@@ -7891,6 +7970,7 @@
       const maskMiniCtx = maskMini.getContext("2d", { willReadFrequently: true });
       const sidePreviews = document.getElementById("sidePreviews");
       const nodeList = document.getElementById("nodeList");
+      const effectsUndo = document.getElementById("effectsUndo");
       const paramPanel = document.getElementById("paramPanel");
       const paramFlyout = document.getElementById("paramFlyout");
       const paramName = document.getElementById("paramName");
@@ -8045,6 +8125,7 @@
       let processedVideoSignature = "";
       let processedBuildPromise = null;
       let videoRefineTimer = 0;
+      let imageRefineTimer = 0;
       let videoResolutionChangeToken = 0;
       let videoResolutionRequestFrame = 0;
       let videoRenderPaused = false;
@@ -8055,6 +8136,10 @@
       let renderingVideoBatch = false;
       let mp4MuxerModulePromise = null;
       let renderBufferCache = null;
+      const imageExportCanvas = document.createElement("canvas");
+      const imageExportCtx = imageExportCanvas.getContext("2d");
+      const videoEncodeCanvas = document.createElement("canvas");
+      const videoEncodeCtx = videoEncodeCanvas.getContext("2d");
       let paperToneCache = { signature: "", maps: new Map() };
       let videoRenderProfile = null;
       let renderingMobileCaptureFrame = false;
@@ -8939,6 +9024,54 @@
         return supported.includes(selected) ? selected : state.videoTuneSize;
       }
 
+      function imageRenderSize() {
+        if (window.innerWidth <= 640) return state.size;
+        const supported = [720, 1080, 1920];
+        const selected = Math.round(Number(state.imageResolution) || 1080);
+        return supported.includes(selected) ? selected : 1080;
+      }
+
+      function selectedOutputRenderSize() {
+        return isVideoSource() ? videoRenderSize() : imageRenderSize();
+      }
+
+      function qualityLabel(renderSize = selectedOutputRenderSize()) {
+        if (renderSize <= 720) return "L";
+        if (renderSize >= 1920) return "H";
+        return "M";
+      }
+
+      function fixedImageOutputSize() {
+        return window.innerWidth <= 640 ? state.size : 1920;
+      }
+
+      function fixedVideoOutputSize() {
+        return 1920;
+      }
+
+      function fixedOutputDimensions(maxSide, aspect = state.sourceAspect, even = false) {
+        const safeAspect = Math.max(0.01, Number(aspect) || 1);
+        const normalize = (value) => {
+          const rounded = Math.max(1, Math.round(value));
+          return even ? Math.max(2, Math.round(rounded / 2) * 2) : rounded;
+        };
+        return {
+          width: normalize(safeAspect >= 1 ? maxSide : maxSide * safeAspect),
+          height: normalize(safeAspect >= 1 ? maxSide / safeAspect : maxSide),
+        };
+      }
+
+      function drawFixedOutput(sourceCanvas, targetCanvas, targetCtx, maxSide, even = false) {
+        const { width, height } = fixedOutputDimensions(maxSide, state.sourceAspect, even);
+        if (targetCanvas.width !== width) targetCanvas.width = width;
+        if (targetCanvas.height !== height) targetCanvas.height = height;
+        targetCtx.clearRect(0, 0, width, height);
+        targetCtx.imageSmoothingEnabled = true;
+        targetCtx.imageSmoothingQuality = "high";
+        targetCtx.drawImage(sourceCanvas, 0, 0, width, height);
+        return targetCanvas;
+      }
+
       function interactiveRenderSize() {
         if (isMobileCaptureSource()) return mobileCapture.renderSize;
         return isVideoSource() ? state.videoTuneSize : state.previewSize;
@@ -8946,10 +9079,11 @@
 
       function finalRenderSize() {
         if (isMobileCaptureSource()) return mobileCapture.renderSize;
-        return isVideoSource() ? videoRenderSize() : state.size;
+        return selectedOutputRenderSize();
       }
 
       function scheduleRenderOutput() {
+        cancelImageRefine();
         if (isVideoSource()) markProcessedVideoDirty();
         if (renderFrameQueued) return;
         renderFrameQueued = true;
@@ -8960,6 +9094,7 @@
             renderFrameQueued = false;
             renderOutput(interactiveRenderSize());
             if (isVideoSource()) scheduleVideoFrameRefine();
+            else scheduleImageRefine();
           });
         }, isVideoSource() ? 320 : 80);
       }
@@ -8968,22 +9103,55 @@
         cancelScheduledRenderOutput();
         if (!state.source) return;
         if (isVideoSource()) {
-          state.videoResolution = state.videoTuneSize;
           markProcessedVideoDirty();
           syncVideoMetrics();
         }
         renderFrameQueued = true;
         renderOutputFrame = requestAnimationFrame(() => {
-          renderOutputFrame = requestAnimationFrame(() => {
-            renderOutputFrame = 0;
-            renderFrameQueued = false;
-            renderOutput(interactiveRenderSize());
-            scheduleRecipeHistoryCommit();
-          });
+          renderOutputFrame = 0;
+          renderFrameQueued = false;
+          // NICE TRY should resolve to one final texture state, not a low-res preview followed by a refinement.
+          renderOutput(window.innerWidth <= 640 ? interactiveRenderSize() : selectedOutputRenderSize());
+          scheduleRecipeHistoryCommit();
         });
       }
 
+      function cancelImageRefine() {
+        if (!imageRefineTimer) return;
+        window.clearTimeout(imageRefineTimer);
+        imageRefineTimer = 0;
+      }
+
+      function scheduleImageRefine(delay = 900) {
+        cancelImageRefine();
+        if (
+          !state.source
+          || isVideoSource()
+          || isMobileCaptureSource()
+          || window.innerWidth <= 640
+          || state.imageExporting
+          || imageRenderSize() <= state.previewSize
+        ) return;
+        const targetSize = imageRenderSize();
+        if (Math.max(result.width, result.height) !== targetSize) {
+          setInputStatus(`${state.previewSize}px 快速预览 · 停止操作后更新 ${qualityLabel(targetSize)} 质感`);
+        }
+        imageRefineTimer = window.setTimeout(() => {
+          imageRefineTimer = 0;
+          if (!state.source || isVideoSource() || isMobileCaptureSource() || state.imageExporting) return;
+          const currentTargetSize = imageRenderSize();
+          setInputStatus(`正在更新 ${qualityLabel(currentTargetSize)} 质感...`);
+          renderOutput(currentTargetSize);
+          setInputStatus(`当前显示 ${qualityLabel(currentTargetSize)} / ${currentTargetSize}px 质感 · 可继续调整`);
+        }, delay);
+      }
+
       function cancelScheduledRenderOutput() {
+        cancelImageRefine();
+        if (videoRefineTimer) window.clearTimeout(videoRefineTimer);
+        videoRefineTimer = 0;
+        if (colorRenderTimer) window.clearTimeout(colorRenderTimer);
+        colorRenderTimer = 0;
         if (renderOutputTimer) {
           window.clearTimeout(renderOutputTimer);
           renderOutputTimer = 0;
@@ -8998,8 +9166,9 @@
       function flushRenderOutput() {
         cancelScheduledRenderOutput();
         if (isVideoSource()) markProcessedVideoDirty();
-        renderOutput(isVideoSource() ? interactiveRenderSize() : finalRenderSize());
+        renderOutput(!isVideoSource() && window.innerWidth <= 640 ? finalRenderSize() : interactiveRenderSize());
         if (isVideoSource()) scheduleVideoFrameRefine();
+        else scheduleImageRefine(700);
       }
 
       function scheduleVideoFrameRefine(delay = 700) {
@@ -9098,32 +9267,37 @@
       function videoSettingsSignature() {
         if (!isVideoSource()) return "";
         return JSON.stringify({
-          motionVersion: 2,
+          motionVersion: 3,
           source: videoObjectUrl,
           preset: state.preset,
           nodes: state.nodes,
           outputReverse: state.outputReverse,
           fps: state.videoFps,
-          renderSize: videoRenderSize(),
+          effectResolution: videoRenderSize(),
+          outputSize: fixedVideoOutputSize(),
         });
       }
 
       function syncVideoMetrics() {
         videoMetricFps.textContent = String(state.videoFps);
-        videoMetricResolution.textContent = String(videoRenderSize());
+        const selectedResolution = selectedOutputRenderSize();
+        videoMetricResolution.textContent = String(selectedResolution);
+        videoMetrics.setAttribute("aria-label", isVideoSource() ? "Video effect quality" : "Image effect quality");
         videoResolutionButtons.forEach((button) => {
-          const active = Number(button.dataset.videoResolution) === videoRenderSize();
+          const resolution = Number(button.dataset.videoResolution);
+          const active = resolution === selectedResolution;
           button.classList.toggle("is-active", active);
           button.setAttribute("aria-pressed", String(active));
-          button.disabled = !isVideoSource() || state.videoExporting;
+          button.disabled = !state.source || state.videoExporting || state.imageExporting;
+          button.setAttribute("aria-label", `${isVideoSource() ? "Video" : "Image"} ${button.textContent} effect quality, ${resolution} sample grid`);
         });
         syncVideoMetricsPosition();
       }
 
       function syncVideoMetricsPosition() {
-        if (!videoMetrics || !isVideoSource() || window.innerWidth <= 640) return;
+        if (!videoMetrics || !state.source || window.innerWidth <= 640) return;
         const main = videoMetrics.parentElement;
-        const media = app.classList.contains("video-cache-ready") ? processedVideo : result;
+        const media = isVideoSource() && app.classList.contains("video-cache-ready") ? processedVideo : result;
         if (!main || !media) return;
         const mainRect = main.getBoundingClientRect();
         const mediaRect = media.getBoundingClientRect();
@@ -9140,10 +9314,38 @@
         videoMetrics.style.setProperty("--video-metrics-top", `${top}px`);
       }
 
-      async function changeVideoResolution(value) {
+      async function changeOutputResolution(value) {
         const nextResolution = Math.round(Number(value));
-        if (!isVideoSource() || state.videoExporting || ![720, 1080, 1920].includes(nextResolution)) {
+        if (!state.source || state.videoExporting || state.imageExporting || ![720, 1080, 1920].includes(nextResolution)) {
           syncVideoMetrics();
+          return;
+        }
+
+        if (selectedOutputRenderSize() === nextResolution) return;
+        rememberNiceTryState();
+        state.recipeCarrier = false;
+        state.recipeCarrierCode = "";
+        if (!isVideoSource()) {
+          state.imageResolution = nextResolution;
+          syncRecipeUi();
+          try {
+            localStorage.setItem("graphicTextureImageResolution", String(nextResolution));
+          } catch (_error) {
+            // The selected size still remains active for the current session.
+          }
+          syncVideoMetrics();
+          setInputStatus(`正在切换到 ${qualityLabel(nextResolution)} 质感...`);
+          setImageExportBusy(true);
+          try {
+            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            cancelScheduledRenderOutput();
+            renderOutput(nextResolution);
+            setInputStatus(`当前显示 ${qualityLabel(nextResolution)} / ${nextResolution}px 质感 · 可继续调整`);
+          } catch (error) {
+            setInputStatus(`质感切换失败：${error.message}`);
+          } finally {
+            setImageExportBusy(false);
+          }
           return;
         }
 
@@ -9156,6 +9358,7 @@
         videoRefineTimer = 0;
 
         state.videoResolution = nextResolution;
+        syncRecipeUi();
         markProcessedVideoDirty();
         syncVideoMetrics();
         syncVideoProcessUi();
@@ -9169,7 +9372,7 @@
         } catch (error) {
           if (token !== videoResolutionChangeToken) return;
           syncVideoMetrics();
-          setInputStatus(`分辨率切换失败：${error.message}`);
+          setInputStatus(`质感切换失败：${error.message}`);
         }
       }
 
@@ -9676,6 +9879,7 @@
       }
 
       function setPreset(id) {
+        if (state.preset !== id) rememberNiceTryState();
         state.preset = id;
         state.selected = presets[id].selected;
         state.nodes = clone(presets[id].nodes);
@@ -9780,6 +9984,7 @@
         },
       };
 
+
       function syncGraphicColor(value) {
         const clean = value.startsWith("#") ? value : `#${value}`;
         state.nodes.ink.color = clean;
@@ -9846,7 +10051,9 @@
           preset: state.preset,
           selected: state.selected,
           nodes: clone(state.nodes),
+          focusMelt: clone(state.focusMelt),
           outputReverse: state.outputReverse,
+          effectResolution: selectedOutputRenderSize(),
         };
       }
 
@@ -9895,7 +10102,7 @@
 
       function recipeBytes() {
         const presetIds = Object.keys(presets);
-        const output = [2, Math.max(0, presetIds.indexOf(state.preset)), state.outputReverse ? 1 : 0];
+        const output = [4, Math.max(0, presetIds.indexOf(state.preset)), state.outputReverse ? 1 : 0];
         recipeNodeOrder.forEach((nodeId) => {
           const template = presets[state.preset].nodes[nodeId];
           recipeNodeKeys[nodeId].forEach((key) => {
@@ -9912,18 +10119,48 @@
             }
           });
         });
+        const focus = state.focusMelt;
+        const halftoneModes = ["off", "bw", "color"];
+        output.push(
+          focus.enabled ? 1 : 0,
+          clamp(Math.round(focus.sourceCount), 1, 2),
+          clamp(Math.round(focus.strength), 0, 100),
+          clamp(Math.round(focus.softness), 0, 100),
+          Math.max(0, halftoneModes.indexOf(focus.halftoneMode)),
+          clamp(Math.round(focus.dotSize), 5, 18),
+          clamp(Math.round(focus.inkShift), 0, 8),
+          clamp(Math.round(focus.colorBoost), 0, 100),
+        );
+        focus.sources.slice(0, 2).forEach((source) => {
+          const angle = ((source.angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+          output.push(
+            Math.round(clamp(source.x, 0, 1) * 255),
+            Math.round(clamp(source.y, 0, 1) * 255),
+            Math.round(clamp(source.radius, 0.08, 0.55) / 0.55 * 255),
+            Math.round(angle / (Math.PI * 2) * 255),
+          );
+        });
+        output.push(Math.max(0, [720, 1080, 1920].indexOf(selectedOutputRenderSize())));
         return Uint8Array.from(output);
       }
 
       function currentRecipeCode() {
-        const payload = encodeBase64Url(recipeBytes());
-        return `GT2-${payload}-${recipeChecksum(payload)}`;
+        const bytes = recipeBytes();
+        if (window.innerWidth <= 640) {
+          const legacy = bytes.slice(0, -17);
+          legacy[0] = 2;
+          const payload = encodeBase64Url(legacy);
+          return `GT2-${payload}-${recipeChecksum(payload)}`;
+        }
+        const payload = encodeBase64Url(bytes);
+        return `GT4-${payload}-${recipeChecksum(payload)}`;
       }
 
       function decodeRecipeBytes(bytes) {
         const presetIds = Object.keys(presets);
         const preset = presetIds[bytes[1]];
-        if (bytes[0] !== 2 || !preset) return null;
+        const version = bytes[0];
+        if (![2, 3, 4].includes(version) || !preset) return null;
         const template = presets[preset].nodes;
         const nodes = clone(template);
         let cursor = 3;
@@ -9948,12 +10185,39 @@
             }
           });
         });
+        let focusMelt = clone(focusMeltDefaults);
+        if (version >= 3) {
+          if (cursor + 15 >= bytes.length) return null;
+          const halftoneModes = ["off", "bw", "color"];
+          focusMelt.enabled = Boolean(bytes[cursor++]);
+          focusMelt.sourceCount = clamp(bytes[cursor++], 1, 2);
+          focusMelt.strength = clamp(bytes[cursor++], 0, 100);
+          focusMelt.softness = clamp(bytes[cursor++], 0, 100);
+          focusMelt.halftoneMode = halftoneModes[bytes[cursor++]] || "off";
+          focusMelt.dotSize = clamp(bytes[cursor++], 5, 18);
+          focusMelt.inkShift = clamp(bytes[cursor++], 0, 8);
+          focusMelt.colorBoost = clamp(bytes[cursor++], 0, 100);
+          focusMelt.sources = [0, 1].map(() => ({
+            x: bytes[cursor++] / 255,
+            y: bytes[cursor++] / 255,
+            radius: bytes[cursor++] / 255 * 0.55,
+            angle: bytes[cursor++] / 255 * Math.PI * 2,
+          }));
+        }
+        let effectResolution = null;
+        if (version === 4) {
+          if (cursor >= bytes.length) return null;
+          effectResolution = [720, 1080, 1920][bytes[cursor++]] || null;
+          if (!effectResolution) return null;
+        }
         if (cursor !== bytes.length) return null;
         return {
           preset,
           selected: presets[preset].selected,
           nodes,
+          focusMelt,
           outputReverse: Boolean(bytes[2]),
+          effectResolution,
         };
       }
 
@@ -9981,16 +10245,17 @@
           preset: payload.p,
           selected: presets[payload.p].selected,
           nodes,
+          focusMelt: clone(focusMeltDefaults),
           outputReverse: Boolean(payload.r),
         };
       }
 
       function decodeRecipeCode(code) {
         const normalized = String(code || "").trim();
-        const match = normalized.match(/^GT2-([A-Za-z0-9_-]+)-([A-Z0-9]{7})$/i);
-        if (!match || recipeChecksum(match[1]) !== match[2].toUpperCase()) return null;
+        const match = normalized.match(/^GT([234])-([A-Za-z0-9_-]+)-([A-Z0-9]{7})$/i);
+        if (!match || recipeChecksum(match[2]) !== match[3].toUpperCase()) return null;
         try {
-          const bytes = decodeBase64Url(match[1]);
+          const bytes = decodeBase64Url(match[2]);
           const compactRecipe = decodeRecipeBytes(bytes);
           if (compactRecipe) return compactRecipe;
           return decodeLegacyRecipePayload(JSON.parse(new TextDecoder().decode(bytes)));
@@ -10003,9 +10268,21 @@
         if (!recipeState?.nodes || !presets[recipeState.preset]) return false;
         if (remember) rememberNiceTryState();
         state.preset = recipeState.preset;
-        state.selected = recipeState.selected || presets[recipeState.preset].selected;
+        state.selected = recipeState.selected === focusMeltMeta.id
+          ? presets[recipeState.preset].selected
+          : (recipeState.selected || presets[recipeState.preset].selected);
         state.nodes = clone(recipeState.nodes);
+        state.focusMelt = clone(focusMeltDefaults);
         state.outputReverse = Boolean(recipeState.outputReverse);
+        if ([720, 1080, 1920].includes(recipeState.effectResolution)) {
+          state.imageResolution = recipeState.effectResolution;
+          state.videoResolution = recipeState.effectResolution;
+          try {
+            localStorage.setItem("graphicTextureImageResolution", String(recipeState.effectResolution));
+          } catch (_error) {
+            // The restored texture quality still remains active for the current session.
+          }
+        }
         state.flyoutOpen = false;
         state.recipeCarrier = Boolean(carrier);
         state.recipeCarrierCode = carrier ? currentRecipeCode() : "";
@@ -10276,36 +10553,61 @@
       }
 
       function scheduleRecipeHistoryCommit(delay = 0) {
-        const token = ++recipeHistoryCommitToken;
-        window.setTimeout(() => {
-          requestAnimationFrame(() => commitRecipeHistory(token));
-        }, delay);
+        void delay;
+        syncUndoUi();
+      }
+
+      function syncUndoUi() {
+        if (!effectsUndo) return;
+        effectsUndo.disabled = !state.source || niceTryHistory.length === 0 || state.imageExporting || state.videoExporting;
+        effectsUndo.setAttribute("aria-disabled", String(effectsUndo.disabled));
       }
 
       function rememberNiceTryState() {
         niceTryHistory.push(captureNiceTryState());
         if (niceTryHistory.length > 24) niceTryHistory.shift();
         scheduleNiceTryHistoryPersist();
+        syncUndoUi();
       }
 
       function restoreNiceTryState(previewFirst = false) {
+        if (!state.source || state.imageExporting || state.videoExporting) return false;
         while (niceTryHistory.length) {
           const previous = niceTryHistory.pop();
           if (!previous?.nodes || !presets[previous.preset]) continue;
           state.preset = previous.preset;
-          state.selected = previous.selected || presets[previous.preset].selected;
+          state.selected = previous.selected === focusMeltMeta.id
+            ? presets[previous.preset].selected
+            : (previous.selected || presets[previous.preset].selected);
           state.nodes = clone(previous.nodes);
+          if ([720, 1080, 1920].includes(previous.effectResolution)) {
+            state.imageResolution = previous.effectResolution;
+            state.videoResolution = previous.effectResolution;
+            try { localStorage.setItem("graphicTextureImageResolution", String(previous.effectResolution)); } catch (_error) {}
+          }
+          state.focusMelt = clone(focusMeltDefaults);
           state.outputReverse = Boolean(previous.outputReverse);
           state.flyoutOpen = false;
           scheduleNiceTryHistoryPersist();
+          syncUndoUi();
           renderAll(!previewFirst);
           if (previewFirst) scheduleNiceTryPreviewRender();
           else scheduleRecipeHistoryCommit();
           return true;
         }
         scheduleNiceTryHistoryPersist();
+        syncUndoUi();
         return false;
       }
+
+      effectsUndo?.addEventListener("click", () => restoreNiceTryState(false));
+      document.addEventListener("keydown", (event) => {
+        if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "z" || event.shiftKey) return;
+        if (isEditablePasteTarget(event.target)) return;
+        event.preventDefault();
+        restoreNiceTryState(false);
+      });
+
 
       function randomizeChain(previewFirst = false, { preserveColors = false } = {}) {
         const preset = presets[state.preset];
@@ -10454,6 +10756,7 @@
             event.stopPropagation();
             closeColorPopovers();
             closeParamFlyout();
+            rememberNiceTryState();
             node.enabled = !node.enabled;
             renderAll();
           });
@@ -10600,7 +10903,12 @@
       function bindParamControls(container) {
         container.querySelectorAll("input[data-param]").forEach((input) => {
           if (input.type === "range") updateRangeStyle(input);
+          let remembered = false;
           input.addEventListener("input", () => {
+            if (!remembered) {
+              rememberNiceTryState();
+              remembered = true;
+            }
             const node = state.nodes[state.selected];
             const key = input.dataset.param;
             if (input.type === "checkbox") node[key] = input.checked;
@@ -10609,12 +10917,17 @@
             if (input.type === "range") updateRangeStyle(input);
             scheduleRenderOutput();
           });
-          input.addEventListener("change", flushRenderOutput);
+          input.addEventListener("change", () => {
+            remembered = false;
+            flushRenderOutput();
+          });
         });
       }
 
       function renderParams() {
-        let meta = nodeMeta.find((item) => item.id === state.selected);
+        let meta = state.selected === focusMeltMeta.id
+          ? focusMeltMeta
+          : nodeMeta.find((item) => item.id === state.selected);
         if (!meta) {
           state.selected = nodeMeta[0].id;
           meta = nodeMeta[0];
@@ -10625,6 +10938,7 @@
         bindParamControls(paramPanel);
         requestAnimationFrame(positionParamFlyout);
       }
+
 
       function renderColorPanel() {
         colorPanel.innerHTML = [
@@ -10810,7 +11124,10 @@
         if (!colorOutsideHandlerBound) {
           document.addEventListener("click", (event) => {
             closeColorPopovers();
-            if (!paramFlyout.contains(event.target) && !nodeList.contains(event.target)) closeParamFlyout();
+            if (
+              !paramFlyout.contains(event.target)
+              && !nodeList.contains(event.target)
+            ) closeParamFlyout();
           });
           window.addEventListener("resize", () => closeColorPopovers());
           colorOutsideHandlerBound = true;
@@ -10947,6 +11264,7 @@
         };
         return imageData;
       }
+
 
       function analyzeOpaqueBackground(data, w, h) {
         if (isMotionSource() || w < 8 || h < 8) return null;
@@ -11717,26 +12035,30 @@
         return reversed;
       }
 
+
       function renderOutput(renderSize = finalRenderSize(), frameContext = null) {
         if (!state.source) return;
+        if (!renderingVideoBatch) syncRecipeUi();
         const renderFrame = resolveRenderFrameContext(frameContext);
         const profiling = renderingVideoBatch && Boolean(videoRenderProfile);
         const measuring = profiling || renderDebugEnabled;
         const renderStarted = measuring ? performance.now() : 0;
-        const source = buildSourceImage(renderSize);
-        const sourceReady = measuring ? performance.now() : 0;
-        const { data, width: w, height: h } = source;
+        const baseSource = buildSourceImage(renderSize);
         if (state.recipeCarrier && !isVideoSource() && !isMobileCaptureSource()) {
+          const { width: w, height: h } = baseSource;
           result.width = w;
           result.height = h;
-          resultCtx.putImageData(source, 0, 0);
+          resultCtx.putImageData(baseSource, 0, 0);
           if (!renderingVideoBatch) {
-            const carrierMask = createMask(source);
+            const carrierMask = createMask(baseSource);
             renderMaskMini(carrierMask, w, h);
           }
           syncResultFit();
           return;
         }
+        const source = baseSource;
+        const sourceReady = measuring ? performance.now() : 0;
+        const { data, width: w, height: h } = source;
         const baseMask = createMask(source);
         const roughMask = createRoughEdgeMask(baseMask, w, h, state.nodes.edge);
         const outputMask = applyOutputReverseMask(roughMask, w, h);
@@ -11766,11 +12088,13 @@
         if (!renderingVideoBatch && !isMobileCaptureSource()) renderMaskMini(outputMask, w, h);
         if (state.preset === "penTrace") {
           renderPenTrace(source, outputMask, w, h, textureMask, renderFrame);
+          syncResultFit();
           finishProfile();
           return;
         }
         if (state.preset === "thermalMap") {
           renderThermalMap(source, outputMask, w, h, textureMask, renderFrame);
+          syncResultFit();
           finishProfile();
           return;
         }
@@ -11968,8 +12292,8 @@
         app.classList.toggle("has-video", isVideoSource());
         if (isVideoSource()) {
           markProcessedVideoDirty();
-          syncVideoMetrics();
         }
+        syncVideoMetrics();
         syncVideoProcessUi();
         renderPresets();
         renderNodeList();
@@ -11979,7 +12303,11 @@
         renderMobileParams();
         renderMobileColorPanel();
         syncRecipeUi();
-        if (shouldRenderOutput) renderOutput(isVideoSource() ? interactiveRenderSize() : finalRenderSize());
+        syncUndoUi();
+        if (shouldRenderOutput) {
+          renderOutput(!isVideoSource() && window.innerWidth <= 640 ? finalRenderSize() : interactiveRenderSize());
+          if (!isVideoSource()) scheduleImageRefine();
+        }
         if (isVideoSource()) syncVideoTimeline();
         syncResultFit();
         syncMobileTopOffset();
@@ -12356,6 +12684,16 @@
         syncVideoProcessUi();
       }
 
+      function setImageExportBusy(busy) {
+        state.imageExporting = busy;
+        document.querySelectorAll("[data-export-png]").forEach((button) => {
+          button.disabled = busy;
+          button.setAttribute("aria-busy", String(busy));
+        });
+        syncVideoMetrics();
+        syncUndoUi();
+      }
+
       function releaseVideoRenderPause() {
         videoRenderPaused = false;
         const resume = videoRenderResumeResolve;
@@ -12421,20 +12759,22 @@
         });
       }
 
-      function canvasToFrameBlob() {
+      function canvasToFrameBlob(canvas = result) {
         return new Promise((resolve, reject) => {
-          result.toBlob((blob) => {
+          canvas.toBlob((blob) => {
             if (blob) resolve(blob);
             else reject(new Error("无法缓存处理帧"));
           }, "image/webp", 0.92);
         });
       }
 
-      async function drawCachedFrame(blob) {
+      async function drawCachedFrame(blob, canvas = result, context = resultCtx) {
         if (window.createImageBitmap) {
           const bitmap = await createImageBitmap(blob);
-          resultCtx.clearRect(0, 0, result.width, result.height);
-          resultCtx.drawImage(bitmap, 0, 0, result.width, result.height);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.imageSmoothingEnabled = true;
+          context.imageSmoothingQuality = "high";
+          context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
           bitmap.close();
           return;
         }
@@ -12446,8 +12786,10 @@
             image.onerror = () => reject(new Error("无法读取缓存帧"));
             image.src = url;
           });
-          resultCtx.clearRect(0, 0, result.width, result.height);
-          resultCtx.drawImage(image, 0, 0, result.width, result.height);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.imageSmoothingEnabled = true;
+          context.imageSmoothingQuality = "high";
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
         } finally {
           URL.revokeObjectURL(url);
         }
@@ -12520,7 +12862,7 @@
         let target = null;
         let encoderError = null;
         const frameDuration = Math.round(1_000_000 / state.videoFps);
-        const bitrate = renderSize >= 1920 ? 14_000_000 : renderSize >= 1080 ? 10_000_000 : 6_000_000;
+        const bitrate = 14_000_000;
 
         try {
           for (let frame = 0; frame < frameCount; frame++) {
@@ -12531,14 +12873,15 @@
             await seekVideo(Math.max(0, time));
             recordVideoSeekTime(performance.now() - seekStarted);
             renderCurrentVideoFrame(renderSize, time);
+            drawFixedOutput(result, videoEncodeCanvas, videoEncodeCtx, fixedVideoOutputSize(), true);
 
             if (!encoder) {
-              const config = await getSupportedVideoEncoderConfig(result.width, result.height, bitrate);
+              const config = await getSupportedVideoEncoderConfig(videoEncodeCanvas.width, videoEncodeCanvas.height, bitrate);
               if (!config) return null;
               target = new muxerModule.ArrayBufferTarget();
               muxer = new muxerModule.Muxer({
                 target,
-                video: { codec: "avc", width: result.width, height: result.height },
+                video: { codec: "avc", width: videoEncodeCanvas.width, height: videoEncodeCanvas.height },
                 fastStart: "in-memory",
                 firstTimestampBehavior: "offset",
               });
@@ -12549,7 +12892,7 @@
               encoder.configure(config);
             }
 
-            const videoFrame = new VideoFrame(result, {
+            const videoFrame = new VideoFrame(videoEncodeCanvas, {
               timestamp: frame * frameDuration,
               duration: frameDuration,
             });
@@ -12577,7 +12920,7 @@
       }
 
       async function encodeVideoWithMediaRecorder(signature, renderSize, duration, frameCount) {
-        if (!result.captureStream || !window.MediaRecorder) {
+        if (!videoEncodeCanvas.captureStream || !window.MediaRecorder) {
           throw new Error("当前浏览器不支持本地视频编码，请使用最新版 Chrome 或 Safari");
         }
         const mimeType = getVideoRecorderMimeType();
@@ -12603,17 +12946,18 @@
 
           if (signature !== videoSettingsSignature()) return null;
           await waitForVideoRenderResume();
-          await drawCachedFrame(frameBlobs[0]);
-          stream = result.captureStream(0);
+          drawFixedOutput(result, videoEncodeCanvas, videoEncodeCtx, fixedVideoOutputSize(), true);
+          await drawCachedFrame(frameBlobs[0], videoEncodeCanvas, videoEncodeCtx);
+          stream = videoEncodeCanvas.captureStream(0);
           let videoTrack = stream.getVideoTracks()[0];
           const manualFrames = Boolean(videoTrack && typeof videoTrack.requestFrame === "function");
           if (!manualFrames) {
             stream.getTracks().forEach((track) => track.stop());
-            stream = result.captureStream(state.videoFps);
+            stream = videoEncodeCanvas.captureStream(state.videoFps);
             videoTrack = stream.getVideoTracks()[0];
           }
           const options = {
-            videoBitsPerSecond: renderSize >= 1920 ? 14_000_000 : renderSize >= 1080 ? 10_000_000 : 6_000_000,
+            videoBitsPerSecond: 14_000_000,
           };
           if (mimeType) options.mimeType = mimeType;
           recorder = new MediaRecorder(stream, options);
@@ -12635,7 +12979,7 @@
           for (let frame = 1; frame < frameBlobs.length; frame++) {
             await waitForVideoRenderResume(recorder);
             const started = performance.now();
-            await drawCachedFrame(frameBlobs[frame]);
+            await drawCachedFrame(frameBlobs[frame], videoEncodeCanvas, videoEncodeCtx);
             if (manualFrames) videoTrack.requestFrame();
             const elapsed = performance.now() - started;
             await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, frameDuration - elapsed)));
@@ -12729,7 +13073,7 @@
         const type = processedVideoBlob.type || "video/webm";
         const a = document.createElement("a");
         a.href = processedVideoUrl;
-        a.download = `graphic-texture-${state.preset}-${state.videoFps}fps.${type.includes("mp4") ? "mp4" : "webm"}`;
+        a.download = `graphic-texture-${state.preset}-${qualityLabel(videoRenderSize())}-${state.videoFps}fps.${type.includes("mp4") ? "mp4" : "webm"}`;
         a.click();
         return true;
       }
@@ -12759,7 +13103,7 @@
           if (videoResolutionRequestFrame) cancelAnimationFrame(videoResolutionRequestFrame);
           videoResolutionRequestFrame = requestAnimationFrame(() => {
             videoResolutionRequestFrame = 0;
-            changeVideoResolution(value);
+            changeOutputResolution(value);
           });
         });
       });
@@ -13079,7 +13423,7 @@
         }
       });
       async function exportOutput() {
-        if (!state.source) return;
+        if (!state.source || state.imageExporting || state.videoExporting) return;
         if (mobileCapture.state === "ready" && mobileCapture.renderedBlob) {
           await downloadMobileRecording();
           return;
@@ -13088,22 +13432,39 @@
           exportVideo();
           return;
         }
-        flushRenderOutput();
-        const pngBlob = await new Promise((resolve, reject) => {
-          result.toBlob((blob) => {
-            if (blob) resolve(blob);
-            else reject(new Error("无法生成 PNG"));
-          }, "image/png");
-        });
-        const outputBlob = await embedRecipeInPng(pngBlob, currentRecipeCode());
-        const filename = `graphic-texture-chain-${state.preset}.png`;
-        if (presentMobileOutput(outputBlob, filename, "图片")) return;
-        const outputUrl = URL.createObjectURL(outputBlob);
-        const a = document.createElement("a");
-        a.href = outputUrl;
-        a.download = filename;
-        a.click();
-        window.setTimeout(() => URL.revokeObjectURL(outputUrl), 1000);
+        const effectSize = imageRenderSize();
+        const outputSize = fixedImageOutputSize();
+        const textureQuality = qualityLabel(effectSize);
+        setImageExportBusy(true);
+        setInputStatus(`正在输出 ${textureQuality} 质感 · ${outputSize}px PNG...`);
+        try {
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          cancelScheduledRenderOutput();
+          renderOutput(effectSize);
+          drawFixedOutput(result, imageExportCanvas, imageExportCtx, outputSize);
+          const exportRecipe = currentRecipeCode();
+          const exportPreset = state.preset;
+          const pngBlob = await new Promise((resolve, reject) => {
+            imageExportCanvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error("无法生成 PNG"));
+            }, "image/png");
+          });
+          const outputBlob = await embedRecipeInPng(pngBlob, exportRecipe);
+          const filename = `graphic-texture-chain-${exportPreset}-${textureQuality}.png`;
+          if (presentMobileOutput(outputBlob, filename, "图片")) return;
+          const outputUrl = URL.createObjectURL(outputBlob);
+          const a = document.createElement("a");
+          a.href = outputUrl;
+          a.download = filename;
+          a.click();
+          window.setTimeout(() => URL.revokeObjectURL(outputUrl), 1000);
+          setInputStatus(`图片已输出：${textureQuality} 质感 · ${outputSize}px`);
+        } catch (error) {
+          setInputStatus(`图片输出失败：${error.message}`);
+        } finally {
+          setImageExportBusy(false);
+        }
       }
 
       document.querySelectorAll("[data-export-png]").forEach((button) => {
@@ -13122,6 +13483,7 @@
         randomizeMobileEffect();
       });
       reverseToggle.addEventListener("click", () => {
+        rememberNiceTryState();
         state.outputReverse = !state.outputReverse;
         syncReverseToggle();
         renderAll();
