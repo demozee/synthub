@@ -1,10 +1,10 @@
 {
   "name": "synths-lab-graphic-texture",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "private": true,
-  "description": "Synthub Graphic Texture V2.4 - desktop L/M/H texture quality and consistent recipe export.",
+  "description": "Synthub Graphic Texture V2.5 - draggable entrance gallery and texture performance improvements.",
   "scripts": {
-    "test": "node tools/check-release.cjs",
+    "test": "node tools/check-release.cjs && node tools/check-texture-performance.cjs",
     "start": "python3 -m http.server 4178",
     "serve": "python3 -m http.server 4178"
   }

@@ -1,6 +1,6 @@
 # Synths Lab Graphic Texture
 
-Version: `V2.4`
+Version: `V2.5`
 
 A browser-based graphic texture generator for turning images, video frames, and SVG assets into print-inspired visual styles such as thermal-map compositions, halftone graphics, pen-trace outlines, rough ink, distressed grain, and fabric-like texture.
 
@@ -32,6 +32,15 @@ http://localhost:4178/tools/graphic-texture-demo.html
 ```
 
 ## Version Notes
+
+### V2.5 - Entrance Gallery and Texture Performance
+
+- Adds a Figma-aligned desktop entrance with 11 selected draggable images and a central click-in link.
+- Updates loading image references to match the curated collection.
+- Fixes spacing between the Effects heading, Chinese label, and Undo control.
+- Reuses noise-lattice calculations without changing texture values; adds an exact numerical regression test.
+- Bounds paper texture cache memory to avoid unbounded growth during repeated generation.
+- Retains L/M/H quality controls; excludes experimental Light Dots and Focus Melt.
 
 ### V2.4 - Desktop Texture Quality
 

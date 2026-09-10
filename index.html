@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" sizes="24x24" href="assets/browser-icon-figma.png?v=20260721" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="image" href="assets/idle-animation/loading-images-review/39-thermalMap.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="assets/idle-animation/loading-images-review/01-xerox.webp" fetchpriority="high" />
     <script
       defer
       src="https://cloud.umami.is/script.js"
@@ -225,14 +225,85 @@
           transition: none;
         }
       }
+      .desktop-entry { display: none; }
+      @media (min-width: 641px) {
+        .loading-stage { display: none; }
+        .desktop-entry {
+          display: block;
+          position: relative;
+          width: 100vw;
+          height: 100dvh;
+          overflow: hidden;
+          background: #f5f5f5;
+        }
+        .intro {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%) scale(var(--entry-scale, 1));
+          width: 570px;
+          text-align: center;
+          z-index: 100;
+          pointer-events: none;
+        }
+        .intro p { margin: 0; color: #000; font-size: 16px; line-height: 20px; font-weight: 400; }
+        .intro .intro-cn { height: 40px; padding-top: 16px; font-size: 14px; line-height: 28.8px; letter-spacing: 1px; white-space: nowrap; }
+        .intro-enter-wrap { position: relative; height: 74px; width: 100%; }
+        .intro-enter {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          top: 42.9px;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 0;
+          color: #000;
+          background: transparent;
+          border: 0;
+          font: inherit;
+          font-size: 16px;
+          line-height: 20px;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+          pointer-events: auto;
+          transition: background 120ms, color 120ms;
+        }
+        .intro-enter::before { content: ""; position: absolute; inset: -12px -18px; }
+        .intro-enter:hover { opacity: .55; }
+        .intro-enter:focus-visible { outline: 2px solid #242528; outline-offset: 5px; }
+        .entry-art {
+          position: absolute;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          cursor: grab;
+          touch-action: none;
+          user-select: none;
+        }
+        .entry-art img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+        .entry-art.is-dragging { cursor: grabbing; }
+        .entry-art:focus-visible { outline: 1px dashed #9296a0; outline-offset: 5px; }
+        .drag-hint { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+      }
     </style>
   </head>
   <body>
+    <main class="desktop-entry" aria-label="Graphic Texture introduction">
+      <div class="art-field" id="artField"></div>
+      <section class="intro">
+        <p lang="en">Upload an image, choose a style, and turn it into a graphic texture with print grain, tactile noise, and handmade imperfections.</p>
+        <p class="intro-cn" lang="zh-CN">上传素材，选择风格，生成带有印刷感、颗粒感和手工痕迹的图形纹理。</p>
+        <div class="intro-enter-wrap"><a class="intro-enter" href="tools/graphic-texture-demo.html">click in</a></div>
+      </section>
+      <p class="drag-hint" id="dragHint">drag images to move · 拖动图片</p>
+    </main>
     <button class="loading-stage" id="enterButton" type="button" aria-label="Enter graphic-texture">
       <img
         class="loading-frame"
         data-effect="thermalMap"
-        src="assets/idle-animation/loading-images-review/39-thermalMap.webp"
+        src="assets/idle-animation/loading-images-review/01-xerox.webp"
         alt=""
         decoding="async"
         fetchpriority="high"
@@ -259,53 +330,19 @@
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const mobileViewport = window.matchMedia("(max-width: 640px)");
       const effects = ["thermalMap", "penTrace", "dotShirt", "xerox"];
-      const mobileAssetNames = {
-        "graphic-texture-chain-dotShirt (6).png": "mobile-dotShirt-6.webp",
-        "graphic-texture-chain-thermalMap (10).png": "mobile-thermalMap-10.webp",
-        "graphic-texture-chain-thermalMap (22).png": "mobile-thermalMap-22.webp",
-        "graphic-texture-chain-thermalMap (29).png": "mobile-thermalMap-29.webp",
-        "graphic-texture-chain-xerox (10).png": "mobile-xerox-10.webp",
-        "graphic-texture-chain-xerox (15).png": "mobile-xerox-15.webp",
-        "graphic-texture-chain-xerox (7).png": "mobile-xerox-7.webp",
-      };
+      const mobileAssetNames = {};
       const assetNames = [
         "01-xerox.webp",
-        "39-thermalMap.webp",
-        "40-penTrace.webp",
-        "41-dotShirt.webp",
-        "42-xerox.webp",
-        "44-dotShirt.webp",
-        "45-xerox.webp",
-        "46-thermalMap.webp",
-        "47-dotShirt.webp",
-        "48-xerox.webp",
-        "49-thermalMap.webp",
-        "50-penTrace.webp",
-        "51-xerox.webp",
-        "52-thermalMap.webp",
-        "53-penTrace.webp",
-        "54-dotShirt.webp",
-        "55-thermalMap.webp",
-        "56-penTrace.webp",
         "57-dotShirt.webp",
-        "58-xerox.webp",
-        "59-thermalMap.webp",
         "60-penTrace.webp",
-        "61-dotShirt.webp",
         "62-xerox.webp",
-        "63-thermalMap.webp",
-        "64-penTrace.webp",
-        "65-dotShirt.webp",
         "66-xerox.webp",
         "67-thermalMap.webp",
         "68-penTrace.webp",
         "graphic-texture-chain-dotShirt (6).png",
         "graphic-texture-chain-thermalMap (10).png",
-        "graphic-texture-chain-thermalMap (22).png",
-        "graphic-texture-chain-thermalMap (29).png",
         "graphic-texture-chain-xerox (10).png",
-        "graphic-texture-chain-xerox (15).png",
-        "graphic-texture-chain-xerox (7).png",
+        "graphic-texture-chain-xerox (7).png"
       ];
       const items = assetNames.map((name) => ({
         effect: effects.find((effect) => name.toLowerCase().includes(effect.toLowerCase())) || "xerox",
@@ -455,6 +492,7 @@
       }
 
       async function showNext() {
+        if (!mobileViewport.matches) return;
         if (mobileViewport.matches) {
           const version = transitionVersion;
           let nextItem;
@@ -502,6 +540,7 @@
 
       function startAnimation() {
         window.clearTimeout(timer);
+        if (!mobileViewport.matches) return;
         paused = document.hidden || reducedMotion.matches;
         frame.classList.remove("is-hidden");
         if (paused) return;
@@ -553,6 +592,166 @@
       }
 
       enterButton.addEventListener("click", enterProduct);
+
+      // Desktop uses a quiet, draggable gallery; mobile keeps its original entry.
+      const artField = document.getElementById("artField");
+      const galleryLayout = [
+        [
+          "01-xerox.webp",
+          0.08,
+          0.12,
+          138,
+          170
+        ],
+        [
+          "57-dotShirt.webp",
+          0.31,
+          0.1191289592760181,
+          150,
+          187
+        ],
+        [
+          "60-penTrace.webp",
+          0.4984305210918114,
+          0.19988687782805428,
+          142,
+          177
+        ],
+        [
+          "62-xerox.webp",
+          0.8300000000000001,
+          0.13,
+          148,
+          187
+        ],
+        [
+          "66-xerox.webp",
+          0.07999999999999999,
+          0.43,
+          110,
+          187
+        ],
+        [
+          "67-thermalMap.webp",
+          0.88,
+          0.44,
+          138,
+          183
+        ],
+        [
+          "68-penTrace.webp",
+          0.12,
+          0.7699999999999999,
+          102,
+          187
+        ],
+        [
+          "graphic-texture-chain-dotShirt (6).png",
+          0.36,
+          0.82,
+          147,
+          174
+        ],
+        [
+          "graphic-texture-chain-thermalMap (10).png",
+          0.6399999999999999,
+          0.8099999999999999,
+          162,
+          167
+        ],
+        [
+          "graphic-texture-chain-xerox (10).png",
+          0.86,
+          0.78,
+          133,
+          147
+        ],
+        [
+          "graphic-texture-chain-xerox (7).png",
+          0.6792803970223326,
+          0.11312217194570136,
+          130,
+          150
+        ]
+      ];
+      const galleryItems = [];
+      let galleryInitialized = false;
+      let drag = null;
+      let topLayer = 1;
+      const bound = (value, min, max) => Math.max(min, Math.min(max, value));
+      function positionArt(item, x, y) {
+        const margin = 12;
+        item.x = bound(x, margin, window.innerWidth - item.width - margin);
+        item.y = bound(y, margin, window.innerHeight - item.height - margin);
+        item.button.style.transform = `translate3d(${item.x}px, ${item.y}px, 0)`;
+      }
+      function layoutGallery() {
+        if (mobileViewport.matches) return;
+        if (!galleryInitialized) {
+          galleryInitialized = true;
+          galleryLayout.forEach(([name, x, y, slotWidth, slotHeight], index) => {
+            const button = document.createElement("button");
+            button.className = "entry-art";
+            button.type = "button";
+            button.setAttribute("aria-label", `移动作品 ${index + 1} · 使用方向键移动`);
+            button.setAttribute("aria-describedby", "dragHint");
+            const img = document.createElement("img");
+            img.alt = "";
+            img.draggable = false;
+            img.decoding = "async";
+            img.src = `assets/idle-animation/loading-images-review/${name}`;
+            button.append(img);
+            const item = { button, img, nx: x, ny: y, slotWidth, slotHeight, moved: false, width: 0, height: 0, x: 0, y: 0 };
+            galleryItems.push(item);
+            artField.append(button);
+            img.addEventListener("load", layoutGallery);
+            button.addEventListener("pointerdown", (event) => {
+              if (event.button !== 0 || drag) return;
+              drag = { item, id: event.pointerId, dx: event.clientX - item.x, dy: event.clientY - item.y };
+              item.button.style.zIndex = String(++topLayer);
+              item.button.classList.add("is-dragging");
+              button.setPointerCapture(event.pointerId);
+              event.preventDefault();
+            });
+            button.addEventListener("pointermove", (event) => {
+              if (!drag || drag.item !== item || event.pointerId !== drag.id) return;
+              positionArt(item, event.clientX - drag.dx, event.clientY - drag.dy);
+              item.moved = true;
+              item.nx = (item.x + item.width / 2) / window.innerWidth;
+              item.ny = (item.y + item.height / 2) / window.innerHeight;
+            });
+            const endDrag = () => {
+              if (drag?.item !== item) return;
+              item.button.classList.remove("is-dragging");
+              drag = null;
+            };
+            button.addEventListener("pointerup", endDrag);
+            button.addEventListener("pointercancel", endDrag);
+            button.addEventListener("lostpointercapture", endDrag);
+            button.addEventListener("keydown", (event) => {
+              const delta = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[event.key];
+              if (!delta) return;
+              event.preventDefault();
+              const step = event.shiftKey ? 20 : 5;
+              positionArt(item, item.x + delta[0] * step, item.y + delta[1] * step);
+              item.nx = (item.x + item.width / 2) / window.innerWidth;
+              item.ny = (item.y + item.height / 2) / window.innerHeight;
+            });
+          });
+        }
+        const scale = Math.min(window.innerWidth / 1612, window.innerHeight / 884);
+        document.documentElement.style.setProperty("--entry-scale", scale);
+        galleryItems.forEach(item => {
+          item.width = item.slotWidth * scale;
+          item.height = item.slotHeight * scale;
+          item.button.style.width = `${item.width}px`;
+          item.button.style.height = `${item.height}px`;
+          positionArt(item, item.nx * window.innerWidth - item.width / 2, item.ny * window.innerHeight - item.height / 2);
+        });
+      }
+      layoutGallery();
+      window.addEventListener("resize", layoutGallery);
+      mobileViewport.addEventListener("change", layoutGallery);
     </script>
   </body>
 </html>

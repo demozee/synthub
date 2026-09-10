@@ -10,7 +10,7 @@
       data-website-id="79bb69d5-2b32-4ab4-b7ae-b4f61d34bee1"
       data-domains="synthub.art,www.synthub.art"
     ></script>
-    <title>Synthub Graphic Texture V2.4</title>
+    <title>Synthub Graphic Texture V2.5</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
@@ -975,12 +975,15 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 16px;
         margin-bottom: 16px;
       }
 
-      .effects-head h2 { margin-bottom: 0; }
+      .effects-head h2 { margin-bottom: 0; flex: 1; min-width: 0; gap: 12px; }
+      .effects-head h2::after { flex-shrink: 0; }
 
       .effects-undo {
+        flex-shrink: 0;
         min-width: 58px;
         height: 28px;
         padding: 0 8px;
@@ -8053,42 +8056,16 @@
 
       const mobileEntryImages = [
         "01-xerox.webp",
-        "39-thermalMap.webp",
-        "40-penTrace.webp",
-        "41-dotShirt.webp",
-        "42-xerox.webp",
-        "44-dotShirt.webp",
-        "45-xerox.webp",
-        "46-thermalMap.webp",
-        "47-dotShirt.webp",
-        "48-xerox.webp",
-        "49-thermalMap.webp",
-        "50-penTrace.webp",
-        "51-xerox.webp",
-        "52-thermalMap.webp",
-        "53-penTrace.webp",
-        "54-dotShirt.webp",
-        "55-thermalMap.webp",
-        "56-penTrace.webp",
         "57-dotShirt.webp",
-        "58-xerox.webp",
-        "59-thermalMap.webp",
         "60-penTrace.webp",
-        "61-dotShirt.webp",
         "62-xerox.webp",
-        "63-thermalMap.webp",
-        "64-penTrace.webp",
-        "65-dotShirt.webp",
         "66-xerox.webp",
         "67-thermalMap.webp",
         "68-penTrace.webp",
         "graphic-texture-chain-dotShirt (6).png",
         "graphic-texture-chain-thermalMap (10).png",
-        "graphic-texture-chain-thermalMap (22).png",
-        "graphic-texture-chain-thermalMap (29).png",
         "graphic-texture-chain-xerox (10).png",
-        "graphic-texture-chain-xerox (15).png",
-        "graphic-texture-chain-xerox (7).png",
+        "graphic-texture-chain-xerox (7).png"
       ];
       let mobileEntryToastTimer = 0;
 
@@ -9780,14 +9757,14 @@
         return normalizer ? total / normalizer : 0;
       }
 
-      function paperTextureTone(x, y, texture, clipStrength = 1, seed = 1) {
+      function paperTextureTone(x, y, texture, clipStrength = 1, seed = 1, rowScanLine = null) {
         if (!texture.enabled || clipStrength <= 0) return 0;
         const fabric = clamp(texture.fabric || 0, 0, 100) / 100;
         const scan = clamp(texture.scan || 0, 0, 100) / 100;
         const cloud = fractalNoise(x * 0.006, y * 0.006, seed, 4) - 0.5;
         const fiberX = fractalNoise(x * 0.038 + seed * 2.1, y * 0.006, seed + 41, 3) - 0.5;
         const fiberY = fractalNoise(x * 0.006, y * 0.032 + seed * 1.7, seed + 67, 3) - 0.5;
-        const scanLine = Math.sin(y * (0.022 + scan * 0.018) + fractalNoise(0, y * 0.018, seed + 83, 2) * 2) * scan;
+        const scanLine = rowScanLine ?? (Math.sin(y * (0.022 + scan * 0.018) + fractalNoise(0, y * 0.018, seed + 83, 2) * 2) * scan);
         return clipStrength * (cloud * 8.5 * fabric + fiberX * 3.8 * fabric + fiberY * 2.4 * fabric + scanLine * 2.4);
       }
 
@@ -9802,14 +9779,63 @@
         if (cached) return cached;
 
         const tones = new Float64Array(width * height);
+        const scan = clamp(texture.scan || 0, 0, 100) / 100;
+        const fabric = clamp(texture.fabric || 0, 0, 100) / 100;
+        const cloudRow = new Float64Array(width);
+        const fiberXRow = new Float64Array(width);
+        const fiberYRow = new Float64Array(width);
         for (let y = 0; y < height; y++) {
           const row = y * width;
+          fillFractalNoiseRow(cloudRow, y, .006, .006, 0, seed, 4, offsetX);
+          fillFractalNoiseRow(fiberXRow, y, .038, .006, seed * 2.1, seed + 41, 3, offsetX);
+          fillFractalNoiseRow(fiberYRow, y, .006, .032, 0, seed + 67, 3, offsetX, seed * 1.7);
+          // Scan noise depends on the row, not the column. Preserve the exact
+          // formula while evaluating it once per row instead of once per pixel.
+          const rowScanLine = Math.sin(y * (0.022 + scan * 0.018) + fractalNoise(0, y * 0.018, seed + 83, 2) * 2) * scan;
           for (let x = 0; x < width; x++) {
-            tones[row + x] = paperTextureTone(x + offsetX, y, texture, 1, seed);
+            tones[row + x] = (cloudRow[x] - .5) * 8.5 * fabric
+              + (fiberXRow[x] - .5) * 3.8 * fabric
+              + (fiberYRow[x] - .5) * 2.4 * fabric + rowScanLine * 2.4;
           }
+        }
+        // Randomizing a seed must not retain an unbounded number of full-size maps.
+        // Limit this cache to roughly 32 MiB, retaining at least the current map.
+        const maxMaps = Math.max(1, Math.floor((32 * 1024 * 1024) / tones.byteLength));
+        while (paperToneCache.maps.size >= maxMaps) {
+          paperToneCache.maps.delete(paperToneCache.maps.keys().next().value);
         }
         paperToneCache.maps.set(key, tones);
         return tones;
+      }
+
+      // Adjacent pixels share noise-lattice corners. Reuse those corners within
+      // each row; retain Float64 arithmetic and the original octave order.
+      function fillFractalNoiseRow(out, y, scaleX, scaleY, shiftX, seed, octaves, offsetX, shiftY = 0) {
+        out.fill(0);
+        let amplitude = .5, frequency = 1, normalizer = 0;
+        for (let octave = 0; octave < octaves; octave++) {
+          const yy = (y * scaleY + shiftY) * frequency;
+          const iy = Math.floor(yy), fy = yy - iy;
+          const uy = fy * fy * (3 - 2 * fy);
+          let previousX = NaN, a = 0, b = 0, c = 0, d = 0;
+          for (let x = 0; x < out.length; x++) {
+            const xx = ((x + offsetX) * scaleX + shiftX) * frequency;
+            const ix = Math.floor(xx), fx = xx - ix;
+            if (ix !== previousX) {
+              a = hash(ix, iy, seed + octave * 19);
+              b = hash(ix + 1, iy, seed + octave * 19);
+              c = hash(ix, iy + 1, seed + octave * 19);
+              d = hash(ix + 1, iy + 1, seed + octave * 19);
+              previousX = ix;
+            }
+            const ux = fx * fx * (3 - 2 * fx);
+            out[x] += lerp(lerp(a, b, ux), lerp(c, d, ux), uy) * amplitude;
+          }
+          normalizer += amplitude;
+          amplitude *= .5;
+          frequency *= 2;
+        }
+        for (let x = 0; x < out.length; x++) out[x] /= normalizer;
       }
 
       function printGrainTone(x, y, amount = 1, seed = 1) {
