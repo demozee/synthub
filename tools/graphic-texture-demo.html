@@ -10,7 +10,7 @@
       data-website-id="79bb69d5-2b32-4ab4-b7ae-b4f61d34bee1"
       data-domains="synthub.art,www.synthub.art"
     ></script>
-    <title>Synthub Graphic Texture V2.5</title>
+    <title>Synthub Graphic Texture V2.6</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
@@ -7452,20 +7452,45 @@
           letter-spacing: 0;
         }
       }
+      .empty-canvas { display: none; }
+      @media (min-width: 641px) {
+        .brand { min-height: 100px; padding: 27.5px; }
+        .brand .graphic-brand { width: 305px; height: 50px; }
+        .brand .graphic-brand .graphic-brand-icon { left: 0; top: 0; width: 50px; height: 50px; }
+        .brand .graphic-brand .graphic-brand-word { left: 65px; top: 5px; width: 90px; height: 40px; object-fit: contain; }
+        .brand .graphic-brand .graphic-brand-cn { right: 0; top: 5px; width: 59px; height: 22.5px; object-fit: contain; }
+        .main .top { display: none; }
+        .app:not(.has-source) .workspace { visibility: hidden; }
+        .app:not(.has-source) .empty-canvas {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          left: 25px;
+          right: 25px;
+          top: 50%;
+          height: min(688.75px, calc(100% - 80px));
+          transform: translateY(-50%);
+          border: 1px dashed transparent;
+          border-radius: 4px;
+          pointer-events: none;
+        }
+        .app:not(.has-source).is-file-dragging .empty-canvas { border-color: #27272a; }
+        .empty-canvas-copy { width: 712.5px; height: 217.5px; flex-shrink: 0; text-align: center; font-family: var(--font-mono); transform: scale(var(--entry-copy-scale, 1)); }
+        .empty-canvas-copy p { margin: 0; color: #000; font-size: 20px; font-weight: 400; line-height: 25px; letter-spacing: 0; }
+        .empty-canvas-copy .empty-canvas-cn { padding-top: 20px; font-size: 17.5px; line-height: 36px; letter-spacing: 1.25px; }
+        .empty-canvas-copy .empty-canvas-hint { padding-top: 29px; font-size: 17.5px; line-height: 36px; letter-spacing: 1.25px; }
+      }
     </style>
   </head>
   <body>
     <main class="app">
       <aside class="side">
         <div class="brand">
-          <div class="brand-logo" role="img" aria-label="synthub">
-            <img class="brand-logo-star-a" src="../assets/synthub-logo-star-a.svg" alt="" />
-            <img class="brand-logo-star-b" src="../assets/synthub-logo-star-b.svg" alt="" />
-            <img class="brand-logo-star-c" src="../assets/synthub-logo-star-c.svg" alt="" />
-            <img class="brand-logo-star-d" src="../assets/synthub-logo-star-d.svg" alt="" />
-            <img class="brand-logo-word" src="../assets/synthub-logo-word.svg" alt="" />
-            <img class="brand-logo-underline" src="../assets/synthub-logo-underline.svg" alt="" />
-            <img class="brand-logo-ub" src="../assets/synthub-logo-ub.svg" alt="" />
+          <div class="brand-logo graphic-brand" role="img" aria-label="Graphic Texture 印花">
+            <img class="graphic-brand-icon" src="../assets/graphic-brand-icon.svg" alt="" />
+            <img class="graphic-brand-word" src="../assets/graphic-brand-word.svg" alt="" />
+            <img class="graphic-brand-cn" src="../assets/graphic-brand-cn.svg" alt="" />
           </div>
         </div>
         <div class="side-scroll">
@@ -7555,6 +7580,13 @@
       </aside>
 
       <section class="main">
+        <div class="empty-canvas" aria-label="Upload introduction">
+          <div class="empty-canvas-copy">
+            <p>Upload an image, choose a style, and turn it into a graphic texture with print grain, tactile noise, and handmade imperfections.</p>
+            <p class="empty-canvas-cn">上传素材，选择风格，生成带有印刷感、颗粒感和手工痕迹的图形纹理。</p>
+            <p class="empty-canvas-hint">拖入文件 或 复制粘贴板</p>
+          </div>
+        </div>
         <div class="top">
           <div class="title"><img src="../assets/graphic-texture-title.svg" alt="Graphic Texture 印花" /></div>
           <div class="note">
@@ -7607,7 +7639,6 @@
           <section class="panel">
             <div class="effects-head">
               <h2 data-cn="效果器">Effects</h2>
-              <button class="effects-undo" id="effectsUndo" type="button" aria-label="Undo previous effect" disabled>UNDO</button>
             </div>
             <div class="node-list" id="nodeList"></div>
           </section>
@@ -7944,7 +7975,7 @@
         sourceHasTransparency: false,
         size: 1000,
         previewSize: 720,
-        imageResolution: 1080,
+        imageResolution: 720,
         imageExporting: false,
         videoTuneSize: 720,
         videoResolution: 720,
@@ -7959,12 +7990,7 @@
         recipeCarrierCode: "",
       };
 
-      try {
-        const savedImageResolution = Math.round(Number(localStorage.getItem("graphicTextureImageResolution")));
-        if ([720, 1080, 1920].includes(savedImageResolution)) state.imageResolution = savedImageResolution;
-      } catch (_error) {
-        // Private browsing can disable storage; the default resolution remains available.
-      }
+      // Each ordinary upload starts at L; do not restore a previous session's H.
 
       const fileInput = document.getElementById("file");
       const app = document.querySelector(".app");
@@ -7996,6 +8022,12 @@
       const sidePreviews = document.getElementById("sidePreviews");
       const nodeList = document.getElementById("nodeList");
       const effectsUndo = document.getElementById("effectsUndo");
+      // Match the entrance page's typography and screen-centered copy exactly.
+      function syncEntryCopyScale() {
+        document.documentElement.style.setProperty("--entry-copy-scale", Math.min(window.innerWidth / 1612, window.innerHeight / 884));
+      }
+      syncEntryCopyScale();
+      window.addEventListener("resize", syncEntryCopyScale);
       const paramPanel = document.getElementById("paramPanel");
       const paramFlyout = document.getElementById("paramFlyout");
       const paramName = document.getElementById("paramName");
@@ -9081,8 +9113,8 @@
       function imageRenderSize() {
         if (window.innerWidth <= 640) return state.size;
         const supported = [720, 1080, 1920];
-        const selected = Math.round(Number(state.imageResolution) || 1080);
-        return supported.includes(selected) ? selected : 1080;
+        const selected = Math.round(Number(state.imageResolution) || 720);
+        return supported.includes(selected) ? selected : 720;
       }
 
       function selectedOutputRenderSize() {
@@ -9382,11 +9414,6 @@
         if (!isVideoSource()) {
           state.imageResolution = nextResolution;
           syncRecipeUi();
-          try {
-            localStorage.setItem("graphicTextureImageResolution", String(nextResolution));
-          } catch (_error) {
-            // The selected size still remains active for the current session.
-          }
           syncVideoMetrics();
           setInputStatus(`正在切换到 ${qualityLabel(nextResolution)} 质感...`);
           setImageExportBusy(true);
@@ -12656,6 +12683,10 @@
 
       function applyLoadedSource(source, aspect, type, status, options = {}) {
         const { recipeState = null, carrier = false, commitHistory = true } = options;
+        cancelScheduledRenderOutput();
+        if (window.innerWidth > 640 && type !== "video" && !recipeState) {
+          state.imageResolution = 720;
+        }
         state.source = source;
         state.sourceType = type;
         state.sourceAspect = aspect || 1;

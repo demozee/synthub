@@ -1,8 +1,8 @@
 {
   "name": "synths-lab-graphic-texture",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "private": true,
-  "description": "Synthub Graphic Texture V2.5 - draggable entrance gallery and texture performance improvements.",
+  "description": "Synthub Graphic Texture V2.6 - refreshed desktop branding, empty canvas and default L uploads.",
   "scripts": {
     "test": "node tools/check-release.cjs && node tools/check-texture-performance.cjs",
     "start": "python3 -m http.server 4178",
