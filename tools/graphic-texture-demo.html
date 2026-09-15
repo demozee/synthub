@@ -5179,7 +5179,7 @@
           font-size: 10px;
           font-weight: 400;
           line-height: 13px;
-          letter-spacing: -0.5px;
+          letter-spacing: 0;
         }
 
         .app.mobile-camera-session .mobile-color-hash {
@@ -6560,59 +6560,47 @@
 
         .mobile-entry-brand {
           position: absolute;
-          top: max(72px, calc(env(safe-area-inset-top) + 48px));
-          left: 50%;
-          display: flex;
-          gap: 20px;
-          width: 235px;
-          height: 50px;
-          transform: translateX(-50%);
+          top: 16px;
+          right: 18px;
+          left: 16px;
+          height: 60px;
         }
 
-        .mobile-entry-mark {
+        .mobile-entry-layout {
           position: relative;
-          flex: 0 0 50px;
-          width: 50px;
-          height: 50px;
+          height: max(520px, var(--mobile-viewport-height));
         }
 
-        .mobile-entry-mark img {
+        .mobile-entry-brand img {
           position: absolute;
           display: block;
-          object-fit: fill;
+          object-fit: contain;
         }
 
-        .mobile-entry-mark-a {
+        .mobile-entry-brand-icon {
           top: 0;
-          left: 22.5px;
-          width: 5px;
-          height: 50px;
-        }
-
-        .mobile-entry-mark-b,
-        .mobile-entry-mark-d {
-          top: 5.5px;
-          left: 5.5px;
-          width: 39px;
-          height: 39px;
-        }
-
-        .mobile-entry-mark-c {
-          top: 22.5px;
           left: 0;
-          width: 50px;
-          height: 5px;
+          width: 60px;
+          height: 60px;
         }
 
         .mobile-entry-title {
-          display: block;
-          width: 165px;
-          height: 50px;
+          top: 6px;
+          left: 78px;
+          width: 106.45px;
+          height: 48px;
+        }
+
+        .mobile-entry-brand-cn {
+          top: 6px;
+          right: 0;
+          width: 55px;
+          height: 21.23px;
         }
 
         .mobile-entry-upload-trigger {
           position: absolute;
-          top: clamp(242px, 34dvh, 308px);
+          top: max(96px, min(29.7561%, calc(100% - 400px - env(safe-area-inset-bottom))));
           left: calc(50% + 10.5px);
           width: 105px;
           height: 105px;
@@ -6646,8 +6634,8 @@
         .mobile-entry-copy {
           position: absolute;
           right: 16px;
-          bottom: calc(154px + env(safe-area-inset-bottom));
-          left: 24px;
+          bottom: calc(181px + env(safe-area-inset-bottom));
+          left: 16px;
         }
 
         .mobile-entry-copy-en {
@@ -6658,8 +6646,8 @@
           font-family: var(--font-mono);
           font-size: 24px;
           font-weight: 300;
-          line-height: normal;
-          letter-spacing: -1.2px;
+          line-height: 31px;
+          letter-spacing: 0;
         }
 
         .mobile-entry-copy-en strong {
@@ -6669,23 +6657,23 @@
         .mobile-entry-copy-cn {
           display: flex;
           justify-content: space-between;
-          width: 350px;
+          width: 100%;
           max-width: 100%;
-          margin: 8px 0 0;
+          margin: 17px 0 0;
           color: #fff;
           font-family: var(--font-cn);
           font-size: 16px;
           font-weight: 300;
           line-height: 24px;
-          letter-spacing: 0.64px;
+          letter-spacing: 0;
         }
 
         .mobile-entry-lines {
           position: absolute;
           right: 0;
-          bottom: calc(98px + env(safe-area-inset-bottom));
+          bottom: calc(102px + env(safe-area-inset-bottom));
           left: 0;
-          height: 53px;
+          height: 74px;
           pointer-events: none;
         }
 
@@ -6694,17 +6682,17 @@
           position: absolute;
           top: 0;
           display: block;
-          height: 53px;
+          height: 74px;
         }
 
         .mobile-entry-line-upload {
-          left: calc(50% - 147px);
-          width: 59px;
+          left: 47.5px;
+          width: 51px;
         }
 
         .mobile-entry-line-camera {
-          left: 50%;
-          width: 102px;
+          left: calc(50% - 0.5px);
+          width: 98px;
         }
 
         .mobile-entry-actions {
@@ -6770,7 +6758,7 @@
           position: absolute;
           right: 16px;
           bottom: calc(104px + env(safe-area-inset-bottom));
-          z-index: 3;
+          z-index: 1400;
           max-width: calc(100% - 32px);
           padding: 9px 12px;
           background: #0d0d11;
@@ -6790,17 +6778,20 @@
           transform: translateY(0);
         }
 
-        @media (max-height: 760px) {
-          .mobile-entry-brand {
-            top: max(58px, calc(env(safe-area-inset-top) + 32px));
-          }
-
+        @media (max-height: 560px) {
           .mobile-entry-upload-trigger {
-            top: 242px;
+            left: calc(50% + 7.5px);
+            width: 75px;
+            height: 75px;
           }
-
-          .mobile-entry-copy {
-            bottom: calc(150px + env(safe-area-inset-bottom));
+          .mobile-entry-upload-main {
+            top: 18px;
+            width: 57px;
+            height: 57px;
+          }
+          .mobile-entry-upload-accent {
+            width: 21px;
+            height: 21px;
           }
         }
 
@@ -6852,47 +6843,40 @@
           background: var(--mobile-bg);
         }
 
-        .mobile-uploaded-mark {
+        .mobile-editor-preset {
           position: absolute;
-          top: 16px;
+          top: 30px;
           left: 16px;
+          right: 16px;
           z-index: 4;
           display: none;
-          width: 50px;
-          height: 50px;
+          align-items: center;
+          gap: 4px;
+          color: #fff;
+          text-align: center;
+          text-shadow: 0 1px 3px rgba(0, 0, 0, .7);
           pointer-events: none;
         }
 
-        .app.has-source:not(.mobile-camera-session) .mobile-uploaded-mark {
-          display: block;
+        .app.has-source:not(.mobile-camera-session) .mobile-editor-preset {
+          display: flex;
+          flex-direction: column;
         }
 
-        .mobile-uploaded-mark img {
-          position: absolute;
-          display: block;
-          object-fit: fill;
+        .mobile-editor-preset strong {
+          font-family: var(--font-mono);
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 21px;
+          letter-spacing: 0;
         }
 
-        .mobile-uploaded-mark-a {
-          top: 0;
-          left: 22.5px;
-          width: 5px;
-          height: 50px;
-        }
-
-        .mobile-uploaded-mark-b,
-        .mobile-uploaded-mark-d {
-          top: 5.5px;
-          left: 5.5px;
-          width: 39px;
-          height: 39px;
-        }
-
-        .mobile-uploaded-mark-c {
-          top: 22.5px;
-          left: 0;
-          width: 50px;
-          height: 5px;
+        .mobile-editor-preset span {
+          font-family: var(--font-cn);
+          font-size: 14px;
+          font-weight: 300;
+          line-height: 18px;
+          letter-spacing: 0;
         }
 
         .app.has-source:not(.mobile-camera-session) .mobile-scroll {
@@ -7052,9 +7036,9 @@
           overflow: visible;
           color: #515257;
           font-size: 10px;
-          font-weight: 300;
+          font-weight: 400;
           line-height: 13px;
-          letter-spacing: -0.5px;
+          letter-spacing: 0;
         }
 
         .app.has-source:not(.mobile-camera-session) .mobile-color-hash {
@@ -7077,6 +7061,7 @@
           border: 0;
           background: url("../assets/png-alpha-icon-figma.svg") center / 20px 20px no-repeat;
           transform: translateX(-50%);
+          filter: brightness(0) invert(1);
         }
 
         .app.has-source:not(.mobile-camera-session) .mobile-alpha-toggle.active {
@@ -7130,7 +7115,7 @@
         }
 
         .app.has-source:not(.mobile-camera-session) .mobile-camera-dock-button.output {
-          border-color: var(--mobile-acid);
+          border: 1px solid #000;
           background: var(--mobile-acid);
           pointer-events: auto;
         }
@@ -7148,6 +7133,7 @@
           bottom: auto;
           height: var(--mobile-viewport-height);
           min-height: 0;
+          overflow-y: auto;
         }
 
         .app:not(.has-source):not(.mobile-camera-session) .mobile-shell {
@@ -7297,8 +7283,8 @@
           text-align: center;
         }
 
-        /* Mobile 08-31 layout: effect controls are image-first and deliberately sparse. */
-        .mobile-color-section {
+        /* Legacy live-capture controls are not part of the photo editor. */
+        .app.mobile-camera-session .mobile-color-section {
           display: none !important;
         }
 
@@ -7328,7 +7314,6 @@
           object-fit: contain;
         }
 
-        .app.has-source:not(.mobile-camera-session) .mobile-preview-re,
         .app.mobile-capture-previewing .mobile-preview-re {
           display: block;
         }
@@ -7337,8 +7322,40 @@
           filter: brightness(0) saturate(100%) invert(92%) sepia(30%) saturate(633%) hue-rotate(31deg) brightness(103%) contrast(102%);
         }
 
-        .app.mobile-camera-session .mobile-scroll,
         .app.has-source:not(.mobile-camera-session) .mobile-scroll {
+          bottom: var(--mobile-dock-height);
+          padding: 16px;
+          overflow-x: hidden;
+          overflow-y: auto;
+          overscroll-behavior-y: contain;
+        }
+
+        .app.has-source.mobile-preview-extreme:not(.mobile-camera-session) .mobile-camera-nice,
+        .app.has-source.mobile-preview-extreme:not(.mobile-camera-session) .mobile-re-card {
+          width: calc(100% - 22px);
+          margin-left: 22px;
+        }
+
+        .app.has-source.mobile-preview-extreme:not(.mobile-camera-session) .mobile-camera-nice {
+          position: relative;
+        }
+
+        .app.mobile-preview-extreme .mobile-camera-nice::before {
+          position: absolute;
+          left: -14px;
+          top: 1px;
+          width: 2px;
+          height: 59px;
+          background: var(--mobile-card);
+          content: "";
+        }
+
+        .app.has-source.mobile-preview-extreme:not(.mobile-camera-session) .mobile-re-card::before {
+          width: 20px;
+          height: 20px;
+        }
+
+        .app.mobile-camera-session .mobile-scroll {
           bottom: var(--mobile-dock-height);
           padding: 16px 24px;
           overflow-x: hidden;
@@ -7351,8 +7368,7 @@
           --mobile-control-row: clamp(48px, calc((var(--mobile-viewport-height) - var(--mobile-camera-preview-height) - var(--mobile-dock-height) - 48px) / 2), 80px);
         }
 
-        .app.mobile-camera-session .mobile-preset-grid,
-        .app.has-source:not(.mobile-camera-session) .mobile-preset-grid {
+        .app.mobile-camera-session .mobile-preset-grid {
           grid-template-columns: repeat(4, minmax(0, 1fr));
           grid-template-rows: repeat(2, var(--mobile-control-row));
           grid-auto-flow: row;
@@ -7361,8 +7377,7 @@
           height: auto;
         }
 
-        .app.mobile-camera-session .mobile-preset,
-        .app.has-source:not(.mobile-camera-session) .mobile-preset {
+        .app.mobile-camera-session .mobile-preset {
           display: grid;
           grid-template-columns: 1fr;
           place-items: center;
@@ -7374,24 +7389,20 @@
           background: var(--mobile-card);
         }
 
-        .app.mobile-camera-session .mobile-preset.active,
-        .app.has-source:not(.mobile-camera-session) .mobile-preset.active {
+        .app.mobile-camera-session .mobile-preset.active {
           border-color: var(--mobile-acid);
           background: var(--mobile-card);
         }
 
         .app.mobile-camera-session .mobile-preset-icon,
-        .app.mobile-camera-session .mobile-preset-icon img,
-        .app.has-source:not(.mobile-camera-session) .mobile-preset-icon,
-        .app.has-source:not(.mobile-camera-session) .mobile-preset-icon img {
+        .app.mobile-camera-session .mobile-preset-icon img {
           width: 38px;
           height: 38px;
           margin: 0;
           object-fit: contain;
         }
 
-        .app.mobile-camera-session .mobile-camera-nice,
-        .app.has-source:not(.mobile-camera-session) .mobile-camera-nice {
+        .app.mobile-camera-session .mobile-camera-nice {
           display: grid;
           grid-column: 1 / -1;
           grid-row: 2;
@@ -7404,8 +7415,7 @@
           background: var(--mobile-acid);
         }
 
-        .app.mobile-camera-session .mobile-camera-nice img,
-        .app.has-source:not(.mobile-camera-session) .mobile-camera-nice img {
+        .app.mobile-camera-session .mobile-camera-nice img {
           width: 40px;
           height: 46px;
           filter: brightness(0);
@@ -7507,7 +7517,7 @@
               </div>
             </label>
             <input id="cameraFile" class="camera-input" type="file" accept="image/*" capture="environment" />
-            <input id="mobileGalleryFile" class="camera-input" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" />
+            <input id="mobileGalleryFile" class="camera-input" type="file" accept="image/*" />
             <button class="camera-button" id="cameraButton" type="button">Camera</button>
             <div
               class="drop-sub"
@@ -7675,15 +7685,11 @@
 
       <section class="mobile-shell" aria-label="Synthub mobile interface">
         <section class="mobile-entry-screen" id="mobileEntryScreen" aria-label="Choose a photo or take one">
-
+          <div class="mobile-entry-layout">
           <div class="mobile-entry-brand" aria-label="Graphic Texture 印花">
-            <span class="mobile-entry-mark" aria-hidden="true">
-              <img class="mobile-entry-mark-a" src="../assets/mobile-entry/mobile-entry-mark-a.svg" alt="" />
-              <img class="mobile-entry-mark-b" src="../assets/mobile-entry/mobile-entry-mark-b.svg" alt="" />
-              <img class="mobile-entry-mark-c" src="../assets/mobile-entry/mobile-entry-mark-c.svg" alt="" />
-              <img class="mobile-entry-mark-d" src="../assets/mobile-entry/mobile-entry-mark-d.svg" alt="" />
-            </span>
-            <img class="mobile-entry-title" src="../assets/mobile-entry/mobile-entry-title.svg" alt="Graphic Texture 印花" />
+            <img class="mobile-entry-brand-icon" src="../assets/graphic-brand-icon.svg" alt="" />
+            <img class="mobile-entry-title" src="../assets/graphic-brand-word.svg" alt="Graphic Texture" />
+            <img class="mobile-entry-brand-cn" src="../assets/graphic-brand-cn.svg" alt="印花" />
           </div>
 
           <button class="mobile-entry-upload-trigger" id="mobileEntryUploadTrigger" type="button" aria-label="从相册中添加图片">
@@ -7705,15 +7711,16 @@
             <button class="mobile-entry-action upload" id="mobileEntryUpload" type="button" aria-label="打开相册">
               <img src="../assets/mobile-entry/mobile-entry-input.svg" alt="" />
             </button>
-            <button class="mobile-entry-action camera" id="mobileEntryCamera" type="button" aria-label="拍摄照片或录制视频">
+            <button class="mobile-entry-action camera" id="mobileEntryCamera" type="button" aria-label="拍照">
               <img src="../assets/mobile-entry/mobile-entry-rec.svg" alt="" />
             </button>
             <button class="mobile-entry-action output" id="mobileEntryOutput" type="button" aria-label="输出">
               <img src="../assets/mobile-entry/mobile-entry-output.svg" alt="" />
             </button>
           </div>
-          <div class="mobile-entry-toast" id="mobileEntryToast" role="status" aria-live="polite">请先上传素材</div>
+          </div>
         </section>
+        <div class="mobile-entry-toast" id="mobileEntryToast" role="status" aria-live="polite"></div>
 
         <div class="mobile-fixed-top">
           <div class="mobile-hero">
@@ -7760,12 +7767,10 @@
             <button class="mobile-preview-re" id="mobilePreviewRe" type="button" aria-label="Reverse mask" aria-pressed="false">
               <img src="../assets/mobile-upload-re.svg" alt="" />
             </button>
-            <span class="mobile-uploaded-mark" aria-hidden="true">
-              <img class="mobile-uploaded-mark-a" src="../assets/mobile-entry/mobile-entry-mark-a.svg" alt="" />
-              <img class="mobile-uploaded-mark-b" src="../assets/mobile-entry/mobile-entry-mark-b.svg" alt="" />
-              <img class="mobile-uploaded-mark-c" src="../assets/mobile-entry/mobile-entry-mark-c.svg" alt="" />
-              <img class="mobile-uploaded-mark-d" src="../assets/mobile-entry/mobile-entry-mark-d.svg" alt="" />
-            </span>
+            <div class="mobile-editor-preset" aria-live="polite">
+              <strong id="mobileEditorPresetName"></strong>
+              <span id="mobileEditorPresetSub"></span>
+            </div>
             <video id="mobileCapturePlayback" class="mobile-capture-playback" muted playsinline preload="metadata"></video>
             <div class="mobile-camera-layer" id="mobileCameraLayer" aria-live="polite">
               <div class="mobile-camera-loading" aria-label="正在连接摄像头">
@@ -7847,15 +7852,15 @@
             <span class="mobile-dock-label">OUTPUT</span>
           </button>
         </div>
-        <div class="mobile-camera-dock" aria-label="摄像工具">
+        <div class="mobile-camera-dock" aria-label="图片工具">
           <button class="mobile-camera-dock-button upload" id="mobileCameraDockUpload" type="button" aria-label="从相册上传">
             <img src="../assets/mobile-camera-dock-upload.svg" alt="" />
           </button>
-          <button class="mobile-camera-dock-button rec" id="mobileCameraDockRec" type="button" aria-label="摄像模式">
+          <button class="mobile-camera-dock-button rec" id="mobileCameraDockRec" type="button" aria-label="拍照">
             <img src="../assets/mobile-camera-dock-rec.svg" alt="" />
             <img class="mobile-upload-rec-icon" src="../assets/mobile-upload-rec.svg" alt="" />
           </button>
-          <button class="mobile-camera-dock-button output" id="mobileCameraDockOutput" type="button" aria-label="输出录制视频">
+          <button class="mobile-camera-dock-button output" id="mobileCameraDockOutput" type="button" aria-label="保存图片">
             <img src="../assets/mobile-camera-dock-output.svg" alt="" />
           </button>
         </div>
@@ -8062,7 +8067,10 @@
       const mobileCameraSwitch = document.getElementById("mobileCameraSwitch");
       const mobileCameraPresetName = document.getElementById("mobileCameraPresetName");
       const mobileCameraPresetSub = document.getElementById("mobileCameraPresetSub");
+      const mobileEditorPresetName = document.getElementById("mobileEditorPresetName");
+      const mobileEditorPresetSub = document.getElementById("mobileEditorPresetSub");
       const mobileCameraDockUpload = document.getElementById("mobileCameraDockUpload");
+      const mobileCameraDock = document.querySelector(".mobile-camera-dock");
       const mobileCameraDockRec = document.getElementById("mobileCameraDockRec");
       const mobileCameraDockOutput = document.getElementById("mobileCameraDockOutput");
       const mobileRecordControl = document.getElementById("mobileRecordControl");
@@ -8220,6 +8228,7 @@
           "--mobile-viewport-height",
           `${Math.max(1, Math.round(viewportHeight))}px`
         );
+        syncMobileTopOffset();
       }
 
       function scheduleMobileVisualViewportSync() {
@@ -8346,6 +8355,8 @@
           const preset = presets[state.preset];
           mobileCameraPresetName.textContent = preset?.label || "";
           mobileCameraPresetSub.textContent = preset?.sub || "";
+          mobileEditorPresetName.textContent = preset?.label || "";
+          mobileEditorPresetSub.textContent = preset?.sub || "";
         }
       }
 
@@ -8361,7 +8372,7 @@
           "aria-label",
           mobileCapture.state === "ready" ? "输出录制视频" : "输出图片",
         );
-        mobileCameraDockRec?.setAttribute("aria-label", mobileCapture.state === "ready" ? "重新拍摄" : "摄像模式");
+        mobileCameraDockRec?.setAttribute("aria-label", mobileCapture.state === "ready" ? "重新拍摄" : "拍照");
         mobileRandomize.disabled = !niceEnabled && mobileCapture.state !== "idle";
         mobileRandomize.setAttribute("aria-disabled", String(mobileRandomize.disabled));
         document.querySelectorAll(".mobile-bottom-dock [data-export-png]").forEach((button) => {
@@ -8656,82 +8667,10 @@
         }
       }
 
-      async function openMobileCamera() {
-        if (window.innerWidth > 640) {
-          cameraFile.value = "";
-          cameraFile.click();
-          return;
-        }
-
-        if (isVideoSource()) resetVideoSource();
-        await closeMobileCapture({ resetSource: true, keepUiIdle: true });
-        const sessionId = ++mobileCameraSessionId;
-        state.source = null;
-        state.sourceType = "empty";
-        state.sourceAspect = 1;
-        state.sourceHasTransparency = false;
-        invalidateSourceImageCache();
-        renderAll(false);
-        setMobileCaptureState("requesting");
-        setInputStatus("正在连接摄像头...");
-        mobileCapture.recordingSupported = false;
-        mobileCapture.recordingSupportMessage = "";
-
-        try {
-          if (!window.isSecureContext) {
-            throw new Error("实时摄像头需要 HTTPS；手机通过局域网 HTTP 打开时无法授权摄像头");
-          }
-          if (!navigator.mediaDevices?.getUserMedia) throw new Error("当前浏览器不支持实时摄像头");
-          const stream = await requestMobileCameraStream();
-          if (sessionId !== mobileCameraSessionId) {
-            stream.getTracks().forEach((track) => track.stop());
-            return;
-          }
-          mobileCapture.stream = stream;
-          const actualFacingMode = stream.getVideoTracks()[0]?.getSettings?.().facingMode;
-          if (["user", "environment"].includes(actualFacingMode)) mobileCapture.facingMode = actualFacingMode;
-          mobileCameraSource.pause();
-          mobileCameraSource.removeAttribute("src");
-          mobileCameraSource.srcObject = stream;
-          mobileCameraSource.loop = false;
-          mobileCameraSource.muted = true;
-          if (mobileCameraSource.readyState < 1) await waitForMobileVideoEvent("loadedmetadata");
-          if (sessionId !== mobileCameraSessionId) return;
-          await mobileCameraSource.play();
-          if (sessionId !== mobileCameraSessionId) return;
-          mobileCapture.renderSize = 420;
-          mobileCapture.fps = 12;
-          mobileCapture.frameSamples = 0;
-          mobileCapture.frameCost = 0;
-          applyMobileCaptureSource("mobile-live");
-          const recordingSupport = await assessMobileRecordingSupport();
-          if (sessionId !== mobileCameraSessionId) return;
-          mobileCapture.recordingSupported = recordingSupport.supported;
-          mobileCapture.recordingSupportMessage = recordingSupport.message;
-          setMobileCaptureState("previewing");
-          mobileRecordControl.setAttribute("aria-label", recordingSupport.supported
-            ? "点击拍照，按住录像，最长 5 秒"
-            : "点击拍照，当前浏览器不支持录像");
-          setInputStatus(recordingSupport.supported
-            ? "实时预览中 · 点击拍照，按住录制，最长 5 秒"
-            : `${recordingSupport.message} 仍可点击拍照。`);
-        } catch (error) {
-          if (sessionId !== mobileCameraSessionId) return;
-          cancelMobileCaptureRenderLoop();
-          stopMobileCameraTracks();
-          const cameraErrorMessages = {
-            NotAllowedError: "摄像头权限未开启。请在 Safari 的页面设置中允许摄像头；微信内打开时请改用 Safari。",
-            NotFoundError: "未检测到可用摄像头。",
-            NotReadableError: "摄像头正被其他应用占用，请关闭占用摄像头的应用后重试。",
-            AbortError: "摄像头启动被中断，请稍后重试。",
-            NotSupportedError: "当前浏览器不支持实时摄像头。请在最新版 Safari 中打开。",
-            SecurityError: "当前页面无法访问摄像头。请确认使用 HTTPS，并在 Safari 中重试。",
-          };
-          mobileCameraErrorText.textContent = cameraErrorMessages[error?.name]
-            || `无法使用摄像头：${error.message || "未知错误"}`;
-          setMobileCaptureState("error");
-          setInputStatus("摄像头无法使用");
-        }
+      function openMobileCamera() {
+        // Keep this synchronous for the native picker; cancellation must not reset the editor.
+        cameraFile.value = "";
+        cameraFile.click();
       }
 
       function createMobileRecorder(stream, chunks) {
@@ -9320,12 +9259,20 @@
       function syncMobileTopOffset() {
         if (!mobileFixedTop) return;
         requestAnimationFrame(() => {
+          if (window.innerWidth > 640) return;
           const previewSize = Math.ceil(mobileFixedTop.getBoundingClientRect().width);
-          const previewHeight = app.classList.contains("mobile-camera-session")
-            ? previewSize
-            : 520;
+          const maximumHeight = 576;
+          const naturalHeight = previewSize / (state.sourceAspect || 1);
+          const desiredHeight = clamp(naturalHeight, previewSize, maximumHeight);
+          const viewportHeight = window.visualViewport?.height || window.innerHeight;
+          const dockHeight = mobileCameraDock.getBoundingClientRect().height || 88;
+          // Two 60px control rows, a 4px gap, and 16px padding on either side.
+          const availableHeight = Math.max(120, viewportHeight - dockHeight - 156);
+          const previewHeight = Math.min(desiredHeight, availableHeight);
+          app.classList.toggle("mobile-preview-extreme", naturalHeight <= previewSize || naturalHeight >= maximumHeight);
           app.style.setProperty("--mobile-preview-size", `${previewSize}px`);
           app.style.setProperty("--mobile-preview-height", `${previewHeight}px`);
+          app.style.setProperty("--mobile-upload-preview-height", `${previewHeight}px`);
           const topHeight = Math.ceil(mobileFixedTop.getBoundingClientRect().height);
           app.style.setProperty("--mobile-top-height", `${topHeight}px`);
           syncMobileHeaderAssets();
@@ -11122,7 +11069,21 @@
 
       function renderMobileColorPanel() {
         if (!mobileColorPanel) return;
-        mobileColorPanel.replaceChildren();
+        mobileColorPanel.innerHTML = '<div class="mobile-color-row">' + ["fg", "bg"].map((target) => {
+          const descriptor = mobileColorDescriptor(target);
+          const color = getMobileColor(target);
+          const transparent = getMobileColorAlpha(target) === 0;
+          return `<button type="button" class="mobile-color-card${transparent ? " transparent" : ""}"
+            data-mobile-alpha="${target}" aria-label="${descriptor.alphaLabel}" aria-pressed="${transparent}"
+            style="--mobile-color:${color}">
+            <span class="mobile-color-label">${descriptor.label}</span>
+            <span class="mobile-alpha-toggle${transparent ? " active" : ""}" aria-hidden="true"></span>
+            <span class="mobile-color-hash">#</span>
+            <span class="mobile-color-value">${color.slice(1).toUpperCase()}</span>
+          </button>`;
+        }).join("") + `<button type="button" class="mobile-re-card${state.outputReverse ? " active" : ""}"
+          data-mobile-re aria-label="反转颜色" aria-pressed="${state.outputReverse}"></button></div>`;
+        bindMobileColorPanel();
         syncMobileCaptureEditingControls();
       }
 
@@ -12735,6 +12696,11 @@
 
       async function loadFile(file, options = {}) {
         if (!file) return { loaded: false, embeddedRecipe: false };
+        const mobilePhoto = window.innerWidth <= 640;
+        if (mobilePhoto && (isVideoFile(file) || isPdfFile(file) || isSvgFile(file))) {
+          showMobileEntryToast("手机端仅支持照片，请选择一张图片");
+          return { loaded: false, embeddedRecipe: false };
+        }
         const {
           commitHistory = true,
           detectRecipe = true,
@@ -12767,19 +12733,24 @@
             return { loaded: true, embeddedRecipe: false };
           }
 
-          if (!isRasterImageFile(file) && !isSvgFile(file)) {
+          const nativePhoto = mobilePhoto && (/^image\//i.test(file.type) || /\.(heic|heif|webp|avif)$/i.test(file.name));
+          if (!isRasterImageFile(file) && !isSvgFile(file) && !nativePhoto) {
             setInputStatus("格式不支持：请上传 PNG、JPG、视频、SVG 或 PDF");
+            if (mobilePhoto) showMobileEntryToast("无法读取这张照片，请换一张图片");
             return { loaded: false, embeddedRecipe: false };
           }
 
           const url = URL.createObjectURL(file);
           const img = new Image();
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = () => reject(new Error("这个文件无法作为图像处理"));
-            img.src = url;
-          });
-          URL.revokeObjectURL(url);
+          try {
+            await new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = () => reject(new Error("这个文件无法作为图像处理"));
+              img.src = url;
+            });
+          } finally {
+            URL.revokeObjectURL(url);
+          }
           const type = isSvgFile(file) ? "svg" : "image";
           const label = embeddedRecipe
             ? "已识别图片内的配方码"
@@ -12794,6 +12765,7 @@
           return { loaded: true, embeddedRecipe: Boolean(embeddedRecipe) };
         } catch (error) {
           setInputStatus(`读取失败：${error.message}`);
+          if (mobilePhoto) showMobileEntryToast("照片读取失败，请选择 JPG 或 PNG 图片重试");
           return { loaded: false, embeddedRecipe: false };
         }
       }
@@ -13335,10 +13307,7 @@
         cameraFile.click();
       });
 
-      async function openMobileGallery() {
-        if (mobileCapture.state !== "idle" || isMobileCaptureSource()) {
-          await closeMobileCapture({ resetSource: true });
-        }
+      function openMobileGallery() {
         mobileGalleryFile.value = "";
         mobileGalleryFile.click();
       }
@@ -13367,10 +13336,7 @@
         await openMobileCamera();
       });
       mobileCameraDockUpload?.addEventListener("click", openMobileGallery);
-      mobileCameraDockRec?.addEventListener("click", () => {
-        if (mobileCapture.state === "idle") openMobileCamera();
-        else if (mobileCapture.state === "ready") restartMobileRecording();
-      });
+      mobileCameraDockRec?.addEventListener("click", openMobileCamera);
       mobileCameraDockOutput?.addEventListener("click", () => {
         if (mobileCapture.state === "ready") {
           downloadMobileRecording();
