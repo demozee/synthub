@@ -9086,11 +9086,21 @@
         };
       }
 
-      function drawFixedOutput(sourceCanvas, targetCanvas, targetCtx, maxSide, even = false) {
+      const videoPreviewMatte = "#f5f5f5";
+
+      function clearOutputCanvas(ctx, width, height, matte = null) {
+        ctx.clearRect(0, 0, width, height);
+        if (matte) {
+          ctx.fillStyle = matte;
+          ctx.fillRect(0, 0, width, height);
+        }
+      }
+
+      function drawFixedOutput(sourceCanvas, targetCanvas, targetCtx, maxSide, even = false, matte = null) {
         const { width, height } = fixedOutputDimensions(maxSide, state.sourceAspect, even);
         if (targetCanvas.width !== width) targetCanvas.width = width;
         if (targetCanvas.height !== height) targetCanvas.height = height;
-        targetCtx.clearRect(0, 0, width, height);
+        clearOutputCanvas(targetCtx, width, height, matte);
         targetCtx.imageSmoothingEnabled = true;
         targetCtx.imageSmoothingQuality = "high";
         targetCtx.drawImage(sourceCanvas, 0, 0, width, height);
@@ -12876,10 +12886,10 @@
         });
       }
 
-      async function drawCachedFrame(blob, canvas = result, context = resultCtx) {
+      async function drawCachedFrame(blob, canvas = result, context = resultCtx, matte = null) {
         if (window.createImageBitmap) {
           const bitmap = await createImageBitmap(blob);
-          context.clearRect(0, 0, canvas.width, canvas.height);
+          clearOutputCanvas(context, canvas.width, canvas.height, matte);
           context.imageSmoothingEnabled = true;
           context.imageSmoothingQuality = "high";
           context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
@@ -12894,7 +12904,7 @@
             image.onerror = () => reject(new Error("无法读取缓存帧"));
             image.src = url;
           });
-          context.clearRect(0, 0, canvas.width, canvas.height);
+          clearOutputCanvas(context, canvas.width, canvas.height, matte);
           context.imageSmoothingEnabled = true;
           context.imageSmoothingQuality = "high";
           context.drawImage(image, 0, 0, canvas.width, canvas.height);
@@ -12981,7 +12991,7 @@
             await seekVideo(Math.max(0, time));
             recordVideoSeekTime(performance.now() - seekStarted);
             renderCurrentVideoFrame(renderSize, time);
-            drawFixedOutput(result, videoEncodeCanvas, videoEncodeCtx, fixedVideoOutputSize(), true);
+            drawFixedOutput(result, videoEncodeCanvas, videoEncodeCtx, fixedVideoOutputSize(), true, videoPreviewMatte);
 
             if (!encoder) {
               const config = await getSupportedVideoEncoderConfig(videoEncodeCanvas.width, videoEncodeCanvas.height, bitrate);
@@ -13054,8 +13064,10 @@
 
           if (signature !== videoSettingsSignature()) return null;
           await waitForVideoRenderResume();
-          drawFixedOutput(result, videoEncodeCanvas, videoEncodeCtx, fixedVideoOutputSize(), true);
-          await drawCachedFrame(frameBlobs[0], videoEncodeCanvas, videoEncodeCtx);
+          const dimensions = fixedOutputDimensions(fixedVideoOutputSize(), state.sourceAspect, true);
+          videoEncodeCanvas.width = dimensions.width;
+          videoEncodeCanvas.height = dimensions.height;
+          await drawCachedFrame(frameBlobs[0], videoEncodeCanvas, videoEncodeCtx, videoPreviewMatte);
           stream = videoEncodeCanvas.captureStream(0);
           let videoTrack = stream.getVideoTracks()[0];
           const manualFrames = Boolean(videoTrack && typeof videoTrack.requestFrame === "function");
@@ -13087,7 +13099,7 @@
           for (let frame = 1; frame < frameBlobs.length; frame++) {
             await waitForVideoRenderResume(recorder);
             const started = performance.now();
-            await drawCachedFrame(frameBlobs[frame], videoEncodeCanvas, videoEncodeCtx);
+            await drawCachedFrame(frameBlobs[frame], videoEncodeCanvas, videoEncodeCtx, videoPreviewMatte);
             if (manualFrames) videoTrack.requestFrame();
             const elapsed = performance.now() - started;
             await new Promise((resolve) => window.setTimeout(resolve, Math.max(0, frameDuration - elapsed)));
