@@ -10,7 +10,7 @@
       data-website-id="79bb69d5-2b32-4ab4-b7ae-b4f61d34bee1"
       data-domains="synthub.art,www.synthub.art"
     ></script>
-    <title>Synthub Graphic Texture V2.6</title>
+    <title>Synthub Graphic Texture V2.7</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
@@ -11852,7 +11852,22 @@
         return blurCtx.getImageData(0, 0, w, h).data;
       }
 
-      function renderThermalMap(source, mask, w, h, textureMask = mask, frameContext = staticRenderFrameContext) {
+      function thermalQualityRefinement(quality) {
+        if (quality <= 720) return null;
+        const fine = quality >= 1920 ? 1 : 0.6;
+        return {
+          focus: lerp(1, lerp(0.75, 0.30, 68 / 100), fine),
+          soft: lerp(1, 0.72, fine),
+          glow: 1,
+          tone: 1,
+          grain: lerp(1, 0.04 + 30 / 180, fine),
+          drop: Math.pow(1 - fine, 2),
+          edge: lerp(1, 0.12, fine),
+        };
+      }
+
+      function renderThermalMap(source, mask, w, h, textureMask = mask, frameContext = staticRenderFrameContext, refinement = undefined) {
+        if (refinement === undefined) refinement = thermalQualityRefinement(selectedOutputRenderSize());
         const { data } = source;
         const out = getRenderBuffers(w, h).output;
         const d = out.data;
@@ -11882,15 +11897,23 @@
         const distress = state.nodes.distress;
         const distressActive = distress.enabled;
         const maskCanvas = createMaskAlphaCanvas(mask, w, h);
-        const soft = getBlurredMaskData(mask, w, h, 8 + decorBlur * 0.28 + textureBleed * 0.08, maskCanvas);
-        const body = getBlurredMaskData(mask, w, h, 2 + edge.width * 1.6, maskCanvas);
-        const glow = getBlurredMaskData(mask, w, h, 18 + decorBlur * 0.42 + textureBleed * 0.16, maskCanvas);
+        // M/H refine the original material without replacing its mask or palette.
+        // Selected quality (not temporary preview size) determines the profile; L stays unchanged.
+        const blurScale = refinement ? Math.max(w, h) / 720 : 1;
+        const soft = getBlurredMaskData(mask, w, h, (8 + decorBlur * 0.28 + textureBleed * 0.08) * blurScale * (refinement?.soft ?? 1), maskCanvas);
+        const body = getBlurredMaskData(mask, w, h, (2 + edge.width * 1.6) * blurScale * (refinement?.focus ?? 1), maskCanvas);
+        const glow = getBlurredMaskData(mask, w, h, (18 + decorBlur * 0.42 + textureBleed * 0.16) * blurScale * (refinement?.glow ?? 1), maskCanvas);
         const distressCell = Math.max(1, distress.size || 1);
         const distressAmount = distressActive ? distress.amount / 100 : 0;
-        const fuzzyEdgeScale = 4 + edge.rough * 0.045;
+        const originalDropMean = (1 - distressAmount * 0.52) * (1 - distressAmount * 0.085 * 0.44) + distressAmount * 0.52 * 0.18;
+        const refinedDropMean = refinement
+          ? (1 - distressAmount * 0.52 * refinement.drop) * (1 - distressAmount * 0.085 * refinement.drop * 0.44) + distressAmount * 0.52 * refinement.drop * 0.18
+          : 1;
+        const dropCompensation = refinement && distressActive ? originalDropMean / refinedDropMean : 1;
+        const fuzzyEdgeScale = (4 + edge.rough * 0.045) * blurScale;
         const bodyMixScale = ink.strength / 100 * inkAlpha;
         const edgeMixScale = (0.26 + edge.width * 0.08) * edgeAlpha;
-        const materialNoiseScale = textureFabric * 0.82 + decorParticles * 0.12;
+        const materialNoiseScale = (textureFabric * 0.82 + decorParticles * 0.12) * (refinement?.grain ?? 1);
         const scanScale = textureScan / 100;
         const paperToneMap = textureActive ? getPaperToneMap(w, h, texture, 121) : null;
         const scanToneMap = textureActive ? getPaperToneMap(w, h, texture, 123, 173) : null;
@@ -11905,7 +11928,8 @@
             const p = row + x;
             const i = p * 4;
             const luma = getLuma(data, i);
-            const tone = clamp((255 - luma) / 255, 0, 1);
+            const originalTone = clamp((255 - luma) / 255, 0, 1);
+            const tone = refinement ? clamp(0.5 + (originalTone - 0.5) * refinement.tone, 0, 1) : originalTone;
             const softA = soft[i + 3] / 255;
             const bodyA = body[i + 3] / 255;
             const glowA = glow[i + 3] / 255;
@@ -11919,7 +11943,7 @@
             const textureClip = clipDecor ? clamp(textureMask[p], 0, 1) : 1;
             const textureStrength = textureActive ? textureClip : 0;
             const paperTone = paperToneMap
-              ? sampleTemporalToneMap(paperToneMap, w, h, x, y, paperToneSample) * textureStrength
+              ? sampleTemporalToneMap(paperToneMap, w, h, x, y, paperToneSample) * textureStrength * (refinement?.grain ?? 1)
               : 0;
             const materialArea = Math.max(softA, bodyA, fuzzyEdge);
             const materialNoise = textureStrength * materialArea * (temporalHash(x, y, 122, frameContext, 0.34) - 0.5) * materialNoiseScale;
@@ -11927,7 +11951,7 @@
               Math.floor(x / distressCell),
               Math.floor(y / distressCell),
               distress.seed,
-              distressAmount * 0.52,
+              distressAmount * 0.52 * (refinement?.drop ?? 1),
               frameContext,
               0.5,
             );
@@ -11935,14 +11959,14 @@
               x,
               y,
               distress.seed + 127,
-              distressAmount * 0.085,
+              distressAmount * 0.085 * (refinement?.drop ?? 1),
               frameContext,
               0.62,
             );
-            const distressDrop = coarseDrop ? 0.18 : pixelDrop ? 0.56 : 1;
+            const distressDrop = (coarseDrop ? 0.18 : pixelDrop ? 0.56 : 1) * dropCompensation;
             const distressNoise = distressActive
               ? (temporalHash(Math.floor(x / 2), Math.floor(y / 2), distress.seed + 151, frameContext, 0.56) - 0.5)
-                * (10 + distress.amount * 1.25) * Math.max(softA, bodyA)
+                * (10 + distress.amount * 1.25) * Math.max(softA, bodyA) * (refinement?.grain ?? 1)
               : 0;
 
             let r = clamp(lerp(255, bgRgb.r, bgCompositeAlpha) + paperTone);
@@ -11959,7 +11983,7 @@
             g = lerp(g, inkRgb.g, bodyMix);
             b = lerp(b, inkRgb.b, bodyMix);
 
-            const edgeMix = clamp(fuzzyEdge * edgeMixScale, 0, 0.58);
+            const edgeMix = clamp(fuzzyEdge * edgeMixScale * (refinement?.edge ?? 1), 0, 0.58);
             r = lerp(r, edgeRgb.r, edgeMix);
             g = lerp(g, edgeRgb.g, edgeMix);
             b = lerp(b, edgeRgb.b, edgeMix);
@@ -11967,7 +11991,7 @@
             const paintedArea = Math.max(haloMix, bodyMix, edgeMix);
             const scanTone = scanToneMap
               ? sampleTemporalToneMap(scanToneMap, w, h, x, y, scanToneSample)
-                * textureStrength * 0.34 * scanScale
+                * textureStrength * 0.34 * scanScale * (refinement?.grain ?? 1)
               : 0;
             d[i] = clamp(r + materialNoise + scanTone + distressNoise);
             d[i + 1] = clamp(g + materialNoise + scanTone + distressNoise);
@@ -11981,7 +12005,7 @@
         resultCtx.putImageData(out, 0, 0);
         if (decor.enabled && decor.grid > 0) {
           resultCtx.save();
-          resultCtx.globalAlpha = decor.grid / 100 * 0.12;
+          resultCtx.globalAlpha = decor.grid / 100 * 0.12 * (refinement?.grain ?? 1);
           resultCtx.strokeStyle = "#111111";
           resultCtx.lineWidth = 1;
           const step = Math.max(12, Number(decor.gridSize) || 48);
