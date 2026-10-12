@@ -62,7 +62,7 @@ async function runFixture() {
       check('Entry toast above entry screen', Number(getComputedStyle(toast).zIndex) > Number(getComputedStyle(document.querySelector('.mobile-entry-screen')).zIndex));
       return;
     }
-    const sizes = { wide: [1000, 300], tall: [300, 1000], square: [512, 512] };
+    const sizes = { wide: [1000, 300], tall: [300, 1000], square: [512, 512], 'zoom-wide': [1000, 300], 'zoom-tall': [300, 1000] };
     const [width, height] = sizes[qa.scenario] || [600, 800];
     const source = document.createElement('canvas');
     source.width = width; source.height = height;
@@ -105,6 +105,76 @@ async function runFixture() {
     check('Preview height follows aspect and viewport', Math.abs(preview.height - expected) < 1);
     await until(() => mobileImageOutput.blob);
     const oldBlob = mobileImageOutput.blob;
+    const zoomTest = qa.scenario.startsWith('zoom');
+    if (zoomTest) {
+      const surface = document.querySelector('.mobile-preview-fixed');
+      const bounds = surface.getBoundingClientRect();
+      const cx = bounds.left + bounds.width / 2;
+      const cy = bounds.top + bounds.height / 2;
+      const touch = (type, points, target = mobileResult) => {
+        const touches = points.map(([x, y], identifier) => new Touch({ identifier, target, clientX: x, clientY: y }));
+        const event = new TouchEvent(type, { bubbles: true, cancelable: true, touches, targetTouches: touches });
+        target.dispatchEvent(event);
+        return event;
+      };
+      const pinch = async (from, to) => {
+        touch('touchstart', [[cx - from / 2, cy], [cx + from / 2, cy]]);
+        const move = touch('touchmove', [[cx - to / 2, cy], [cx + to / 2, cy]]);
+        touch('touchend', []);
+        await wait(40);
+        return move;
+      };
+      const pixels = mobileResult.toDataURL();
+      const originalCanvas = rect('#mobileResult');
+      if (qa.scenario === 'zoom') {
+        touch('touchstart', [[cx - 25, cy + 25], [cx + 75, cy + 25]]);
+        touch('touchmove', [[cx - 75, cy + 25], [cx + 125, cy + 25]]);
+        touch('touchend', []);
+        await wait(40);
+        const anchored = rect('#mobileResult');
+        check('Pinch preserves off-center focal point', Math.abs(anchored.left - (originalCanvas.left - originalCanvas.width / 2 - 25)) < 1 && Math.abs(anchored.top - (originalCanvas.top - originalCanvas.height / 2 - 25)) < 1);
+        await pinch(100, 50);
+      }
+      const pinchEvent = await pinch(100, 200);
+      check('Pinch scales image to 2x', Math.abs(rect('#mobileResult').width / originalCanvas.width - 2) < .01);
+      check('Page pinch default prevented', pinchEvent.defaultPrevented);
+      check('UI stays fixed during pinch', rect('.mobile-camera-dock').width === dock.width && rect('.mobile-camera-nice').width === nice.width && rect('.mobile-editor-preset').top === title.top);
+      check('Zoom does not rerender or change export', mobileResult.toDataURL() === pixels && mobileImageOutput.blob === oldBlob);
+      await pinch(100, 500);
+      check('Zoom capped at 4x', Math.abs(rect('#mobileResult').width / originalCanvas.width - 4) < .01);
+      touch('touchstart', [[cx, cy]]);
+      touch('touchmove', [[cx + 4000, cy + 4000]]);
+      touch('touchend', []);
+      await wait(40);
+      const fit = Math.min(bounds.width / mobileResult.width, bounds.height / mobileResult.height);
+      const maxX = Math.max(0, (mobileResult.width * fit * 4 - bounds.width) / 2);
+      const maxY = Math.max(0, (mobileResult.height * fit * 4 - bounds.height) / 2);
+      const moved = rect('#mobileResult');
+      check('Pan clamps at image edge', Math.abs(moved.left - (originalCanvas.left - originalCanvas.width * 1.5 + maxX)) < 1 && Math.abs(moved.top - (originalCanvas.top - originalCanvas.height * 1.5 + maxY)) < 1);
+      const uiPinch = touch('touchmove', [[cx, cy], [cx + 80, cy]], mobileCameraDockRec);
+      check('Pinch on controls cannot zoom page', uiPinch.defaultPrevented);
+      ['gesturestart', 'gesturechange', 'gestureend'].forEach(type => {
+        const event = new Event(type, { bubbles: true, cancelable: true });
+        surface.dispatchEvent(event);
+        check(`Safari ${type} suppressed`, event.defaultPrevented);
+      });
+      const tap = () => { touch('touchstart', [[cx, cy]]); touch('touchend', []); };
+      tap(); tap();
+      await wait(40);
+      check('Double tap restores full image', rect('#mobileResult').width === originalCanvas.width && rect('#mobileResult').left === originalCanvas.left);
+      await pinch(100, 50);
+      check('Cannot shrink below full image', rect('#mobileResult').width === originalCanvas.width);
+      await pinch(100, 200);
+      touch('touchstart', [[cx - 50, cy], [cx + 50, cy]]);
+      touch('touchmove', [[cx - 75, cy], [cx + 75, cy]]);
+      touch('touchend', [[cx + 75, cy]]);
+      touch('touchmove', [[cx + 90, cy + 15]]);
+      touch('touchcancel', []);
+      await wait(40);
+      check('Pinch to pan and cancellation finish cleanly', !surface.classList.contains('is-gesturing') && Math.abs(rect('#mobileResult').width / originalCanvas.width - 3) < .01);
+      qa.zoomScale = rect('#mobileResult').width / originalCanvas.width;
+      if (qa.scenario === 'zoom-preview') return;
+    }
     for (const target of ['fg', 'bg']) {
       const button = () => mobileColorPanel.querySelector(`[data-mobile-alpha="${target}"]`);
       button().click();
@@ -119,10 +189,20 @@ async function runFixture() {
     mobilePresetGrid.querySelector('.mobile-camera-nice').click();
     check('NICE TRY randomizes colors', getMobileColor('fg') + getMobileColor('bg') !== oldColors);
     check('NICE TRY keeps heading in sync', mobileEditorPresetName.textContent === presets[state.preset].label && mobileEditorPresetSub.textContent === presets[state.preset].sub);
+    if (zoomTest) {
+      await wait(450);
+      check('Effect changes preserve zoom', Math.abs(Number(mobileResult.style.getPropertyValue('--preview-zoom')) - qa.zoomScale) < .01);
+      mobileCameraDockRec.click();
+      check('Cancelled retake preserves zoom', Number(mobileResult.style.getPropertyValue('--preview-zoom')) === qa.zoomScale);
+    }
     const currentRecipe = JSON.stringify(state.nodes);
     select(cameraFile, file);
     await until(() => state.source !== before);
     check('Same photo retake preserves effects', JSON.stringify(state.nodes) === currentRecipe);
+    if (zoomTest) {
+      await wait(80);
+      check('New photo resets zoom', Number(mobileResult.style.getPropertyValue('--preview-zoom')) === 1);
+    }
     const replacement = state.source;
     const video = await loadFile(new File(['bad'], 'clip.mp4', { type: 'video/mp4' }));
     check('Video rejected without losing image', !video.loaded && state.source === replacement);

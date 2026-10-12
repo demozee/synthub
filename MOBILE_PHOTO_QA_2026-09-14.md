@@ -59,3 +59,13 @@ Re-read the four current Figma nodes: `3609:1499`, `6475:279`, `6030:53`, and `6
 - In-app Chromium checks: 390x820 portrait and tall, 375x812 wide, 430x932 camera-file return, and 390x654 tall with simulated 34px bottom safe area. Each editor run has 33 checks. Entry checks cover brand size, icon-to-copy clearance, overflow, and toast stacking at 375x812, 430x932, and 390x654 with simulated safe area.
 - Screenshots reviewed for entry, normal, wide, and tall layouts. No browser errors reported. Release checks and `git diff --check` pass.
 - Local mobile preview HTML and brand asset return HTTP 200 with `Cache-Control: no-store`. This update remains local, without a version change or GitHub push.
+
+## Preview pinch zoom: 2026-10-12
+
+- Mobile pinch gestures now scale only the result canvas between 1x and 4x. Preset headings and controls remain fixed.
+- The pinch midpoint anchors the image; one finger can pan after zooming. Translation clamps against the actual contained image dimensions, including wide and tall sources. Double tap restores the full image.
+- Native page pinch is cancelled through mobile touch handling and Safari gesture events. Vertical scrolling remains available outside the preview.
+- Preview changes use one CSS-transform update per animation frame and do not redraw the effect canvas or prepare another export. Effect changes retain the view; successfully importing a new photo resets it.
+- Simulated touch regression: 50 checks pass at 390x844, including off-center anchoring. Wide 375x812, tall 430x932, and short 390x654 with simulated 34px safe area each pass 49 checks. Checks cover bounds, gesture cancellation, fixed UI, unchanged image pixels/export during zoom, effect changes, and photo replacement.
+- Zoomed preview screenshot reviewed after switching to Dot Shirt. Release checks and whitespace checks pass.
+- These are in-app Chromium tests using synthetic touch events. Actual iPhone Safari pinch arbitration still needs a device check. No version name changed; this follow-up is local.

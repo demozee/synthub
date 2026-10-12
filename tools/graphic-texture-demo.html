@@ -4386,7 +4386,7 @@
         html,
         body {
           scrollbar-width: none;
-          touch-action: manipulation;
+          touch-action: pan-y;
         }
 
         body::-webkit-scrollbar {
@@ -6832,6 +6832,8 @@
           display: grid;
           width: 100%;
           height: 520px;
+          overflow: hidden;
+          touch-action: none;
           background: var(--mobile-bg);
           place-items: center;
         }
@@ -6841,6 +6843,12 @@
           height: 100%;
           object-fit: contain;
           background: var(--mobile-bg);
+          transform-origin: center;
+          transform: translate(var(--preview-pan-x, 0px), var(--preview-pan-y, 0px)) scale(var(--preview-zoom, 1));
+        }
+
+        .app.has-source:not(.mobile-camera-session) .mobile-preview-fixed.is-gesturing #mobileResult {
+          will-change: transform;
         }
 
         .mobile-editor-preset {
@@ -8216,6 +8224,147 @@
       const renderDebugEnabled = new URLSearchParams(window.location.search).has("debugRender");
       let mobileViewportSyncFrame = 0;
       let mobileCameraSessionId = 0;
+
+      const mobilePreviewView = { scale: 1, x: 0, y: 0, source: null };
+      const mobilePreviewSurface = mobileResult.closest(".mobile-preview-fixed");
+      let mobilePreviewGesture = null;
+      let mobilePreviewTransformFrame = 0;
+      let mobilePreviewLastTap = null;
+
+      function clampMobilePreviewView() {
+        const width = mobilePreviewSurface.clientWidth;
+        const height = mobilePreviewSurface.clientHeight;
+        const fit = Math.min(width / mobileResult.width, height / mobileResult.height);
+        const maxX = Math.max(0, (mobileResult.width * fit * mobilePreviewView.scale - width) / 2);
+        const maxY = Math.max(0, (mobileResult.height * fit * mobilePreviewView.scale - height) / 2);
+        mobilePreviewView.x = clamp(mobilePreviewView.x, -maxX, maxX);
+        mobilePreviewView.y = clamp(mobilePreviewView.y, -maxY, maxY);
+      }
+
+      function paintMobilePreviewView() {
+        mobilePreviewTransformFrame = 0;
+        mobileResult.style.setProperty("--preview-zoom", mobilePreviewView.scale);
+        mobileResult.style.setProperty("--preview-pan-x", `${mobilePreviewView.x}px`);
+        mobileResult.style.setProperty("--preview-pan-y", `${mobilePreviewView.y}px`);
+      }
+
+      function scheduleMobilePreviewView() {
+        if (!mobilePreviewTransformFrame) mobilePreviewTransformFrame = requestAnimationFrame(paintMobilePreviewView);
+      }
+
+      function resetMobilePreviewView() {
+        mobilePreviewView.scale = 1;
+        mobilePreviewView.x = 0;
+        mobilePreviewView.y = 0;
+        mobilePreviewGesture = null;
+        mobilePreviewLastTap = null;
+        mobilePreviewSurface.classList.remove("is-gesturing");
+        scheduleMobilePreviewView();
+      }
+
+      function beginMobilePreviewGesture(touches) {
+        const points = Array.from(touches).slice(0, 2);
+        if (!points.length) {
+          mobilePreviewGesture = null;
+          mobilePreviewSurface.classList.remove("is-gesturing");
+          return;
+        }
+        const bounds = mobilePreviewSurface.getBoundingClientRect();
+        const centerX = points.reduce((sum, point) => sum + point.clientX, 0) / points.length;
+        const centerY = points.reduce((sum, point) => sum + point.clientY, 0) / points.length;
+        mobilePreviewGesture = {
+          count: points.length,
+          centerX, centerY,
+          distance: points.length === 2 ? Math.hypot(points[1].clientX - points[0].clientX, points[1].clientY - points[0].clientY) : 0,
+          scale: mobilePreviewView.scale,
+          x: mobilePreviewView.x,
+          y: mobilePreviewView.y,
+          anchorX: centerX - bounds.left - bounds.width / 2,
+          anchorY: centerY - bounds.top - bounds.height / 2,
+          startedAt: performance.now(),
+          moved: points.length === 2,
+        };
+        mobilePreviewSurface.classList.toggle("is-gesturing", points.length === 2 || mobilePreviewView.scale > 1);
+      }
+
+      function mobilePreviewCanZoom() {
+        return window.matchMedia("(max-width: 640px)").matches && state.source && !app.classList.contains("mobile-camera-session");
+      }
+
+      mobilePreviewSurface.addEventListener("touchstart", (event) => {
+        if (!mobilePreviewCanZoom() || event.target.closest("button")) return;
+        if (event.cancelable) event.preventDefault();
+        if (event.touches.length > 1) mobilePreviewLastTap = null;
+        beginMobilePreviewGesture(event.touches);
+      }, { passive: false });
+
+      mobilePreviewSurface.addEventListener("touchmove", (event) => {
+        if (!mobilePreviewCanZoom() || !mobilePreviewGesture) return;
+        if (event.cancelable) event.preventDefault();
+        const points = Array.from(event.touches).slice(0, 2);
+        if (points.length !== mobilePreviewGesture.count) {
+          beginMobilePreviewGesture(event.touches);
+          return;
+        }
+        const gesture = mobilePreviewGesture;
+        const centerX = points.reduce((sum, point) => sum + point.clientX, 0) / points.length;
+        const centerY = points.reduce((sum, point) => sum + point.clientY, 0) / points.length;
+        const dx = centerX - gesture.centerX;
+        const dy = centerY - gesture.centerY;
+        if (Math.hypot(dx, dy) > 8) gesture.moved = true;
+        if (points.length === 2) {
+          const distance = Math.hypot(points[1].clientX - points[0].clientX, points[1].clientY - points[0].clientY);
+          mobilePreviewView.scale = clamp(gesture.scale * distance / Math.max(1, gesture.distance), 1, 4);
+          // Keep the image point under the pinch midpoint fixed while both fingers move.
+          const ratio = mobilePreviewView.scale / gesture.scale;
+          mobilePreviewView.x = gesture.anchorX + dx - (gesture.anchorX - gesture.x) * ratio;
+          mobilePreviewView.y = gesture.anchorY + dy - (gesture.anchorY - gesture.y) * ratio;
+        } else if (mobilePreviewView.scale > 1) {
+          mobilePreviewView.x = gesture.x + dx;
+          mobilePreviewView.y = gesture.y + dy;
+        }
+        clampMobilePreviewView();
+        scheduleMobilePreviewView();
+      }, { passive: false });
+
+      mobilePreviewSurface.addEventListener("touchend", (event) => {
+        if (!mobilePreviewGesture) return;
+        if (event.cancelable) event.preventDefault();
+        const gesture = mobilePreviewGesture;
+        const now = performance.now();
+        if (!event.touches.length && !gesture.moved && now - gesture.startedAt < 250) {
+          const previous = mobilePreviewLastTap;
+          if (previous && now - previous.time < 300 && Math.hypot(previous.x - gesture.centerX, previous.y - gesture.centerY) < 32) {
+            resetMobilePreviewView();
+          } else {
+            mobilePreviewLastTap = { time: now, x: gesture.centerX, y: gesture.centerY };
+          }
+        }
+        beginMobilePreviewGesture(event.touches);
+        if (mobilePreviewGesture) mobilePreviewGesture.moved = true;
+      }, { passive: false });
+
+      mobilePreviewSurface.addEventListener("touchcancel", () => {
+        mobilePreviewLastTap = null;
+        beginMobilePreviewGesture([]);
+      });
+
+      // Safari can ignore the viewport zoom limit, so also cancel its native pinch gesture.
+      const preventMobilePagePinch = (event) => {
+        if (window.matchMedia("(max-width: 640px)").matches && (event.type.startsWith("gesture") || event.touches.length > 1) && event.cancelable) {
+          event.preventDefault();
+        }
+      };
+      ["touchstart", "touchmove", "gesturestart", "gesturechange", "gestureend"].forEach((type) => {
+        document.addEventListener(type, preventMobilePagePinch, { passive: false, capture: true });
+      });
+
+      const mobilePreviewResizeObserver = new ResizeObserver(() => {
+        beginMobilePreviewGesture([]);
+        clampMobilePreviewView();
+        scheduleMobilePreviewView();
+      });
+      mobilePreviewResizeObserver.observe(mobilePreviewSurface);
 
       function syncMobileVisualViewport() {
         mobileViewportSyncFrame = 0;
@@ -9618,6 +9767,12 @@
       function syncMobileResult() {
         if (!mobileResult || !mobileResultCtx || !result.width || !result.height) return;
         copyCanvas(result, mobileResult, mobileResultCtx);
+        if (mobilePreviewView.source !== state.source) {
+          mobilePreviewView.source = state.source;
+          resetMobilePreviewView();
+        }
+        clampMobilePreviewView();
+        scheduleMobilePreviewView();
         compositeMobileCameraFocusWindow();
         prepareMobileImageOutput();
       }
