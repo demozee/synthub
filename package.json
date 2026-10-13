@@ -4,7 +4,7 @@
   "private": true,
   "description": "Synthub Graphic Texture V2.7 - consistent thermal palette with refined M/H materials and unchanged L style.",
   "scripts": {
-    "test": "node tools/check-release.cjs && node tools/check-thermal-quality.cjs && node tools/check-texture-performance.cjs",
+    "test": "node tools/check-release.cjs && node tools/check-thermal-quality.cjs && node tools/check-preview-fit.cjs && node tools/check-image-output.cjs && node tools/check-pen-trace-contours.cjs && node tools/check-texture-performance.cjs && node tools/check-quality-transition.cjs && node tools/check-mobile-effect-defaults.cjs",
     "start": "python3 -m http.server 4178",
     "serve": "python3 -m http.server 4178"
   }

@@ -470,6 +470,36 @@
         background: transparent;
       }
 
+      .quality-transition-preview {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: block;
+        width: var(--fit-width);
+        height: var(--fit-height);
+        max-width: 100%;
+        max-height: 100%;
+        opacity: 1;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .quality-transition-preview[hidden] { display: none; }
+
+      .quality-transition-edge {
+        position: absolute;
+        top: 50%;
+        left: calc(50% - var(--fit-width) / 2);
+        width: 28px;
+        height: var(--fit-height);
+        margin-top: calc(var(--fit-height) / -2);
+        margin-left: -28px;
+        background: linear-gradient(90deg, transparent, #ffffff80 85%, #ffffffd9);
+        z-index: 4;
+        pointer-events: none;
+      }
+      .quality-transition-edge[hidden] { display: none; }
+
       .processed-video {
         display: none;
         width: var(--fit-width, auto);
@@ -488,18 +518,24 @@
         display: none;
       }
 
+      @media (min-width: 641px) {
+        /* Keep the fitted media centered without focus-driven viewport scrolling. */
+        .stage { overflow: clip; }
+      }
 
       .video-metrics {
         position: absolute;
-        top: var(--video-metrics-top, 30px);
-        left: var(--video-metrics-left, auto);
+        top: auto;
+        bottom: var(--quality-dock-bottom, 50px);
+        left: 50%;
+        transform: translateX(-50%);
         z-index: 6;
         display: none;
-        grid-template-columns: 84px 74px 62px;
-        width: 220px;
-        height: 40px;
-        border: 1px solid #dadde7;
-        background: #f5f5f5;
+        grid-template-columns: max-content 62px;
+        width: max-content;
+        height: 50px;
+        border: 0;
+        background: transparent;
         color: #0f0e12;
         font-family: var(--font-mono);
       }
@@ -509,61 +545,115 @@
       }
 
       .app.has-source:not(.has-video) .video-metrics {
-        grid-template-columns: 84px 74px;
-        width: 158px;
+        grid-template-columns: max-content;
+        width: max-content;
       }
 
       .app.has-source:not(.has-video) .video-fps-value {
         display: none;
       }
 
-      .app.has-source:not(.has-video) .video-resolution-value::after {
-        display: none;
+      .app.has-source:not(.has-video) .video-quality-options {
+        border-right: 0;
       }
 
       .video-quality-options {
+        --quality-cell: 50px;
+        --quality-step: 50px;
+        position: relative;
+        isolation: isolate;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 0;
         min-width: 0;
         height: 100%;
         margin: 0;
-        padding: 0 16px;
-        border-right: 1px solid #dadde7;
+        padding: 0;
+        border: 0;
+        background: #f5f5f5;
+        box-shadow: inset 0 0 0 1.25px #dadde7;
+      }
+
+      .video-quality-options::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: var(--quality-cell);
+        height: 100%;
+        background: #0f0e12;
+        transform: translateX(calc(var(--quality-index, 0) * var(--quality-step)));
+        transition: none;
+        pointer-events: none;
       }
 
       .video-quality-option {
         display: grid;
         place-items: center;
-        width: 12px;
-        height: 38px;
+        position: relative;
+        flex: 0 0 var(--quality-cell);
+        width: var(--quality-cell);
+        height: 50px;
         margin: 0;
         padding: 0;
         border: 0;
         background: transparent;
         color: #0f0e12;
         font-family: var(--font-mono);
-        font-size: 20px;
+        font-size: 25px;
         font-weight: 400;
-        line-height: 26px;
+        line-height: 30px;
         cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: none;
+      }
+
+      .video-quality-option + .video-quality-option {
+        margin-left: calc(var(--quality-step) - var(--quality-cell));
       }
 
       .video-quality-option.is-active {
-        color: #ff4a00;
+        color: var(--yellow);
         font-weight: 500;
+      }
+
+      .video-quality-option[hidden] {
+        display: none;
+      }
+
+      .video-quality-options.has-middle .video-quality-option + .video-quality-option::after {
+        content: "";
+        position: absolute;
+        left: -1.25px;
+        top: 10px;
+        width: 1.25px;
+        height: 30px;
+        background: #dadde7;
+        pointer-events: none;
+      }
+
+      .video-quality-options.has-middle .video-quality-option.is-active::after,
+      .video-quality-options.has-middle .video-quality-option.is-active + .video-quality-option::after {
+        display: none;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .video-quality-option:not(:disabled):hover {
+          background: #0f0e120a;
+        }
+        .video-quality-option.is-active:not(:disabled):hover { background: #ffffff14; }
+      }
+
+      .video-quality-option:not(:disabled):active {
+        background: #00000033;
       }
 
       .video-quality-option:disabled {
         cursor: default;
       }
 
-      .video-quality-options:has(.video-quality-option:disabled) {
-        opacity: 0.55;
-      }
-
-      .video-resolution-value,
       .video-fps-value {
         display: grid;
         place-items: center;
@@ -577,20 +667,6 @@
         font-weight: 400;
         line-height: 26px;
         letter-spacing: 0;
-      }
-
-      .video-resolution-value {
-        position: relative;
-      }
-
-      .video-resolution-value::after {
-        position: absolute;
-        top: 12px;
-        right: -1px;
-        width: 1px;
-        height: 16px;
-        background: #dadde7;
-        content: "";
       }
 
       .video-process-button {
@@ -7478,6 +7554,16 @@
         .brand .graphic-brand .graphic-brand-word { left: 65px; top: 5px; width: 90px; height: 40px; object-fit: contain; }
         .brand .graphic-brand .graphic-brand-cn { right: 0; top: 5px; width: 59px; height: 22.5px; object-fit: contain; }
         .main .top { display: none; }
+        /* The hidden header must not leave an empty second grid row below the preview. */
+        .main {
+          grid-template-rows: minmax(0, 1fr);
+          row-gap: 0;
+          padding-top: 30px;
+          padding-bottom: 30px;
+        }
+        .main .workspace { grid-row: 1; }
+        /* Keep the complete media centered, with clear space for the fixed dock. */
+        .app.has-source .main { padding-block: 130px; }
         .app:not(.has-source) .workspace { visibility: hidden; }
         .app:not(.has-source) .empty-canvas {
           position: absolute;
@@ -7498,6 +7584,77 @@
         .empty-canvas-copy p { margin: 0; color: #000; font-size: 20px; font-weight: 400; line-height: 25px; letter-spacing: 0; }
         .empty-canvas-copy .empty-canvas-cn { padding-top: 20px; font-size: 17.5px; line-height: 36px; letter-spacing: 1.25px; }
         .empty-canvas-copy .empty-canvas-hint { padding-top: 29px; font-size: 17.5px; line-height: 36px; letter-spacing: 1.25px; }
+      }
+      /* Figma 10067:1121: 48px menu rows, using the existing 80% desktop UI scale. */
+      .image-output-menu { display: none; }
+      @media (min-width: 641px) {
+        .output-control { position: relative; width: 267px; }
+        .image-output-menu {
+          position: absolute;
+          left: 0;
+          bottom: 100%;
+          width: 267px;
+          z-index: 100;
+          background: var(--panel-card, #222227);
+        }
+        .output-control.is-open .image-output-menu { display: grid; }
+        .image-output-option {
+          position: relative;
+          box-sizing: border-box;
+          width: 100%;
+          height: 60px;
+          padding: 0;
+          border: 1px solid #000;
+          border-radius: 0;
+          background: #222227;
+          color: #f4f3ef;
+          font-family: var(--font-mono);
+          font-weight: 300;
+          cursor: pointer;
+        }
+        .image-output-option + .image-output-option { border-top: 0; }
+        .image-output-option img {
+          position: absolute;
+          left: 16.5px;
+          top: 19.75px;
+          width: 16px;
+          height: 21px;
+        }
+        .image-output-option .output-size-label {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          font-size: 30px;
+          line-height: normal;
+          transform: translateY(-1.125px);
+        }
+        .image-output-option .output-size-pixels {
+          position: absolute;
+          right: 11px;
+          top: 17px;
+          color: #9296a0;
+          font-size: 20px;
+          line-height: 25px;
+        }
+        .image-output-option:not(:disabled):hover { background: #303036; }
+        .image-output-option:focus-visible { outline: 1px solid var(--yellow); outline-offset: -2px; }
+        .image-output-option:not(:disabled):active { background: #1a1a1d; }
+        .image-output-option:disabled { cursor: not-allowed; opacity: .38; }
+        .right .export-button:not(:disabled):hover,
+        .app.has-source .right .export-button:not(:disabled):hover {
+          background: linear-gradient(#ffffff66, #ffffff66), var(--yellow);
+          color: #221819;
+          filter: none;
+          transform: none;
+        }
+        .right .export-button:not(:disabled):active,
+        .app.has-source .right .export-button:not(:disabled):active {
+          background: linear-gradient(#00000033, #00000033), var(--yellow);
+          filter: none;
+          transform: none;
+        }
+        .app.has-source .right .export-button { color: #221819; }
       }
     </style>
   </head>
@@ -7618,12 +7775,13 @@
             <button class="video-quality-option" type="button" data-video-resolution="1080" aria-label="Medium detail effect, 1080 sample grid" title="MEDIUM">M</button>
             <button class="video-quality-option" type="button" data-video-resolution="1920" aria-label="High detail effect, 1920 sample grid" title="HIGH · FINE">H</button>
           </div>
-          <output class="video-resolution-value" id="videoMetricResolution" aria-label="Effect sample grid">720</output>
           <output class="video-fps-value" id="videoMetricFps" aria-label="Target frames per second">12</output>
         </div>
         <div class="workspace">
           <div class="stage">
             <canvas id="result" class="result" width="1000" height="1000"></canvas>
+            <canvas id="qualityTransitionPreview" class="quality-transition-preview" width="1" height="1" hidden aria-hidden="true"></canvas>
+            <div id="qualityTransitionEdge" class="quality-transition-edge" hidden aria-hidden="true"></div>
             <video id="processedVideo" class="processed-video" muted playsinline preload="auto"></video>
             <div class="stage-drop-overlay" id="stageDropOverlay" aria-hidden="true">
               <strong>Try another image</strong>
@@ -7674,10 +7832,22 @@
           <div id="paramPanel"></div>
         </section>
         <div class="export-dock">
+          <div class="output-control" id="outputControl">
+            <div class="image-output-menu" id="imageOutputMenu" role="menu" aria-label="Image output size" hidden>
+              <button class="image-output-option" type="button" role="menuitem" data-image-output-size="2048" aria-label="Export 2K PNG, 2048 pixels">
+                <img src="../assets/output-size-download-figma.svg" alt="" />
+                <span class="output-size-label">2K</span><span class="output-size-pixels">2048</span>
+              </button>
+              <button class="image-output-option" type="button" role="menuitem" data-image-output-size="4096" aria-label="Export 4K PNG, 4096 pixels">
+                <img src="../assets/output-size-download-figma.svg" alt="" />
+                <span class="output-size-label">4K</span><span class="output-size-pixels">4096</span>
+              </button>
+            </div>
           <button class="export-button" id="exportPng" data-export-png>
             <span class="export-icon"><img src="../assets/download-icon-figma.svg" alt="" /></span>
             <span class="export-label">OUTPUT</span>
           </button>
+          </div>
           <button class="reverse-toggle" id="reverseToggle" type="button" aria-label="反向" aria-pressed="false">
             <span class="reverse-icon" aria-hidden="true">
               <svg viewBox="0 0 20 20" fill="none">
@@ -7880,6 +8050,8 @@
     <video id="mobileCameraSource" class="video-source" muted playsinline autoplay preload="auto"></video>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="./pen-trace-contours.js"></script>
+    <script src="./image-output-renderer.js"></script>
     <script>
       const presets = {
         thermalMap: {
@@ -7989,6 +8161,7 @@
         size: 1000,
         previewSize: 720,
         imageResolution: 720,
+        imageOutputSize: new URLSearchParams(location.search).get("output") === "4k" ? 4096 : 2048,
         imageExporting: false,
         videoTuneSize: 720,
         videoResolution: 720,
@@ -8028,6 +8201,14 @@
       const workCtx = work.getContext("2d", { willReadFrequently: true });
       const result = document.getElementById("result");
       const resultCtx = result.getContext("2d", { willReadFrequently: true });
+      const qualityTransitionPreview = document.getElementById("qualityTransitionPreview");
+      const qualityTransitionCtx = qualityTransitionPreview.getContext("2d");
+      const qualityTransitionEdge = document.getElementById("qualityTransitionEdge");
+      const qualityTransitionParams = new URLSearchParams(window.location.search);
+      const qualityTransitionDemo = ["localhost", "127.0.0.1"].includes(window.location.hostname) && qualityTransitionParams.has("quality-transition");
+      const qualityTransitionTestDelay = qualityTransitionDemo ? Math.max(0, Math.min(1500, Number(qualityTransitionParams.get("quality-transition-test-delay")) || 0)) : 0;
+      const qualityTransitionDuration = qualityTransitionDemo ? Math.max(440, Math.min(1500, Number(qualityTransitionParams.get("quality-transition-test-duration")) || 440)) : 440;
+      const qualityTransition = { version: 0, phase: "idle", animation: null, edgeAnimation: null, source: null };
       const sourceMini = document.getElementById("sourceMini");
       const sourceMiniCtx = sourceMini.getContext("2d", { willReadFrequently: true });
       const maskMini = document.getElementById("maskMini");
@@ -8099,7 +8280,6 @@
       const videoTime = document.getElementById("videoTime");
       const videoMetrics = document.getElementById("videoMetrics");
       const videoMetricFps = document.getElementById("videoMetricFps");
-      const videoMetricResolution = document.getElementById("videoMetricResolution");
       const videoResolutionButtons = Array.from(document.querySelectorAll("[data-video-resolution]"));
 
       const mobileEntryImages = [
@@ -8187,6 +8367,8 @@
       const imageExportCtx = imageExportCanvas.getContext("2d");
       const videoEncodeCanvas = document.createElement("canvas");
       const videoEncodeCtx = videoEncodeCanvas.getContext("2d");
+      const mediaQaEnabled = ["localhost", "127.0.0.1"].includes(location.hostname) && new URLSearchParams(location.search).has("media-qa");
+      const mediaQa = { preview: null, encoded: null, metrics: null };
       let paperToneCache = { signature: "", maps: new Map() };
       let videoRenderProfile = null;
       let renderingMobileCaptureFrame = false;
@@ -9035,8 +9217,79 @@
         return `${currentRecipeCode()}|${fixedImageOutputSize()}|${imageRenderSize()}`;
       }
 
+      // Local-only pixel QA: inspect the real render/encoder/decoder paths without
+      // changing their algorithms or adding controls to the shipping interface.
+      function mediaQaSample(source) {
+        const canvas = document.createElement("canvas");
+        drawFixedOutput(source, canvas, canvas.getContext("2d"), 384);
+        return canvas;
+      }
+
+      function exposeMediaQaImage(id, canvas) {
+        let image = document.getElementById(id);
+        if (!image) { image = document.createElement("img"); image.id = id; image.hidden = true; document.body.appendChild(image); }
+        image.src = canvas.toDataURL("image/png");
+      }
+
+      function compareMediaQaFrames(a, b) {
+        if (!a || !b || a.width !== b.width || a.height !== b.height) return null;
+        const x = a.getContext("2d").getImageData(0, 0, a.width, a.height).data;
+        const y = b.getContext("2d").getImageData(0, 0, b.width, b.height).data;
+        let error = 0, squared = 0, max = 0, count = 0;
+        for (let i = 0; i < x.length; i++) if (i % 4 !== 3) {
+          const d = Math.abs(x[i] - y[i]); error += d; squared += d*d; max = Math.max(max, d); count++;
+        }
+        return { mae: +(error/count).toFixed(4), max, psnr: squared ? +(10*Math.log10(255*255/(squared/count))).toFixed(2) : null };
+      }
+
+      function recordImageMediaQa() {
+        if (!mediaQaEnabled || isMotionSource()) return;
+        const sample = mediaQaSample(result), pixels = sample.getContext("2d").getImageData(0, 0, sample.width, sample.height).data;
+        let hash = 2166136261;
+        for (const value of pixels) hash = Math.imul(hash ^ value, 16777619) >>> 0;
+        document.documentElement.dataset.mediaQaImage = JSON.stringify({ preset: state.preset, quality: selectedOutputRenderSize(), render: [result.width, result.height], sample: [sample.width, sample.height], hash, mobile: window.innerWidth <= 640 });
+        exposeMediaQaImage("mediaQaImagePreview", sample);
+      }
+
+      function recordVideoMediaQaPreview(time) {
+        if (!mediaQaEnabled) return;
+        const native = document.createElement("canvas");
+        drawFixedOutput(result, native, native.getContext("2d"), fixedVideoOutputSize(), true, videoPreviewMatte);
+        mediaQa.preview = mediaQaSample(native); native.width = native.height = 1;
+        mediaQa.encoded = null;
+        mediaQa.metrics = { phase: "rendering", preset: state.preset, quality: videoRenderSize(), fps: state.videoFps, previewTime: time };
+        exposeMediaQaImage("mediaQaVideoPreview", mediaQa.preview);
+        document.documentElement.dataset.mediaQaVideo = JSON.stringify(mediaQa.metrics);
+      }
+
+      function recordVideoMediaQaEncoded() {
+        if (!mediaQaEnabled || !mediaQa.metrics) return;
+        mediaQa.encoded = mediaQaSample(videoEncodeCanvas);
+        exposeMediaQaImage("mediaQaVideoEncoded", mediaQa.encoded);
+        mediaQa.metrics.previewVsEncoded = mediaQa.metrics.previewTime < .001 ? compareMediaQaFrames(mediaQa.preview, mediaQa.encoded) : null;
+        document.documentElement.dataset.mediaQaVideo = JSON.stringify(mediaQa.metrics);
+      }
+
+      function recordVideoMediaQaDecoded(blob) {
+        if (!mediaQaEnabled || !mediaQa.encoded) return;
+        const decoded = document.createElement("canvas");
+        decoded.width = mediaQa.encoded.width; decoded.height = mediaQa.encoded.height;
+        decoded.getContext("2d").drawImage(processedVideo, 0, 0, decoded.width, decoded.height);
+        exposeMediaQaImage("mediaQaVideoDecoded", decoded);
+        Object.assign(mediaQa.metrics, { phase: "complete", type: blob.type, bytes: blob.size, dimensions: [processedVideo.videoWidth, processedVideo.videoHeight], duration: processedVideo.duration, encodedVsDecoded: compareMediaQaFrames(mediaQa.encoded, decoded) });
+        document.documentElement.dataset.mediaQaVideo = JSON.stringify(mediaQa.metrics);
+      }
+
       function prepareMobileImageOutput() {
         if (window.innerWidth > 640 || !state.source || state.sourceType !== "image") return;
+        // Never cache a temporary preview as the final mobile download.
+        if (Math.max(result.width, result.height) !== imageRenderSize()) {
+          window.clearTimeout(mobileImageOutput.timer);
+          mobileImageOutput.generation++;
+          mobileImageOutput.signature = "";
+          mobileImageOutput.blob = null;
+          return;
+        }
         const signature = mobileImageOutputSignature();
         if (mobileImageOutput.source === state.source && mobileImageOutput.signature === signature) return;
         window.clearTimeout(mobileImageOutput.timer);
@@ -9052,6 +9305,7 @@
           if (generation !== mobileImageOutput.generation || mobileCapture.state !== "idle" || mobileImageOutput.source !== state.source) return;
           const canvas = document.createElement("canvas");
           drawFixedOutput(result, canvas, canvas.getContext("2d"), fixedImageOutputSize());
+          if (mediaQaEnabled) exposeMediaQaImage("mediaQaMobileOutput", canvas);
           try {
             const png = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
             if (!png) throw new Error("PNG encoding failed");
@@ -9195,14 +9449,16 @@
       function videoRenderSize() {
         const supported = [720, 1080, 1920];
         const selected = Math.round(Number(state.videoResolution) || state.videoTuneSize);
-        return supported.includes(selected) ? selected : state.videoTuneSize;
+        return normalizeEffectResolution(state.preset, supported.includes(selected) ? selected : state.videoTuneSize);
       }
 
       function imageRenderSize() {
-        if (window.innerWidth <= 640) return state.size;
+        // Mobile has no quality controls: updated Thermal/Pen default to the
+        // shared H renderer. Output dimensions still use the mobile size limit.
+        if (window.innerWidth <= 640) return ["thermalMap", "penTrace"].includes(state.preset) ? 1920 : state.size;
         const supported = [720, 1080, 1920];
         const selected = Math.round(Number(state.imageResolution) || 720);
-        return supported.includes(selected) ? selected : 720;
+        return normalizeEffectResolution(state.preset, supported.includes(selected) ? selected : 720);
       }
 
       function selectedOutputRenderSize() {
@@ -9216,7 +9472,16 @@
       }
 
       function fixedImageOutputSize() {
-        return window.innerWidth <= 640 ? state.size : 1920;
+        return window.innerWidth <= 640 ? state.size : ([2048, 4096].includes(state.imageOutputSize) ? state.imageOutputSize : 2048);
+      }
+
+      // Output pixels are independent from the current L/M/H material style.
+      function setImageOutputSize(value) {
+        const size = Number(value);
+        if (![2048, 4096].includes(size) || state.imageExporting) return false;
+        state.imageOutputSize = size;
+        document.documentElement.dataset.imageOutputSize = String(size);
+        return true;
       }
 
       function fixedVideoOutputSize() {
@@ -9295,7 +9560,7 @@
           renderOutputFrame = 0;
           renderFrameQueued = false;
           // NICE TRY should resolve to one final texture state, not a low-res preview followed by a refinement.
-          renderOutput(window.innerWidth <= 640 ? interactiveRenderSize() : selectedOutputRenderSize());
+          renderOutput(selectedOutputRenderSize());
           scheduleRecipeHistoryCommit();
         });
       }
@@ -9312,7 +9577,6 @@
           !state.source
           || isVideoSource()
           || isMobileCaptureSource()
-          || window.innerWidth <= 640
           || state.imageExporting
           || imageRenderSize() <= state.previewSize
         ) return;
@@ -9471,43 +9735,123 @@
       }
 
       function syncVideoMetrics() {
+        syncImageOutputMenu();
         videoMetricFps.textContent = String(state.videoFps);
         const selectedResolution = selectedOutputRenderSize();
-        videoMetricResolution.textContent = String(selectedResolution);
         videoMetrics.setAttribute("aria-label", isVideoSource() ? "Video effect quality" : "Image effect quality");
         videoResolutionButtons.forEach((button) => {
           const resolution = Number(button.dataset.videoResolution);
+          button.hidden = state.preset === "penTrace" && resolution === 1080;
           const active = resolution === selectedResolution;
           button.classList.toggle("is-active", active);
           button.setAttribute("aria-pressed", String(active));
           button.disabled = !state.source || state.videoExporting || state.imageExporting;
           button.setAttribute("aria-label", `${isVideoSource() ? "Video" : "Image"} ${button.textContent} effect quality, ${resolution} sample grid`);
         });
+        const visible = videoResolutionButtons.filter(button => !button.hidden);
+        const selectedIndex = Math.max(0, visible.findIndex(button => Number(button.dataset.videoResolution) === selectedResolution));
+        const options = videoMetrics.querySelector(".video-quality-options");
+        options.classList.toggle("has-middle", visible.length === 3);
+        options.style.setProperty("--quality-index", String(selectedIndex));
         syncVideoMetricsPosition();
       }
+
+      videoMetrics.querySelector(".video-quality-options").addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        const available = videoResolutionButtons.filter(button => !button.hidden && !button.disabled);
+        if (!available.length) return;
+        event.preventDefault();
+        const current = Math.max(0, available.indexOf(document.activeElement));
+        const next = event.key === "Home" ? 0 : event.key === "End" ? available.length - 1
+          : (current + (event.key === "ArrowRight" ? 1 : -1) + available.length) % available.length;
+        available[next].focus();
+        changeOutputResolution(available[next].dataset.videoResolution);
+      });
 
       function syncVideoMetricsPosition() {
         if (!videoMetrics || !state.source || window.innerWidth <= 640) return;
         const main = videoMetrics.parentElement;
-        const media = isVideoSource() && app.classList.contains("video-cache-ready") ? processedVideo : result;
-        if (!main || !media) return;
+        if (!main) return;
         const mainRect = main.getBoundingClientRect();
-        const mediaRect = media.getBoundingClientRect();
-        const layoutScale = main.offsetWidth > 0 ? mainRect.width / main.offsetWidth : 1;
-        if (!mainRect.width || !mediaRect.width || !layoutScale) return;
-        const visualGap = 30;
-        const logicalGap = visualGap / layoutScale;
-        const rightAlignedLeft = (mediaRect.right - mainRect.left) / layoutScale - videoMetrics.offsetWidth;
-        const aboveMediaTop = (mediaRect.top - mainRect.top) / layoutScale - videoMetrics.offsetHeight - logicalGap;
-        const maxLeft = main.offsetWidth - logicalGap - videoMetrics.offsetWidth;
-        const left = clamp(rightAlignedLeft, logicalGap, Math.max(logicalGap, maxLeft));
-        const top = Math.max(logicalGap, aboveMediaTop);
-        videoMetrics.style.setProperty("--video-metrics-left", `${left}px`);
-        videoMetrics.style.setProperty("--video-metrics-top", `${top}px`);
+        const layoutScale = main.offsetHeight > 0 ? mainRect.height / main.offsetHeight : 1;
+        if (!mainRect.height || !layoutScale) return;
+        // Figma 10117:765: a fixed 40px visual bottom gap. Convert through the
+        // desktop CSS scale, without following the image or the Output button.
+        videoMetrics.style.setProperty("--quality-dock-bottom", `${40 / layoutScale}px`);
+      }
+
+      function resetQualityPreviewTransition() {
+        qualityTransition.version++;
+        if (qualityTransition.animation) qualityTransition.animation.cancel();
+        if (qualityTransition.edgeAnimation) qualityTransition.edgeAnimation.cancel();
+        qualityTransition.animation = null;
+        qualityTransition.edgeAnimation = null;
+        qualityTransitionEdge.hidden = true;
+        if (qualityTransition.phase !== "idle") {
+          for (const name of ["opacity", "position", "z-index"]) result.style.removeProperty(name);
+          qualityTransitionPreview.hidden = true;
+          qualityTransitionPreview.width = qualityTransitionPreview.height = 1;
+          result.parentElement.dataset.qualityTransition = "idle";
+        }
+        qualityTransition.phase = "idle";
+        qualityTransition.source = null;
+      }
+
+      function beginQualityPreviewTransition() {
+        if (window.innerWidth <= 640 || isMotionSource() || !state.source) return null;
+        resetQualityPreviewTransition();
+        const token = qualityTransition.version;
+        qualityTransition.source = state.source;
+        qualityTransitionPreview.width = result.width;
+        qualityTransitionPreview.height = result.height;
+        qualityTransitionCtx.drawImage(result, 0, 0);
+        for (const name of ["--fit-width", "--fit-height"]) qualityTransitionPreview.style.setProperty(name, result.style.getPropertyValue(name));
+        qualityTransitionPreview.hidden = false;
+        result.style.setProperty("opacity", "0");
+        qualityTransition.phase = "loading";
+        result.parentElement.dataset.qualityTransition = "loading";
+        return token;
+      }
+
+      function isQualityPreviewTransitionCurrent(token) {
+        return token === qualityTransition.version && qualityTransition.source === state.source;
+      }
+
+      function finishQualityPreviewTransition(token) {
+        if (token === null || !isQualityPreviewTransitionCurrent(token)) return;
+        qualityTransition.phase = "revealing";
+        result.parentElement.dataset.qualityTransition = "revealing";
+        result.style.setProperty("opacity", "1");
+        result.style.setProperty("position", "relative");
+        result.style.setProperty("z-index", "3");
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          resetQualityPreviewTransition();
+          return;
+        }
+        const motion = { duration: qualityTransitionDuration, easing: "cubic-bezier(0.4, 0, 0.2, 1)" };
+        for (const name of ["--fit-width", "--fit-height"]) qualityTransitionEdge.style.setProperty(name, result.style.getPropertyValue(name));
+        qualityTransitionEdge.hidden = false;
+        qualityTransition.edgeAnimation = qualityTransitionEdge.animate([
+          { transform: "translateX(0)", opacity: 1 },
+          { transform: `translateX(${result.style.getPropertyValue("--fit-width")})`, opacity: 0 },
+        ], motion);
+        qualityTransition.animation = result.animate([
+          { clipPath: "inset(0 100% 0 0)" },
+          { clipPath: "inset(0 0 0 0)" },
+        ], motion);
+        qualityTransition.animation.finished.then(() => {
+          if (isQualityPreviewTransitionCurrent(token)) resetQualityPreviewTransition();
+        }).catch(() => {});
+      }
+
+      function waitForQualityFeedbackPaint() {
+        // Paint the final (non-animated) selection before any synchronous image
+        // work. The timer runs in a new task, after the frame's paint opportunity.
+        return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => window.setTimeout(resolve, 0))));
       }
 
       async function changeOutputResolution(value) {
-        const nextResolution = Math.round(Number(value));
+        const nextResolution = normalizeEffectResolution(state.preset, Math.round(Number(value)));
         if (!state.source || state.videoExporting || state.imageExporting || ![720, 1080, 1920].includes(nextResolution)) {
           syncVideoMetrics();
           return;
@@ -9518,17 +9862,24 @@
         state.recipeCarrier = false;
         state.recipeCarrierCode = "";
         if (!isVideoSource()) {
+          const transitionToken = beginQualityPreviewTransition();
           state.imageResolution = nextResolution;
           syncRecipeUi();
           syncVideoMetrics();
           setInputStatus(`正在切换到 ${qualityLabel(nextResolution)} 质感...`);
           setImageExportBusy(true);
           try {
-            await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            await waitForQualityFeedbackPaint();
+            if (transitionToken !== null) {
+              if (qualityTransitionTestDelay) await new Promise(resolve => window.setTimeout(resolve, qualityTransitionTestDelay));
+              if (!isQualityPreviewTransitionCurrent(transitionToken)) return;
+            }
             cancelScheduledRenderOutput();
             renderOutput(nextResolution);
+            finishQualityPreviewTransition(transitionToken);
             setInputStatus(`当前显示 ${qualityLabel(nextResolution)} / ${nextResolution}px 质感 · 可继续调整`);
           } catch (error) {
+            if (transitionToken !== null) resetQualityPreviewTransition();
             setInputStatus(`质感切换失败：${error.message}`);
           } finally {
             setImageExportBusy(false);
@@ -9551,6 +9902,8 @@
         syncVideoProcessUi();
 
         try {
+          await waitForQualityFeedbackPaint();
+          if (token !== videoResolutionChangeToken) return;
           if (videoSource.seeking) await waitForVideoEvent("seeked");
           else await seekVideo(currentTime);
           if (token !== videoResolutionChangeToken) return;
@@ -11627,6 +11980,7 @@
         const buffers = getRenderBuffers(w, h);
         const mask = buffers.baseMask;
         const maskNoise = buffers.maskNoise;
+        const continuousPen = usesContinuousPenTrace(state.preset, selectedOutputRenderSize());
         const contrast = 1 + (extract.enabled ? extract.contrast : 20) / 32;
         const threshold = extract.enabled ? extract.threshold : 128;
         const grayKeep = extract.enabled ? clamp(extract.grayKeep || 0, 0, 100) / 100 : 0;
@@ -11663,7 +12017,7 @@
             }
             let luma = clamp((getLuma(data, i) - 128) * contrast + 128);
             if (extract.invert) luma = 255 - luma;
-            const noisy = luma + (maskNoise[y * w + x] - 0.5) * 22;
+            const noisy = luma + (continuousPen ? 0 : (maskNoise[y * w + x] - 0.5) * 22);
             let strength;
             if (grayKeep <= 0) {
               strength = noisy < threshold ? 1 : 0;
@@ -11896,6 +12250,15 @@
       }
 
       function renderPenTrace(source, mask, w, h, textureMask = mask, frameContext = staticRenderFrameContext) {
+        if (usesContinuousPenTrace(state.preset, selectedOutputRenderSize())) {
+          const quality = selectedOutputRenderSize();
+          const contours = createPenTraceStructure(source, mask, w, h, state.nodes, state.outputReverse, quality);
+          document.documentElement.dataset.penTraceLayers = JSON.stringify(contours.stats);
+          result.width = w; result.height = h;
+          drawContinuousPenTrace(resultCtx, contours, w, h, state.nodes, isTransparentOutput(), quality);
+          syncResultFit();
+          return;
+        }
         const out = getRenderBuffers(w, h).output;
         const d = out.data;
         const ink = state.nodes.ink;
@@ -12342,11 +12705,13 @@
         const sourceReady = measuring ? performance.now() : 0;
         const { data, width: w, height: h } = source;
         const baseMask = createMask(source);
-        const roughMask = createRoughEdgeMask(baseMask, w, h, state.nodes.edge);
+        const roughMask = usesContinuousPenTrace(state.preset, selectedOutputRenderSize())
+          ? baseMask : createRoughEdgeMask(baseMask, w, h, state.nodes.edge);
         const outputMask = applyOutputReverseMask(roughMask, w, h);
         const textureMask = getTextureMask(outputMask);
         const maskReady = measuring ? performance.now() : 0;
         const finishProfile = () => {
+          recordImageMediaQa();
           if (!measuring) return;
           const effectReady = performance.now();
           const sourceMs = sourceReady - renderStarted;
@@ -12565,6 +12930,7 @@
       }
 
       function renderAll(shouldRenderOutput = true) {
+        if (qualityTransition.phase !== "idle") resetQualityPreviewTransition();
         cancelScheduledRenderOutput();
         if (state.recipeCarrier && state.recipeCarrierCode && currentRecipeCode() !== state.recipeCarrierCode) {
           state.recipeCarrier = false;
@@ -12991,6 +13357,33 @@
         syncUndoUi();
       }
 
+      function setImageOutputMenuOpen(open) {
+        const control = document.getElementById("outputControl");
+        const menu = document.getElementById("imageOutputMenu");
+        const trigger = document.getElementById("exportPng");
+        const canOpen = window.innerWidth > 640 && state.source && !isVideoSource()
+          && !state.imageExporting && !state.videoExporting;
+        const expanded = Boolean(open && canOpen);
+        control.classList.toggle("is-open", expanded);
+        menu.hidden = !expanded;
+        trigger.setAttribute("aria-expanded", String(expanded));
+      }
+
+      function syncImageOutputMenu() {
+        const isImage = window.innerWidth > 640 && !isVideoSource();
+        const trigger = document.getElementById("exportPng");
+        if (isImage) {
+          trigger.setAttribute("aria-haspopup", "menu");
+          trigger.setAttribute("aria-controls", "imageOutputMenu");
+        } else {
+          trigger.removeAttribute("aria-haspopup");
+          trigger.removeAttribute("aria-controls");
+        }
+        const disabled = !isImage || !state.source || state.imageExporting || state.videoExporting;
+        document.querySelectorAll("[data-image-output-size]").forEach((button) => { button.disabled = disabled; });
+        if (disabled) setImageOutputMenuOpen(false);
+      }
+
       function releaseVideoRenderPause() {
         videoRenderPaused = false;
         const resume = videoRenderResumeResolve;
@@ -13061,7 +13454,9 @@
           canvas.toBlob((blob) => {
             if (blob) resolve(blob);
             else reject(new Error("无法缓存处理帧"));
-          }, "image/webp", 0.92);
+          // Fine pen strokes must not be compressed before the video encoder.
+          // Lossless frames also preserve transparent edges in the fallback.
+          }, "image/png");
         });
       }
 
@@ -13171,6 +13566,7 @@
             recordVideoSeekTime(performance.now() - seekStarted);
             renderCurrentVideoFrame(renderSize, time);
             drawFixedOutput(result, videoEncodeCanvas, videoEncodeCtx, fixedVideoOutputSize(), true, videoPreviewMatte);
+            if (frame === 0) recordVideoMediaQaEncoded();
 
             if (!encoder) {
               const config = await getSupportedVideoEncoderConfig(videoEncodeCanvas.width, videoEncodeCanvas.height, bitrate);
@@ -13247,6 +13643,7 @@
           videoEncodeCanvas.width = dimensions.width;
           videoEncodeCanvas.height = dimensions.height;
           await drawCachedFrame(frameBlobs[0], videoEncodeCanvas, videoEncodeCtx, videoPreviewMatte);
+          recordVideoMediaQaEncoded();
           stream = videoEncodeCanvas.captureStream(0);
           let videoTrack = stream.getVideoTracks()[0];
           const manualFrames = Boolean(videoTrack && typeof videoTrack.requestFrame === "function");
@@ -13305,6 +13702,7 @@
         processedVideo.src = processedVideoUrl;
         processedVideo.load();
         await waitForProcessedVideoReady();
+        try { recordVideoMediaQaDecoded(blob); } catch (error) { if (mediaQaEnabled) document.documentElement.dataset.mediaQaVideoError = error.message; }
         processedVideoSignature = signature;
         processedVideo.currentTime = Math.min(previousTime, processedVideo.duration || state.videoDuration || 0);
         app.classList.add("video-cache-ready");
@@ -13324,6 +13722,7 @@
           const previousTime = playbackVideo().currentTime || 0;
           const wasPlaying = !playbackVideo().paused;
           const profileStarted = performance.now();
+          recordVideoMediaQaPreview(previousTime);
 
           try {
             resetVideoRenderProfile();
@@ -13734,15 +14133,24 @@
         const effectSize = imageRenderSize();
         const outputSize = fixedImageOutputSize();
         const textureQuality = qualityLabel(effectSize);
+        const outputLabel = outputSize === 4096 ? "4K" : outputSize === 2048 ? "2K" : `${outputSize}px`;
+        const exportRecipe = currentRecipeCode();
+        const exportPreset = state.preset;
+        let outputMode = "legacy-scaling";
         setImageExportBusy(true);
-        setInputStatus(`正在输出 ${textureQuality} 质感 · ${outputSize}px PNG...`);
+        setInputStatus(`正在输出 ${textureQuality} 质感 · ${outputLabel} PNG...`);
         try {
           await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
           cancelScheduledRenderOutput();
-          renderOutput(effectSize);
-          drawFixedOutput(result, imageExportCanvas, imageExportCtx, outputSize);
-          const exportRecipe = currentRecipeCode();
-          const exportPreset = state.preset;
+          if (window.innerWidth > 640) {
+            const outputInfo = await redrawStillImageOutput(imageExportCanvas, imageExportCtx, outputSize, effectSize,
+              progress => setInputStatus(`正在绘制 ${textureQuality} 质感 · ${outputLabel} · ${progress}%`));
+            document.documentElement.dataset.lastImageOutput = JSON.stringify(outputInfo);
+            outputMode = outputInfo.mode;
+          } else {
+            renderOutput(effectSize);
+            drawFixedOutput(result, imageExportCanvas, imageExportCtx, outputSize);
+          }
           const pngBlob = await new Promise((resolve, reject) => {
             imageExportCanvas.toBlob((blob) => {
               if (blob) resolve(blob);
@@ -13750,7 +14158,23 @@
             }, "image/png");
           });
           const outputBlob = await embedRecipeInPng(pngBlob, exportRecipe);
-          const filename = `graphic-texture-chain-${exportPreset}-${textureQuality}.png`;
+          const filename = `graphic-texture-chain-${exportPreset}-${textureQuality}-${outputLabel}.png`;
+          // Local QA only; not the future output-size UI. Allows inspecting native pixels without downloading.
+          if (["127.0.0.1", "localhost"].includes(location.hostname) && new URLSearchParams(location.search).has("output-preview")) {
+            document.getElementById("outputQaPreview")?.remove();
+            const preview = document.createElement("dialog");
+            preview.id = "outputQaPreview";
+            preview.style.cssText = "max-width:80vw;max-height:88vh;padding:20px;border:1px solid #555;background:#f5f5f5;color:#111;overflow:auto";
+            const close = document.createElement("button"); close.textContent = "Close output preview";
+            const caption = document.createElement("p"); caption.textContent = `${textureQuality} · ${outputLabel} · ${imageExportCanvas.width}×${imageExportCanvas.height}px${outputMode === "flattened-source" ? " · Flattened source: resize only" : ""}`;
+            const img = document.createElement("img"); img.id = "outputQaImage";
+            img.src = imageExportCanvas.toDataURL("image/png");
+            img.style.cssText = "display:block;max-width:72vw;max-height:72vh;object-fit:contain";
+            close.addEventListener("click", () => preview.close());
+            preview.append(close, caption, img); document.body.appendChild(preview); preview.showModal();
+            setInputStatus(`图片已输出：${textureQuality} 质感 · ${outputLabel} (${imageExportCanvas.width}×${imageExportCanvas.height}px)`);
+            return;
+          }
           if (await presentMobileOutput(outputBlob, filename, "图片")) return;
           const outputUrl = URL.createObjectURL(outputBlob);
           const a = document.createElement("a");
@@ -13758,7 +14182,7 @@
           a.download = filename;
           a.click();
           window.setTimeout(() => URL.revokeObjectURL(outputUrl), 1000);
-          setInputStatus(`图片已输出：${textureQuality} 质感 · ${outputSize}px`);
+          setInputStatus(`图片已输出：${textureQuality} 质感 · ${outputLabel} (${imageExportCanvas.width}×${imageExportCanvas.height}px)${outputMode === "flattened-source" ? " · 已处理图片，仅调整尺寸" : ""}`);
         } catch (error) {
           setInputStatus(`图片输出失败：${error.message}`);
         } finally {
@@ -13767,7 +14191,42 @@
       }
 
       document.querySelectorAll("[data-export-png]").forEach((button) => {
-        button.addEventListener("click", exportOutput);
+        button.addEventListener("click", () => {
+          if (button.id === "exportPng" && window.innerWidth > 640 && !isVideoSource()) {
+            setImageOutputMenuOpen(true);
+          } else {
+            exportOutput();
+          }
+        });
+      });
+      const outputControl = document.getElementById("outputControl");
+      outputControl.addEventListener("pointerenter", () => setImageOutputMenuOpen(true));
+      outputControl.addEventListener("pointerleave", () => setImageOutputMenuOpen(false));
+      outputControl.addEventListener("focusout", (event) => {
+        if (!outputControl.contains(event.relatedTarget)) setImageOutputMenuOpen(false);
+      });
+      outputControl.addEventListener("keydown", (event) => {
+        if (window.innerWidth <= 640 || isVideoSource()) return;
+        const options = [...outputControl.querySelectorAll("[data-image-output-size]")];
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setImageOutputMenuOpen(false);
+          document.getElementById("exportPng").focus();
+        } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          event.preventDefault();
+          setImageOutputMenuOpen(true);
+          const index = options.indexOf(document.activeElement);
+          const next = index < 0 ? (event.key === "ArrowDown" ? 0 : options.length - 1)
+            : (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+          if (!options[next].disabled) options[next].focus();
+        }
+      });
+      document.querySelectorAll("[data-image-output-size]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (!setImageOutputSize(button.dataset.imageOutputSize)) return;
+          setImageOutputMenuOpen(false);
+          exportOutput();
+        });
       });
       const randomizeButton = document.getElementById("randomize");
       randomizeButton.title = "Click to randomize · Shift-click to restore the previous result";
@@ -13788,6 +14247,7 @@
         renderAll();
       });
       window.addEventListener("resize", () => {
+        syncImageOutputMenu();
         scheduleMobileVisualViewportSync();
         positionParamFlyout();
         syncResultFit();
@@ -13921,6 +14381,7 @@
         state.nodes.color.highlight = "#B8CFDB";
       }
 
+      setImageOutputSize(state.imageOutputSize);
       renderAll(false);
     </script>
   </body>
