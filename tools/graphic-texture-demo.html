@@ -9866,6 +9866,10 @@
           state.imageResolution = nextResolution;
           syncRecipeUi();
           syncVideoMetrics();
+          renderNodeList();
+          renderParams();
+          renderMobileEffects();
+          renderMobileParams();
           setInputStatus(`正在切换到 ${qualityLabel(nextResolution)} 质感...`);
           setImageExportBusy(true);
           try {
@@ -9897,6 +9901,10 @@
 
         state.videoResolution = nextResolution;
         syncRecipeUi();
+        renderNodeList();
+        renderParams();
+        renderMobileEffects();
+        renderMobileParams();
         markProcessedVideoDirty();
         syncVideoMetrics();
         syncVideoProcessUi();
@@ -10515,7 +10523,7 @@
       }
 
       function randInt(min, max) {
-        return Math.round(min + Math.random() * (max - min));
+        return min + Math.floor(Math.random() * (max - min + 1));
       }
 
       function chance(value = 0.5) {
@@ -10527,9 +10535,106 @@
       }
 
       function randomColorValue(role) {
-        const backgrounds = ["#f7f6f2", "#f2eee5", "#d9d9d9", "#c8d8cb", "#111116", "#0c0d11"];
-        const graphics = ["#050506", "#111111", "#263b55", "#6fc7ba", "#5a3b22", "#c9d8e8", "#ff682c"];
-        return pick(role === "bg" ? backgrounds : graphics);
+        const palette = createNiceTryPalette("color-picker");
+        return role === "bg" ? palette.background : palette.graphic;
+      }
+
+      // Shuffle bags give every direction a turn, without repeating at bag boundaries.
+      // They are exploration history only; the resulting values still live in the recipe.
+      const niceTryBags = new Map();
+      const niceTryPalettes = new Map();
+      function nextNiceTryChoice(key, choices) {
+        let entry = niceTryBags.get(key);
+        if (!entry) { entry = { remaining: [], previous: null }; niceTryBags.set(key, entry); }
+        if (!entry.remaining.length) {
+          entry.remaining = choices.slice();
+          for (let i = entry.remaining.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const item = entry.remaining[i]; entry.remaining[i] = entry.remaining[j]; entry.remaining[j] = item;
+          }
+          const last = entry.remaining.length - 1;
+          if (last > 0 && entry.remaining[last] === entry.previous) {
+            const item = entry.remaining[0]; entry.remaining[0] = entry.remaining[last]; entry.remaining[last] = item;
+          }
+        }
+        entry.previous = entry.remaining.pop();
+        return entry.previous;
+      }
+
+      function niceTryHsl(hue, saturation, lightness) {
+        const h = ((hue % 360) + 360) % 360 / 30, s = saturation / 100, l = lightness / 100;
+        const a = s * Math.min(l, 1 - l);
+        return "#" + [0, 8, 4].map(offset => {
+          const k = (offset + h) % 12;
+          return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))).toString(16).padStart(2, "0");
+        }).join("");
+      }
+
+      function niceTryRgb(hex) {
+        return [1, 3, 5].map(index => parseInt(hex.slice(index, index + 2), 16));
+      }
+
+      function niceTryContrast(a, b) {
+        const luminance = hex => niceTryRgb(hex).reduce((sum, channel, i) => {
+          const v = channel / 255;
+          return sum + (v <= .04045 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4)) * [.2126, .7152, .0722][i];
+        }, 0);
+        const x = luminance(a), y = luminance(b);
+        return (Math.max(x, y) + .05) / (Math.min(x, y) + .05);
+      }
+
+      function createNiceTryPalette(presetId, current) {
+        const mode = nextNiceTryChoice("palette:" + presetId, ["paper", "tinted", "night", "bright", "duotone", "mono"]);
+        // Pick the hue BEFORE contrast/distance checks. All twelve hue families
+        // get a turn, including when mobile NICE TRY switches between presets.
+        const family = mode === "mono" ? null : nextNiceTryChoice("hue:chromatic", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        const recent = niceTryPalettes.get(presetId) || [];
+        const avoid = current ? recent.concat([current]) : recent;
+        let best, bestDistance = -1;
+        for (let attempt = 0; attempt < 24; attempt++) {
+          // Retry only within this family; never replace a bright yellow/green
+          // with a blue simply because its first background had low contrast.
+          const hue = family === null ? randInt(0, 359) : family * 30 + randInt(3, 26);
+          const partner = hue + pick([30, -30, 150, 180, 210]);
+          let graphic, background;
+          if (mode === "paper") {
+            graphic = niceTryHsl(hue, randInt(38, 90), randInt(16, 38));
+            background = niceTryHsl(partner, randInt(12, 40), randInt(92, 98));
+          } else if (mode === "tinted") {
+            graphic = niceTryHsl(hue, randInt(40, 86), randInt(12, 30));
+            background = niceTryHsl(partner, randInt(30, 65), randInt(78, 90));
+          } else if (mode === "night") {
+            graphic = niceTryHsl(hue, randInt(48, 94), randInt(66, 86));
+            background = niceTryHsl(partner, randInt(20, 58), randInt(7, 18));
+          } else if (mode === "bright") {
+            graphic = niceTryHsl(hue, randInt(68, 100), randInt(44, 60));
+            background = niceTryHsl(partner, randInt(10, 30), randInt(95, 99));
+          } else if (mode === "duotone") {
+            graphic = niceTryHsl(hue, randInt(45, 95), randInt(12, 28));
+            background = niceTryHsl(partner, randInt(55, 95), randInt(62, 80));
+          } else {
+            graphic = niceTryHsl(hue, randInt(0, 16), randInt(7, 28));
+            background = niceTryHsl(hue, randInt(4, 22), randInt(86, 98));
+          }
+          // Repair the ground, not the selected ink hue. A luminous yellow or
+          // lime can use a dark colored ground instead of being filtered out.
+          if (niceTryContrast(graphic, background) < 3.2) {
+            const dark = niceTryHsl(partner, randInt(24, 62), randInt(4, 12));
+            const light = niceTryHsl(partner, randInt(16, 48), randInt(94, 99));
+            background = niceTryContrast(graphic, dark) >= niceTryContrast(graphic, light) ? dark : light;
+          }
+          const candidate = { graphic, background };
+          const distance = avoid.reduce((nearest, previous) => {
+            const rgb = niceTryRgb(graphic).concat(niceTryRgb(background));
+            const old = niceTryRgb(previous.graphic).concat(niceTryRgb(previous.background));
+            return Math.min(nearest, Math.sqrt(rgb.reduce((sum, value, i) => sum + (value - old[i]) ** 2, 0)));
+          }, 1000);
+          if (distance > bestDistance) { best = candidate; bestDistance = distance; }
+          if (distance >= 115) break;
+        }
+        recent.push(best);
+        niceTryPalettes.set(presetId, recent.slice(-8));
+        return best;
       }
 
       const presetRandomProfiles = {
@@ -10542,8 +10647,12 @@
             texture: { fabric: [12, 42], scan: [8, 34], bleed: [6, 24] },
             decor: { grid: [6, 34], gridSize: [30, 72], blur: [48, 86], particles: [4, 30] },
           },
-          backgrounds: ["#f7f6f2", "#f2eee5", "#dfe6df", "#d9d9d9", "#111116"],
-          graphics: ["#050506", "#263b55", "#5a3b22", "#6fc7ba", "#ff682c"],
+          variants: {
+            soft: { decor: { blur: [76, 94], grid: [0, 12], particles: [0, 10] }, texture: { bleed: [14, 30], scan: [0, 12] }, distress: { amount: [4, 16] } },
+            contours: { decor: { blur: [32, 52], grid: [24, 48], gridSize: [22, 48] }, extract: { contrast: [48, 78] }, edge: { rough: [10, 32] } },
+            grain: { distress: { amount: [28, 46], size: [2, 5] }, texture: { fabric: [32, 58], scan: [16, 38] }, decor: { blur: [52, 74], particles: [18, 40] } },
+            airy: { extract: { threshold: [84, 116], grayKeep: [16, 36] }, ink: { strength: [54, 72] }, decor: { grid: [0, 8], blur: [48, 72], particles: [0, 6] }, distress: { amount: [2, 12] } },
+          },
         },
         penTrace: {
           ranges: {
@@ -10553,8 +10662,12 @@
             distress: { amount: [16, 44], size: [2, 6], seed: [1, 99] },
             texture: { fabric: [8, 30], scan: [4, 28], bleed: [0, 10] },
           },
-          backgrounds: ["#f7f6f2", "#f2eee5", "#e6eadf", "#d9d9d9"],
-          graphics: ["#111111", "#263b55", "#293771", "#5a3b22"],
+          variants: {
+            fine: { edge: { width: [1, 1], rough: [12, 30] }, distress: { amount: [2, 10], size: [2, 3] }, texture: { fabric: [0, 10], scan: [0, 6] }, ink: { holes: [0, 8] } },
+            detailed: { extract: { threshold: [90, 130], contrast: [20, 42], grayKeep: [20, 42] }, edge: { width: [1, 2], rough: [30, 52] }, texture: { fabric: [14, 32] } },
+            dry: { edge: { width: [1, 2], rough: [72, 94] }, distress: { amount: [34, 50], size: [2, 4] }, texture: { fabric: [28, 50], bleed: [0, 3] }, ink: { holes: [18, 34] } },
+            bold: { extract: { threshold: [148, 184], contrast: [48, 78] }, edge: { width: [2, 4], rough: [28, 54] }, ink: { strength: [94, 100], holes: [2, 10] }, distress: { amount: [10, 24] } },
+          },
         },
         dotShirt: {
           ranges: {
@@ -10565,8 +10678,12 @@
             distress: { amount: [8, 28], size: [2, 6], seed: [1, 99] },
             texture: { fabric: [10, 34], scan: [6, 24], bleed: [2, 14] },
           },
-          backgrounds: ["#0c0d11", "#111116", "#293771", "#f2eee5"],
-          graphics: ["#c9d8e8", "#ffffff", "#6fc7ba", "#ff682c"],
+          variants: {
+            fine: { screen: { dot: [4, 7], strength: [78, 100], angle: [-45, 45] }, distress: { amount: [0, 10] }, texture: { fabric: [4, 16] } },
+            poster: { screen: { dot: [18, 24], strength: [88, 100], angle: [-45, 45] }, extract: { contrast: [56, 84] }, ink: { holes: [0, 8] } },
+            faded: { screen: { dot: [8, 14], strength: [52, 74], angle: [-45, 45] }, distress: { amount: [26, 44] }, texture: { fabric: [28, 48], scan: [12, 32] } },
+            dense: { screen: { dot: [10, 17], strength: [88, 100], angle: [-45, 45] }, extract: { threshold: [96, 140], grayKeep: [14, 30] }, ink: { strength: [94, 100] }, edge: { width: [0, 1] } },
+          },
         },
         xerox: {
           ranges: {
@@ -10576,8 +10693,12 @@
             distress: { amount: [26, 58], size: [2, 5], seed: [1, 99] },
             texture: { fabric: [2, 20], scan: [48, 92], bleed: [4, 20] },
           },
-          backgrounds: ["#f7f6f2", "#f4f1e8", "#d9d9d9"],
-          graphics: ["#000000", "#111111", "#263b55"],
+          variants: {
+            crisp: { ink: { holes: [4, 14] }, distress: { amount: [10, 24], size: [2, 3] }, texture: { scan: [12, 32], bleed: [0, 6] }, edge: { rough: [30, 50] } },
+            toner: { ink: { holes: [30, 52] }, distress: { amount: [44, 68], size: [2, 5] }, texture: { scan: [26, 52], fabric: [18, 36] } },
+            scan: { texture: { scan: [78, 100], bleed: [2, 10] }, distress: { amount: [18, 34] }, extract: { threshold: [110, 160], grayKeep: [8, 24] } },
+            heavy: { extract: { threshold: [82, 112], contrast: [88, 100] }, ink: { strength: [96, 100], holes: [8, 20] }, edge: { width: [2, 4], rough: [72, 98] }, texture: { bleed: [16, 30] } },
+          },
         },
       };
 
@@ -11206,10 +11327,10 @@
       });
 
 
-      function randomizeChain(previewFirst = false, { preserveColors = false } = {}) {
-        const preset = presets[state.preset];
-        const profile = presetRandomProfiles[state.preset];
-        const colors = preserveColors ? {
+      function randomizeChain(previewFirst = false, { preserveColors = false, nextPreset = state.preset } = {}) {
+        const preset = presets[nextPreset];
+        const profile = presetRandomProfiles[nextPreset];
+        const colors = {
           ink: state.nodes.ink.color,
           edge: state.nodes.edge.color,
           background: state.nodes.color.bg,
@@ -11219,37 +11340,37 @@
           backgroundAlpha: state.nodes.color.bgAlpha,
           highlightAlpha: state.nodes.color.highlightAlpha,
           transparent: state.nodes.color.transparent,
-        } : null;
+        };
         rememberNiceTryState();
+        state.preset = nextPreset;
         state.nodes = clone(preset.nodes);
-        state.outputReverse = chance(0.5);
 
-        Object.entries(profile.ranges).forEach(([nodeId, ranges]) => {
-          const node = state.nodes[nodeId];
-          if (!node || !node.enabled) return;
+        const applyRanges = groups => Object.entries(groups).forEach(([nodeId, ranges]) => {
+          if (!state.nodes[nodeId] || !state.nodes[nodeId].enabled) return;
           Object.entries(ranges).forEach(([key, range]) => {
-            node[key] = randInt(range[0], range[1]);
+            state.nodes[nodeId][key] = randInt(range[0], range[1]);
           });
         });
+        applyRanges(profile.ranges);
+        const direction = nextNiceTryChoice("material:" + nextPreset, Object.keys(profile.variants));
+        applyRanges(profile.variants[direction]);
 
-        state.nodes.color.bg = pick(profile.backgrounds);
-        syncGraphicColor(pick(profile.graphics));
-        state.nodes.color.bgAlpha = 100;
-        state.nodes.color.highlightAlpha = 100;
-        state.nodes.ink.colorAlpha = 100;
-        state.nodes.edge.colorAlpha = 100;
-        state.nodes.color.transparent = false;
-        if (colors) {
+        if (preserveColors) {
           state.nodes.ink.color = colors.ink;
           state.nodes.edge.color = colors.edge;
           state.nodes.color.bg = colors.background;
           state.nodes.color.highlight = colors.highlight;
-          state.nodes.ink.colorAlpha = colors.inkAlpha;
-          state.nodes.edge.colorAlpha = colors.edgeAlpha;
-          state.nodes.color.bgAlpha = colors.backgroundAlpha;
-          state.nodes.color.highlightAlpha = colors.highlightAlpha;
-          state.nodes.color.transparent = colors.transparent;
+        } else {
+          const palette = createNiceTryPalette(nextPreset, { graphic: colors.ink, background: colors.background });
+          state.nodes.color.bg = palette.background;
+          syncGraphicColor(palette.graphic);
         }
+        // RE and transparency are user decisions, not random material parameters.
+        state.nodes.ink.colorAlpha = colors.inkAlpha;
+        state.nodes.edge.colorAlpha = colors.edgeAlpha;
+        state.nodes.color.bgAlpha = colors.backgroundAlpha;
+        state.nodes.color.highlightAlpha = colors.highlightAlpha;
+        state.nodes.color.transparent = colors.transparent;
         state.selected = preset.selected;
         renderAll(!previewFirst);
         if (previewFirst) scheduleNiceTryPreviewRender();
@@ -11260,9 +11381,7 @@
         const presetIds = Object.keys(presets);
         const alternatives = presetIds.filter((id) => id !== state.preset);
         const nextPreset = pick(alternatives.length ? alternatives : presetIds);
-        state.preset = nextPreset;
-        state.selected = presets[nextPreset].selected;
-        randomizeChain(false);
+        randomizeChain(false, { nextPreset });
       }
 
       function presetIcon(id) {
@@ -11327,22 +11446,71 @@
         syncMobileCaptureEditingControls();
       }
 
+      function effectUiMeta(id) {
+        const meta = Object.assign({ available: true }, nodeMeta.find(item => item.id === id));
+        const pen = state.preset === "penTrace";
+        const thermal = state.preset === "thermalMap";
+        const highPen = pen && usesContinuousPenTrace(state.preset, selectedOutputRenderSize());
+        if ((pen && (id === "screen" || id === "decor")) || (thermal && id === "screen")) {
+          meta.available = false;
+          meta.desc = pen ? "针管线稿不使用此效果" : "热感构成不使用网点效果";
+        }
+        if (id === "ink" && (pen || thermal)) {
+          meta.name = pen ? "Line Ink" : "Thermal Ink";
+          meta.hint = pen ? "线条着墨" : "热感着墨";
+          meta.desc = pen ? "控制线条着墨强度，不填充内部块面" : "控制热感主体着墨强度";
+          meta.keys = ["strength"];
+        }
+        if (id === "extract" && state.sourceHasTransparency) {
+          meta.available = highPen;
+          meta.desc = highPen ? "透明轮廓来自 Alpha；阈值调整内部结构层次" : "当前透明图片按 Alpha 提取轮廓，不使用灰度阈值";
+          if (highPen) meta.keys = ["threshold"];
+        }
+        if (pen && id === "texture") {
+          meta.name = highPen ? "Print Shading" : "Paper Texture";
+          meta.hint = highPen ? "结构排纹" : "纸面纹理";
+          meta.desc = highPen ? "依据原图明暗生成疏密排纹" : "纸面颗粒与扫描纹理；透明底不保留背景纸纹";
+          meta.keys = highPen ? ["fabric"] : ["fabric", "scan"];
+        }
+        if (highPen && id === "distress") meta.desc = "控制线缘纤维、粗糙密度及随机细节";
+        if (highPen && id === "edge") meta.desc = "控制轮廓线宽；毛糙需配合 Distress Grain";
+        return meta;
+      }
+
+      function toggleEffectNode(id) {
+        if (!effectUiMeta(id).available) return;
+        rememberNiceTryState();
+        const node = state.nodes[id];
+        node.enabled = !node.enabled;
+        // Previously these presets stored zero-strength optional layers: merely
+        // setting enabled=true did nothing. Give a newly enabled layer a usable start.
+        if (node.enabled && id === "screen" && node.strength === 0) node.strength = 80;
+        if (node.enabled && id === "decor" && node.grid === 0 && node.blur === 0 && node.particles === 0) {
+          node.grid = 18; node.blur = 24; node.particles = 12;
+        }
+        renderAll();
+      }
+
       function renderNodeList() {
         nodeList.innerHTML = "";
-        nodeMeta.forEach((meta, index) => {
+        nodeMeta.forEach((baseMeta, index) => {
+          const meta = effectUiMeta(baseMeta.id);
           const node = state.nodes[meta.id];
           const item = document.createElement("div");
-          item.className = `node${state.flyoutOpen && state.selected === meta.id ? " active" : ""}${node.enabled ? "" : " disabled"}`;
+          item.className = `node${meta.available && state.flyoutOpen && state.selected === meta.id ? " active" : ""}${meta.available && node.enabled ? "" : " disabled"}`;
+          item.setAttribute("aria-disabled", String(!meta.available));
+          item.title = meta.available ? "点击名称调整参数；点击 on/off 开关效果" : meta.desc;
           item.innerHTML = `
             <div class="node-index">${index + 1}</div>
             <div class="node-body">
               <div class="node-name">${meta.name}</div>
               <div class="node-desc">${meta.desc}</div>
             </div>
-            <div class="toggle">${node.enabled ? "on" : "off"}</div>
+            <div class="toggle">${meta.available ? (node.enabled ? "on" : "off") : "—"}</div>
           `;
           item.addEventListener("click", (event) => {
             event.stopPropagation();
+            if (!meta.available) return;
             closeColorPopovers();
             const isCurrentOpen = state.flyoutOpen && state.selected === meta.id;
             state.selected = meta.id;
@@ -11353,9 +11521,7 @@
             event.stopPropagation();
             closeColorPopovers();
             closeParamFlyout();
-            rememberNiceTryState();
-            node.enabled = !node.enabled;
-            renderAll();
+            toggleEffectNode(meta.id);
           });
           nodeList.appendChild(item);
         });
@@ -11393,6 +11559,10 @@
       }
 
       function controlRange(label, key, min, max, step = 1, cnLabel = "") {
+        const meta = effectUiMeta(state.selected);
+        if (!meta.available || (meta.keys && !meta.keys.includes(key))) return "";
+        if (state.selected === "ink" && state.preset === "penTrace" && key === "strength") { label = "Ink strength"; cnLabel = "线条着墨"; }
+        if (state.selected === "texture" && meta.name === "Print Shading" && key === "fabric") { label = "Shading"; cnLabel = "结构排纹"; }
         const node = state.nodes[state.selected];
         const value = node[key];
         return `
@@ -11446,6 +11616,7 @@
       }
 
       function getParamControls() {
+        if (!effectUiMeta(state.selected).available) return "";
         if (state.selected === "extract") {
           return [
             controlRange("Threshold", "threshold", 0, 255, 1, "阈值"),
@@ -11524,7 +11695,13 @@
       function renderParams() {
         let meta = state.selected === focusMeltMeta.id
           ? focusMeltMeta
-          : nodeMeta.find((item) => item.id === state.selected);
+          : effectUiMeta(state.selected);
+        if (meta && !meta.available) {
+          state.flyoutOpen = false;
+          paramFlyout.classList.add("closed");
+          state.selected = nodeMeta.find(item => effectUiMeta(item.id).available).id;
+          meta = effectUiMeta(state.selected);
+        }
         if (!meta) {
           state.selected = nodeMeta[0].id;
           meta = nodeMeta[0];
@@ -11607,35 +11784,38 @@
 
       function renderMobileEffects() {
         mobileEffects.innerHTML = "";
-        nodeMeta.forEach((meta, index) => {
+        nodeMeta.forEach((baseMeta, index) => {
+          const meta = effectUiMeta(baseMeta.id);
           const node = state.nodes[meta.id];
           const item = document.createElement("button");
           item.type = "button";
+          item.disabled = !meta.available;
+          item.title = meta.desc;
           item.className = `mobile-effect-card${state.selected === meta.id ? " active" : ""}${node.enabled ? "" : " disabled"}`;
           item.innerHTML = `
             <div class="mobile-effect-top">
               <span>${index + 1}. ${meta.name}</span>
-              <span class="mobile-effect-toggle">${node.enabled ? "on" : "off"}</span>
+              <span class="mobile-effect-toggle">${meta.available ? (node.enabled ? "on" : "off") : "—"}</span>
             </div>
             <div class="mobile-effect-desc">${meta.desc}</div>
           `;
           item.addEventListener("click", () => {
+            if (!meta.available) return;
             state.selected = meta.id;
             state.flyoutOpen = false;
             renderAll(false);
           });
           item.querySelector(".mobile-effect-toggle").addEventListener("click", (event) => {
             event.stopPropagation();
-            node.enabled = !node.enabled;
             state.selected = meta.id;
-            renderAll();
+            toggleEffectNode(meta.id);
           });
           mobileEffects.appendChild(item);
         });
       }
 
       function renderMobileParams() {
-        const meta = nodeMeta.find((item) => item.id === state.selected);
+        const meta = effectUiMeta(state.selected);
         if (!meta) return;
         const body = getParamControls();
         mobileParamPanel.innerHTML = `
@@ -12429,8 +12609,8 @@
           : 1;
         const dropCompensation = refinement && distressActive ? originalDropMean / refinedDropMean : 1;
         const fuzzyEdgeScale = (4 + edge.rough * 0.045) * blurScale;
-        const bodyMixScale = ink.strength / 100 * inkAlpha;
-        const edgeMixScale = (0.26 + edge.width * 0.08) * edgeAlpha;
+        const bodyMixScale = ink.enabled ? ink.strength / 100 * inkAlpha : 0;
+        const edgeMixScale = edge.enabled ? (0.26 + edge.width * 0.08) * edgeAlpha : 0;
         const materialNoiseScale = (textureFabric * 0.82 + decorParticles * 0.12) * (refinement?.grain ?? 1);
         const scanScale = textureScan / 100;
         const paperToneMap = textureActive ? getPaperToneMap(w, h, texture, 121) : null;

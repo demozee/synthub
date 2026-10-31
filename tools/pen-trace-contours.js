@@ -311,7 +311,9 @@ function createPenTraceStructure(source, mask, width, height, nodes, reversed = 
   };
   const structureCount=profile.structureCount===2?2:(seed%5===0?2:3);
   const positions=structureCount===2?[.32,.68]:[.23,.49,.76];
-  const thresholdOffset=((nodes.extract?.threshold||142)-142)/255*.18;
+  const structureThreshold=nodes.extract && nodes.extract.enabled !== false
+    ? (Number.isFinite(nodes.extract.threshold)?nodes.extract.threshold:142) : 128;
+  const thresholdOffset=(structureThreshold-142)/255*.18;
   for(let index=0;index<structureCount;index++) {
     const field=smoothPenTraceMask(gray,w,h,profile.detailPreserving?1:Math.max(2,smallScale*(3.4+random(index)*2)));
     const level=Math.max(.03,Math.min(.97,lo+toneRange*(positions[index]+(random(index+9)-.5)*.1+thresholdOffset)));

@@ -49,7 +49,7 @@ async function redrawStillImageOutput(targetCanvas, targetCtx, outputSize, style
   const edgeAlpha = getColorAlpha(edge, "color") / 100;
   const bgAlpha = transparent ? 1 : getColorAlpha(color, "bg") / 100;
   const hiAlpha = getColorAlpha(color, "highlight") / 100;
-  const inkStrength = ink.strength / 100 * inkAlpha;
+  const inkStrength = ink.enabled ? ink.strength / 100 * inkAlpha : 0;
   const ref = preset === "thermalMap" ? thermalQualityRefinement(styleSize) : null;
   const field = (data, x, y, alpha = false) => outputFieldSample(data, sw, sh, x, y, alpha);
   let soft, body, glow, edgeMap;
@@ -119,7 +119,7 @@ async function redrawStillImageOutput(targetCanvas, targetCtx, outputSize, style
             const drop = (coarse ? .18 : fine ? .56 : 1) * dropComp;
             const hm = clamp((halo - s * .3) * .62 * hiAlpha * (.88 + drop * .12), 0, .72);
             const bm = clamp((s * .38 + c * .52) * (.42 + tone * .58) * inkStrength * drop, 0, .96);
-            const em = clamp(fuzzy * (.26 + edge.width * .08) * edgeAlpha * (ref?.edge ?? 1), 0, .58);
+            const em = edge.enabled ? clamp(fuzzy * (.26 + edge.width * .08) * edgeAlpha * (ref?.edge ?? 1), 0, .58) : 0;
             r = lerp(lerp(lerp(clamp(r + paperTone * grainFactor), hiRgb.r, hm), inkRgb.r, bm), edgeRgb.r, em);
             g = lerp(lerp(lerp(clamp(g + paperTone * grainFactor), hiRgb.g, hm), inkRgb.g, bm), edgeRgb.g, em);
             b = lerp(lerp(lerp(clamp(b + paperTone * grainFactor), hiRgb.b, hm), inkRgb.b, bm), edgeRgb.b, em);

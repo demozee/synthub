@@ -77,4 +77,12 @@ for (const quality of [1080, 1920]) {
   assert.notDeepEqual(rendered.pixels, low.pixels, 'M/H must refine the material');
 }
 assert(!html.includes('studyScript.src'), 'Local study loader must not ship');
+for (const quality of [720, 1080, 1920]) {
+  for (const id of ['ink', 'edge']) {
+    const active = fixture(quality);
+    vm.runInContext(`state.nodes.${id}.enabled=false; renderThermalMap(source,mask,32,32,mask,{})`, active.ctx);
+    assert.notDeepEqual(Array.from(active.ctx.captured), active.pixels, `${id} off must affect Thermal ${quality}`);
+  }
+}
 console.log('PASS: unchanged L golden output, approved M/H profiles, unchanged preset/colors, local-study exclusion');
+console.log('PASS: Thermal Ink/Rough Edge switches change pixels at L/M/H');
