@@ -1,0 +1,75 @@
+/* Figma 10457:48 (sun) / 10538:1550 (moon). UI only; no result-canvas filters. */
+.canvas-theme-toggle { display: none; }
+@media (min-width: 641px) {
+  :root {
+    --quality-ui-bg: #27272a;
+    --quality-ui-text: #f4f3ef;
+    --quality-ui-line: #000;
+  }
+  :root[data-canvas-theme="light"] {
+    --editor-canvas-bg: #f5f5f5;
+    --quality-ui-bg: #f5f5f5;
+    --quality-ui-text: #0f0e12;
+    --quality-ui-line: #dadde7;
+  }
+  .video-quality-options {
+    background: var(--quality-ui-bg);
+    box-shadow: inset 0 0 0 1.25px var(--quality-ui-line);
+  }
+  .video-quality-option { color: var(--quality-ui-text); }
+  .video-quality-option.is-active { color: var(--editor-control-accent); }
+  .video-quality-options.has-middle .video-quality-option + .video-quality-option::after { background: var(--quality-ui-line); }
+  .video-fps-value { background: var(--quality-ui-bg); color: var(--quality-ui-text); }
+  .canvas-theme-toggle {
+    position: absolute;
+    z-index: 7;
+    top: 50px;
+    right: 30px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: filter var(--motion-fast) linear, transform var(--motion-fast) var(--motion-ease);
+  }
+  .canvas-theme-toggle:hover { filter: brightness(1.08); }
+  .canvas-theme-toggle:active { transform: scale(.96); }
+  .canvas-theme-art {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    transform: scale(1.25);
+    transform-origin: top left;
+    pointer-events: none;
+  }
+  .canvas-theme-art img { position: absolute; display: block; max-width: none; }
+  .canvas-theme-art-light { display: none; }
+  :root[data-canvas-theme="light"] .canvas-theme-art-light { display: block; }
+  :root[data-canvas-theme="light"] .canvas-theme-art-dark { display: none; }
+  .canvas-theme-base { left: 0; top: 0; }
+  .canvas-theme-core { left: 13px; top: 14.077px; }
+  .canvas-theme-ray { transform-origin: center; }
+  .canvas-theme-ray-top { left: 19.25px; top: 7px; }
+  .canvas-theme-ray-bottom { left: 19.25px; top: 31px; }
+  .canvas-theme-ray-right { left: 31.255px; top: 18.995px; transform: rotate(90deg); }
+  .canvas-theme-ray-left { left: 7.255px; top: 18.995px; transform: rotate(90deg); }
+  .canvas-theme-ray-tr { left: 27.737px; top: 10.511px; transform: rotate(45deg); }
+  .canvas-theme-ray-bl { left: 10.765px; top: 27.482px; transform: rotate(45deg); }
+  .canvas-theme-ray-tl { left: 10.766px; top: 10.518px; transform: rotate(-45deg); }
+  .canvas-theme-ray-br { left: 27.736px; top: 27.489px; transform: rotate(-45deg); }
+  /* Original sun exports, positioned from the dark artboard's node transforms. */
+  .canvas-theme-art-dark .canvas-theme-core { left: 15px; top: 15px; }
+  .canvas-theme-art-dark .canvas-theme-ray-bottom { top: 29px; }
+  .canvas-theme-art-dark .canvas-theme-ray-right { left: 30.25488px; top: 17.995px; }
+  .canvas-theme-art-dark .canvas-theme-ray-left { left: 8.25488px; top: 17.995px; }
+  .canvas-theme-art-dark .canvas-theme-ray-tr { left: 27.03921px; top: 10.21817px; }
+  .canvas-theme-art-dark .canvas-theme-ray-bl { left: 11.48306px; top: 25.77451px; }
+  .canvas-theme-art-dark .canvas-theme-ray-tl { left: 11.48306px; top: 10.23514px; }
+  .canvas-theme-art-dark .canvas-theme-ray-br { left: 27.0397px; top: 25.79104px; }
+}

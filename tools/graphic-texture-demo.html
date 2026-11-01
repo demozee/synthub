@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="canonical" href="https://synthub.art/graphic-texture/" />
+    <link rel="preload" href="../assets/ibm-plex-mono-light.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <link rel="icon" type="image/png" sizes="24x24" href="../assets/browser-icon-figma.png?v=20260721" />
     <script
@@ -7657,7 +7658,115 @@
         }
         .app.has-source .right .export-button { color: #221819; }
       }
+      /* Figma 10457:48 / 10116:428: desktop chrome only, never output pixels. */
+      .nice-try-dock { display: none; }
+      @media (min-width: 641px) {
+        :root {
+          --editor-canvas-bg: #19191b;
+          --editor-control-text: #f4f3ef;
+          --editor-control-accent: #edff87;
+          --editor-dock-layer: 120;
+        }
+        body, .app, .main { background: var(--editor-canvas-bg); }
+        .empty-canvas-copy p { color: #b3b3b3; font-weight: 300; }
+        .side { position: relative; }
+        .nice-try-dock {
+          position: relative;
+          z-index: var(--editor-dock-layer);
+          display: flex;
+          flex: 0 0 90px;
+          align-items: center;
+          height: 90px;
+          padding: 15px 27.5px;
+          background: var(--panel-bg);
+        }
+        .right .export-dock {
+          position: relative;
+          z-index: var(--editor-dock-layer);
+          height: 90px;
+          padding-block: 15px;
+          background: var(--panel-bg);
+        }
+        .nice-try-dock #randomize.randomize-button {
+          width: 100%;
+          height: 60px;
+          margin: 0;
+          flex-shrink: 0;
+          background: var(--panel-card);
+          border: 1.25px solid #000;
+          color: var(--editor-control-text);
+        }
+        .app.has-source .nice-try-dock #randomize.randomize-button {
+          background: var(--panel-card-dark);
+          border-color: var(--editor-control-accent);
+        }
+        .nice-try-dock #randomize.randomize-button::before {
+          left: 28.75px;
+          top: 13.75px;
+          width: 26.57px;
+          height: 30px;
+          background-image: url("../assets/nice-try-dock-idle-figma.svg");
+        }
+        .app.has-source .nice-try-dock #randomize.randomize-button::before {
+          background-image: url("../assets/nice-try-dock-active-figma.svg");
+        }
+        .video-quality-options {
+          background: var(--panel-bg);
+          box-shadow: inset 0 0 0 1.25px #000;
+        }
+        .video-quality-options::before {
+          box-sizing: border-box;
+          background: var(--panel-card-dark);
+          border: 1.25px solid var(--editor-control-accent);
+        }
+        .video-quality-option { color: var(--editor-control-text); }
+        .video-quality-option.is-active { color: var(--editor-control-accent); }
+        .video-quality-options.has-middle .video-quality-option + .video-quality-option::after { background: #000; }
+        .output-control.is-image-output #exportPng .export-label { left: 32px; right: 60px; }
+        .image-output-size-trigger {
+          position: absolute;
+          z-index: 2;
+          right: 0;
+          bottom: 0;
+          display: grid;
+          place-items: center;
+          width: 60px;
+          height: 60px;
+          padding: 0;
+          border: 0;
+          border-radius: 0;
+          background: var(--yellow);
+          color: #221819;
+          font: 400 20px/25px var(--font-mono);
+          cursor: pointer;
+        }
+        .image-output-size-trigger[hidden] { display: none; }
+        .output-control .image-output-menu {
+          left: auto;
+          right: 0;
+          bottom: 100%;
+          width: 60px;
+          gap: 0;
+        }
+        .output-control .image-output-option {
+          width: 60px;
+          height: 60px;
+          background: var(--yellow);
+          color: #221819;
+          border: 0;
+        }
+        .output-control .image-output-option[hidden] { display: none; }
+        .output-control .image-output-option .output-size-label { font: 400 20px/25px var(--font-mono); transform: none; }
+        .image-output-size-trigger:not(:disabled):hover,
+        .output-control .image-output-option:not(:disabled):hover { background: linear-gradient(#ffffff66, #ffffff66), var(--yellow); }
+        .image-output-size-trigger:not(:disabled):active,
+        .output-control .image-output-option:not(:disabled):active { background: linear-gradient(#00000033, #00000033), var(--yellow); }
+      }
+      @media (max-width: 640px) { .image-output-size-trigger { display: none; } }
     </style>
+    <link rel="stylesheet" href="../assets/entry-copy.css" />
+    <link rel="stylesheet" href="../assets/canvas-theme.css" />
+    <script src="../assets/canvas-theme.js"></script>
   </head>
   <body>
     <main class="app">
@@ -7716,7 +7825,6 @@
           <section class="panel">
             <h2 data-cn="预设">Presets</h2>
             <div class="preset-grid" id="presetGrid"></div>
-            <button class="randomize-button" id="randomize">NICE TRY</button>
             <section class="recipe-section" id="recipeSection" aria-label="Recipe">
               <h2 data-cn="配方">Recipe</h2>
               <div class="recipe-control" id="recipeControl">
@@ -7753,9 +7861,38 @@
             </button>
           </section>
         </div>
+        <div class="nice-try-dock">
+          <button class="randomize-button" id="randomize">NICE TRY</button>
+        </div>
       </aside>
 
       <section class="main">
+        <button class="canvas-theme-toggle" id="canvasThemeToggle" type="button" aria-label="切换为浅色画布" aria-pressed="false">
+          <span class="canvas-theme-art canvas-theme-art-dark" aria-hidden="true">
+            <img class="canvas-theme-base" src="../assets/canvas-theme-sun-base-figma.svg" alt="" />
+            <img class="canvas-theme-core" src="../assets/canvas-theme-sun-core-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-top" src="../assets/canvas-theme-sun-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-bottom" src="../assets/canvas-theme-sun-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-right" src="../assets/canvas-theme-sun-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-left" src="../assets/canvas-theme-sun-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-tr" src="../assets/canvas-theme-sun-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-bl" src="../assets/canvas-theme-sun-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-tl" src="../assets/canvas-theme-sun-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-br" src="../assets/canvas-theme-sun-ray-v-figma.svg" alt="" />
+          </span>
+          <span class="canvas-theme-art canvas-theme-art-light" aria-hidden="true">
+            <img class="canvas-theme-base" src="../assets/canvas-theme-base-figma.svg" alt="" />
+            <img class="canvas-theme-core" src="../assets/canvas-theme-core-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-top" src="../assets/canvas-theme-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-bottom" src="../assets/canvas-theme-ray-v-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-right" src="../assets/canvas-theme-ray-h-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-left" src="../assets/canvas-theme-ray-h-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-tr" src="../assets/canvas-theme-ray-d1-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-bl" src="../assets/canvas-theme-ray-d1-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-tl" src="../assets/canvas-theme-ray-d2-figma.svg" alt="" />
+            <img class="canvas-theme-ray canvas-theme-ray-br" src="../assets/canvas-theme-ray-d2-figma.svg" alt="" />
+          </span>
+        </button>
         <div class="empty-canvas" aria-label="Upload introduction">
           <div class="empty-canvas-copy">
             <p>Upload an image, choose a style, and turn it into a graphic texture with print grain, tactile noise, and handmade imperfections.</p>
@@ -7835,19 +7972,18 @@
         <div class="export-dock">
           <div class="output-control" id="outputControl">
             <div class="image-output-menu" id="imageOutputMenu" role="menu" aria-label="Image output size" hidden>
-              <button class="image-output-option" type="button" role="menuitem" data-image-output-size="2048" aria-label="Export 2K PNG, 2048 pixels">
-                <img src="../assets/output-size-download-figma.svg" alt="" />
-                <span class="output-size-label">2K</span><span class="output-size-pixels">2048</span>
+              <button class="image-output-option" type="button" role="menuitem" data-image-output-size="2048" aria-label="Use 2K PNG output, 2048 pixels">
+                <span class="output-size-label">2K</span>
               </button>
-              <button class="image-output-option" type="button" role="menuitem" data-image-output-size="4096" aria-label="Export 4K PNG, 4096 pixels">
-                <img src="../assets/output-size-download-figma.svg" alt="" />
-                <span class="output-size-label">4K</span><span class="output-size-pixels">4096</span>
+              <button class="image-output-option" type="button" role="menuitem" data-image-output-size="4096" aria-label="Use 4K PNG output, 4096 pixels">
+                <span class="output-size-label">4K</span>
               </button>
             </div>
           <button class="export-button" id="exportPng" data-export-png>
             <span class="export-icon"><img src="../assets/download-icon-figma.svg" alt="" /></span>
             <span class="export-label">OUTPUT</span>
           </button>
+          <button class="image-output-size-trigger" id="imageOutputSizeTrigger" type="button" aria-label="Choose image output size" aria-haspopup="menu" aria-controls="imageOutputMenu" aria-expanded="false" hidden>2K</button>
           </div>
           <button class="reverse-toggle" id="reverseToggle" type="button" aria-label="反向" aria-pressed="false">
             <span class="reverse-icon" aria-hidden="true">
@@ -8162,7 +8298,7 @@
         size: 1000,
         previewSize: 720,
         imageResolution: 720,
-        imageOutputSize: new URLSearchParams(location.search).get("output") === "4k" ? 4096 : 2048,
+        imageOutputSize: preferredImageOutputSize(),
         imageExporting: false,
         videoTuneSize: 720,
         videoResolution: 720,
@@ -9472,6 +9608,19 @@
         return "M";
       }
 
+      function preferredImageOutputSize() {
+        const explicit = new URLSearchParams(location.search).get("output");
+        if (explicit === "4k") return 4096;
+        if (explicit === "2k") return 2048;
+        try {
+          const saved = Number(localStorage.getItem("graphicTextureImageOutputSize"));
+          if ([2048, 4096].includes(saved)) return saved;
+        } catch (_error) {
+          // Storage can be blocked; the current page still keeps its selection.
+        }
+        return 2048;
+      }
+
       function fixedImageOutputSize() {
         return window.innerWidth <= 640 ? state.size : ([2048, 4096].includes(state.imageOutputSize) ? state.imageOutputSize : 2048);
       }
@@ -9482,6 +9631,7 @@
         if (![2048, 4096].includes(size) || state.imageExporting) return false;
         state.imageOutputSize = size;
         document.documentElement.dataset.imageOutputSize = String(size);
+        try { localStorage.setItem("graphicTextureImageOutputSize", String(size)); } catch (_error) {}
         return true;
       }
 
@@ -10641,7 +10791,7 @@
       const presetRandomProfiles = {
         thermalMap: {
           ranges: {
-            extract: { threshold: [92, 144], contrast: [28, 68], grayKeep: [0, 22] },
+            extract: { threshold: [56, 208], contrast: [12, 96], grayKeep: [0, 70] },
             ink: { strength: [62, 90], holes: [0, 12] },
             edge: { width: [1, 5], rough: [18, 56] },
             distress: { amount: [10, 30], size: [3, 7], seed: [1, 99] },
@@ -10650,14 +10800,14 @@
           },
           variants: {
             soft: { decor: { blur: [76, 94], grid: [0, 12], particles: [0, 10] }, texture: { bleed: [14, 30], scan: [0, 12] }, distress: { amount: [4, 16] } },
-            contours: { decor: { blur: [32, 52], grid: [24, 48], gridSize: [22, 48] }, extract: { contrast: [48, 78] }, edge: { rough: [10, 32] } },
+            contours: { decor: { blur: [32, 52], grid: [24, 48], gridSize: [22, 48] }, extract: { contrast: [32, 96] }, edge: { rough: [10, 32] } },
             grain: { distress: { amount: [28, 46], size: [2, 5] }, texture: { fabric: [32, 58], scan: [16, 38] }, decor: { blur: [52, 74], particles: [18, 40] } },
-            airy: { extract: { threshold: [84, 116], grayKeep: [16, 36] }, ink: { strength: [54, 72] }, decor: { grid: [0, 8], blur: [48, 72], particles: [0, 6] }, distress: { amount: [2, 12] } },
+            airy: { extract: { threshold: [48, 160], grayKeep: [12, 85] }, ink: { strength: [54, 72] }, decor: { grid: [0, 8], blur: [48, 72], particles: [0, 6] }, distress: { amount: [2, 12] } },
           },
         },
         penTrace: {
           ranges: {
-            extract: { threshold: [108, 174], contrast: [24, 64], grayKeep: [0, 18] },
+            extract: { threshold: [72, 216], contrast: [8, 96], grayKeep: [0, 70] },
             ink: { strength: [78, 100], holes: [6, 26] },
             edge: { width: [1, 3], rough: [48, 90] },
             distress: { amount: [16, 44], size: [2, 6], seed: [1, 99] },
@@ -10665,14 +10815,14 @@
           },
           variants: {
             fine: { edge: { width: [1, 1], rough: [12, 30] }, distress: { amount: [2, 10], size: [2, 3] }, texture: { fabric: [0, 10], scan: [0, 6] }, ink: { holes: [0, 8] } },
-            detailed: { extract: { threshold: [90, 130], contrast: [20, 42], grayKeep: [20, 42] }, edge: { width: [1, 2], rough: [30, 52] }, texture: { fabric: [14, 32] } },
+            detailed: { extract: { threshold: [64, 172], contrast: [8, 64], grayKeep: [20, 85] }, edge: { width: [1, 2], rough: [30, 52] }, texture: { fabric: [14, 32] } },
             dry: { edge: { width: [1, 2], rough: [72, 94] }, distress: { amount: [34, 50], size: [2, 4] }, texture: { fabric: [28, 50], bleed: [0, 3] }, ink: { holes: [18, 34] } },
-            bold: { extract: { threshold: [148, 184], contrast: [48, 78] }, edge: { width: [2, 4], rough: [28, 54] }, ink: { strength: [94, 100], holes: [2, 10] }, distress: { amount: [10, 24] } },
+            bold: { extract: { threshold: [120, 224], contrast: [40, 100] }, edge: { width: [2, 4], rough: [28, 54] }, ink: { strength: [94, 100], holes: [2, 10] }, distress: { amount: [10, 24] } },
           },
         },
         dotShirt: {
           ranges: {
-            extract: { threshold: [122, 182], contrast: [38, 76], grayKeep: [0, 16] },
+            extract: { threshold: [72, 220], contrast: [12, 96], grayKeep: [0, 75] },
             ink: { strength: [80, 100], holes: [2, 18] },
             screen: { dot: [7, 18], strength: [68, 100], angle: [-28, 28] },
             edge: { width: [0, 3], rough: [10, 44] },
@@ -10681,14 +10831,14 @@
           },
           variants: {
             fine: { screen: { dot: [4, 7], strength: [78, 100], angle: [-45, 45] }, distress: { amount: [0, 10] }, texture: { fabric: [4, 16] } },
-            poster: { screen: { dot: [18, 24], strength: [88, 100], angle: [-45, 45] }, extract: { contrast: [56, 84] }, ink: { holes: [0, 8] } },
+            poster: { screen: { dot: [18, 24], strength: [88, 100], angle: [-45, 45] }, extract: { contrast: [40, 100] }, ink: { holes: [0, 8] } },
             faded: { screen: { dot: [8, 14], strength: [52, 74], angle: [-45, 45] }, distress: { amount: [26, 44] }, texture: { fabric: [28, 48], scan: [12, 32] } },
-            dense: { screen: { dot: [10, 17], strength: [88, 100], angle: [-45, 45] }, extract: { threshold: [96, 140], grayKeep: [14, 30] }, ink: { strength: [94, 100] }, edge: { width: [0, 1] } },
+            dense: { screen: { dot: [10, 17], strength: [88, 100], angle: [-45, 45] }, extract: { threshold: [56, 184], grayKeep: [8, 80] }, ink: { strength: [94, 100] }, edge: { width: [0, 1] } },
           },
         },
         xerox: {
           ranges: {
-            extract: { threshold: [92, 148], contrast: [68, 100], grayKeep: [0, 10] },
+            extract: { threshold: [56, 212], contrast: [24, 100], grayKeep: [0, 65] },
             ink: { strength: [86, 100], holes: [16, 44] },
             edge: { width: [1, 4], rough: [62, 100] },
             distress: { amount: [26, 58], size: [2, 5], seed: [1, 99] },
@@ -10697,8 +10847,8 @@
           variants: {
             crisp: { ink: { holes: [4, 14] }, distress: { amount: [10, 24], size: [2, 3] }, texture: { scan: [12, 32], bleed: [0, 6] }, edge: { rough: [30, 50] } },
             toner: { ink: { holes: [30, 52] }, distress: { amount: [44, 68], size: [2, 5] }, texture: { scan: [26, 52], fabric: [18, 36] } },
-            scan: { texture: { scan: [78, 100], bleed: [2, 10] }, distress: { amount: [18, 34] }, extract: { threshold: [110, 160], grayKeep: [8, 24] } },
-            heavy: { extract: { threshold: [82, 112], contrast: [88, 100] }, ink: { strength: [96, 100], holes: [8, 20] }, edge: { width: [2, 4], rough: [72, 98] }, texture: { bleed: [16, 30] } },
+            scan: { texture: { scan: [78, 100], bleed: [2, 10] }, distress: { amount: [18, 34] }, extract: { threshold: [80, 216], grayKeep: [4, 80] } },
+            heavy: { extract: { threshold: [48, 164], contrast: [60, 100] }, ink: { strength: [96, 100], holes: [8, 20] }, edge: { width: [2, 4], rough: [72, 98] }, texture: { bleed: [16, 30] } },
           },
         },
       };
@@ -13541,7 +13691,7 @@
       function setImageOutputMenuOpen(open) {
         const control = document.getElementById("outputControl");
         const menu = document.getElementById("imageOutputMenu");
-        const trigger = document.getElementById("exportPng");
+        const trigger = document.getElementById("imageOutputSizeTrigger");
         const canOpen = window.innerWidth > 640 && state.source && !isVideoSource()
           && !state.imageExporting && !state.videoExporting;
         const expanded = Boolean(open && canOpen);
@@ -13552,7 +13702,11 @@
 
       function syncImageOutputMenu() {
         const isImage = window.innerWidth > 640 && !isVideoSource();
-        const trigger = document.getElementById("exportPng");
+        const trigger = document.getElementById("imageOutputSizeTrigger");
+        const control = document.getElementById("outputControl");
+        control.classList.toggle("is-image-output", isImage && Boolean(state.source));
+        trigger.hidden = !isImage || !state.source;
+        trigger.textContent = state.imageOutputSize === 4096 ? "4K" : "2K";
         if (isImage) {
           trigger.setAttribute("aria-haspopup", "menu");
           trigger.setAttribute("aria-controls", "imageOutputMenu");
@@ -13561,7 +13715,11 @@
           trigger.removeAttribute("aria-controls");
         }
         const disabled = !isImage || !state.source || state.imageExporting || state.videoExporting;
-        document.querySelectorAll("[data-image-output-size]").forEach((button) => { button.disabled = disabled; });
+        trigger.disabled = disabled;
+        document.querySelectorAll("button[data-image-output-size]").forEach((button) => {
+          button.disabled = disabled;
+          button.hidden = Number(button.dataset.imageOutputSize) === state.imageOutputSize;
+        });
         if (disabled) setImageOutputMenuOpen(false);
       }
 
@@ -14373,26 +14531,25 @@
 
       document.querySelectorAll("[data-export-png]").forEach((button) => {
         button.addEventListener("click", () => {
-          if (button.id === "exportPng" && window.innerWidth > 640 && !isVideoSource()) {
-            setImageOutputMenuOpen(true);
-          } else {
-            exportOutput();
-          }
+          setImageOutputMenuOpen(false);
+          exportOutput();
         });
       });
       const outputControl = document.getElementById("outputControl");
-      outputControl.addEventListener("pointerenter", () => setImageOutputMenuOpen(true));
+      const outputSizeTrigger = document.getElementById("imageOutputSizeTrigger");
+      outputSizeTrigger.addEventListener("pointerenter", () => setImageOutputMenuOpen(true));
+      outputSizeTrigger.addEventListener("click", () => setImageOutputMenuOpen(true));
       outputControl.addEventListener("pointerleave", () => setImageOutputMenuOpen(false));
       outputControl.addEventListener("focusout", (event) => {
         if (!outputControl.contains(event.relatedTarget)) setImageOutputMenuOpen(false);
       });
       outputControl.addEventListener("keydown", (event) => {
         if (window.innerWidth <= 640 || isVideoSource()) return;
-        const options = [...outputControl.querySelectorAll("[data-image-output-size]")];
+        const options = [...outputControl.querySelectorAll("[data-image-output-size]")].filter(button => !button.hidden);
         if (event.key === "Escape") {
           event.preventDefault();
           setImageOutputMenuOpen(false);
-          document.getElementById("exportPng").focus();
+          outputSizeTrigger.focus();
         } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
           event.preventDefault();
           setImageOutputMenuOpen(true);
@@ -14402,11 +14559,11 @@
           if (!options[next].disabled) options[next].focus();
         }
       });
-      document.querySelectorAll("[data-image-output-size]").forEach((button) => {
+      document.querySelectorAll("button[data-image-output-size]").forEach((button) => {
         button.addEventListener("click", () => {
           if (!setImageOutputSize(button.dataset.imageOutputSize)) return;
           setImageOutputMenuOpen(false);
-          exportOutput();
+          syncImageOutputMenu();
         });
       });
       const randomizeButton = document.getElementById("randomize");

@@ -12,7 +12,7 @@ const target = path.join(root, 'graphic-texture/index.html');
 const base = new URL('../tools/', 'https://synthub.art/graphic-texture/');
 for (const match of publicHtml.matchAll(/(?:src|href)="([^"#]+)"/g)) {
   const url = new URL(match[1], base);
-  if (url.origin !== base.origin || !/\.(?:js|svg|png|jpe?g|webp|woff2?)$/i.test(url.pathname)) continue;
+  if (url.origin !== base.origin || !/\.(?:css|js|svg|png|jpe?g|webp|woff2?)$/i.test(url.pathname)) continue;
   assert(fs.existsSync(path.join(root, decodeURIComponent(url.pathname))), 'Missing public resource: ' + url.pathname);
 }
 const landing = fs.readFileSync(path.join(root, 'index.html'), 'utf8');

@@ -1,0 +1,43 @@
+/* Shared desktop introduction geometry. The editor's UI is rendered at 80%. */
+@font-face {
+  font-family: "Synthub Entry Mono";
+  src: url("./ibm-plex-mono-light.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300;
+  font-display: block;
+}
+
+@media (min-width: 641px) {
+  .intro { --entry-copy-unit: 1px; }
+  .empty-canvas-copy { --entry-copy-unit: 1.25px; }
+
+  .intro,
+  .empty-canvas-copy {
+    width: calc(570 * var(--entry-copy-unit));
+    height: calc(174 * var(--entry-copy-unit));
+    font-family: "Synthub Entry Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 300;
+  }
+
+  .intro > p,
+  .empty-canvas-copy > p {
+    margin: 0;
+    font-family: inherit;
+    font-size: calc(16 * var(--entry-copy-unit));
+    font-weight: 300;
+    line-height: calc(20 * var(--entry-copy-unit));
+    letter-spacing: 0;
+  }
+
+  .intro .intro-cn,
+  .empty-canvas-copy .empty-canvas-cn {
+    box-sizing: border-box;
+    height: calc(40 * var(--entry-copy-unit));
+    padding-top: calc(16 * var(--entry-copy-unit));
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: calc(14 * var(--entry-copy-unit));
+    line-height: calc(28.8 * var(--entry-copy-unit));
+    letter-spacing: var(--entry-copy-unit);
+    white-space: nowrap;
+  }
+}

@@ -33,6 +33,7 @@ vm.runInContext(`
   for (const preset of Object.keys(presets)) {
     state.preset=preset; state.nodes=clone(presets[preset].nodes);
     const colors=new Set(), bases=new Set(), recipes=new Set(), directions=[];
+    const extractionSamples={threshold:[],contrast:[],grayKeep:[]};
     for(let i=0;i<240;i++) {
       const previous=JSON.stringify(state.nodes);
       state.outputReverse=i%2===0;
@@ -40,6 +41,7 @@ vm.runInContext(`
       state.nodes.ink.colorAlpha=73; state.nodes.edge.colorAlpha=61; state.nodes.color.highlightAlpha=85;
       randomizeChain(i%2===0);
       const n=state.nodes;
+      for(const key of Object.keys(extractionSamples))extractionSamples[key].push(n.extract[key]);
       assert.equal(state.preset,preset,'Desktop explores within the current preset');
       assert.equal(state.outputReverse,i%2===0,'Preserve explicit RE');
       assert.equal(n.color.transparent,true); assert.equal(n.color.bgAlpha,0);
@@ -66,6 +68,10 @@ vm.runInContext(`
       }
     }
     assert(colors.size>220); assert(bases.size>210); assert.equal(recipes.size,240);
+    assert(Math.min(...extractionSamples.threshold)<90&&Math.max(...extractionSamples.threshold)>195,'Effective threshold exploration spans sparse and full shapes');
+    assert(Math.min(...extractionSamples.contrast)<35&&Math.max(...extractionSamples.contrast)>90,'Effective contrast spans soft to hard extraction');
+    assert(Math.min(...extractionSamples.grayKeep)<8&&Math.max(...extractionSamples.grayKeep)>65,'Effective gray retention spans binary to rich midtones');
+    console.log('PASS '+preset+' extraction ranges: '+JSON.stringify(Object.fromEntries(Object.entries(extractionSamples).map(([key,values])=>[key,[Math.min(...values),Math.max(...values)]]))));
     const before=JSON.stringify([state.nodes.ink.color,state.nodes.edge.color,state.nodes.color]);
     randomizeChain(false,{preserveColors:true});
     assert.equal(JSON.stringify([state.nodes.ink.color,state.nodes.edge.color,state.nodes.color]),before);
