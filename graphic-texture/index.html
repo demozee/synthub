@@ -14,7 +14,7 @@
       data-website-id="79bb69d5-2b32-4ab4-b7ae-b4f61d34bee1"
       data-domains="synthub.art,www.synthub.art"
     ></script>
-    <title>Synthub Graphic Texture V2.7</title>
+    <title>Synthub Graphic Texture V2.8</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500;600&display=swap");
 
@@ -9350,6 +9350,20 @@
       }
 
       let mobileSharePending = false;
+      const sourceFilenames = new WeakMap();
+      let exportFilenameSequence = 0;
+
+      function createExportFilename(sourceName, suffix, extension = "png") {
+        const clean = (value) => String(value || "")
+          .replace(/[\u0000-\u001f\u007f<>:"/\\|?*]/g, "_")
+          .replace(/[.\s]+$/g, "").trim();
+        const basename = clean(String(sourceName || "").split(/[\\/]/).pop().replace(/\.[^.]+$/, ""));
+        const stem = Array.from(basename || "graphic-texture").slice(0, 64).join("");
+        const random = Math.floor(Math.random() * 1679616).toString(36).padStart(4, "0");
+        const unique = `${random}${(++exportFilenameSequence).toString(36)}`;
+        return `${stem}_${clean(suffix) || "texture"}_${unique}.${extension}`;
+      }
+
       const mobileImageOutput = { source: null, signature: "", blob: null, filename: "", timer: 0, generation: 0 };
 
       function mobileImageOutputSignature() {
@@ -9437,7 +9451,7 @@
         mobileImageOutput.signature = signature;
         mobileImageOutput.blob = null;
         const recipe = currentRecipeCode();
-        const filename = `graphic-texture-chain-${state.preset}-${qualityLabel(imageRenderSize())}.png`;
+        const filename = `${state.preset}-${qualityLabel(imageRenderSize())}`;
         // Prepare after edits settle, so OUTPUT can share inside the original tap.
         mobileImageOutput.timer = window.setTimeout(async () => {
           mobileImageOutput.timer = 0;
@@ -9537,7 +9551,7 @@
           if (!mobileCapture.renderedBlob) return;
           const type = mobileCapture.renderedBlob.type || "video/webm";
           const extension = type.includes("mp4") ? "mp4" : "webm";
-          const filename = `graphic-texture-mobile-${state.preset}.${extension}`;
+          const filename = createExportFilename("camera", `mobile-${state.preset}`, extension);
           if (await presentMobileOutput(mobileCapture.renderedBlob, filename, "视频")) return;
           if (!mobileCapture.renderedUrl) mobileCapture.renderedUrl = URL.createObjectURL(mobileCapture.renderedBlob);
           const a = document.createElement("a");
@@ -13537,6 +13551,7 @@
           state.imageResolution = 720;
         }
         state.source = source;
+        sourceFilenames.set(source, options.sourceFilename || "");
         state.sourceType = type;
         state.sourceAspect = aspect || 1;
         state.sourceHasTransparency = (type === "image" || type === "svg") && sourceHasTransparency(source, state.sourceAspect);
@@ -13577,7 +13592,7 @@
           videoSource.videoWidth / Math.max(1, videoSource.videoHeight),
           "video",
           "视频已载入：可继续拖入文件替换",
-          options,
+          { ...options, sourceFilename: file.name },
         );
         syncVideoTimeline(initialTime);
       }
@@ -13602,6 +13617,7 @@
           const embeddedCode = detectRecipe ? await extractRecipeFromPng(file) : "";
           const embeddedRecipe = embeddedCode ? decodeRecipeCode(embeddedCode) : null;
           const sourceOptions = {
+            sourceFilename: file.name,
             recipeState: embeddedRecipe,
             carrier: Boolean(embeddedRecipe),
             commitHistory,
@@ -13617,7 +13633,7 @@
           if (isPdfFile(file)) {
             setInputStatus("正在读取 PDF 首页...");
             const pdfCanvas = await renderPdfFirstPage(file);
-            applyLoadedSource(pdfCanvas, pdfCanvas.width / pdfCanvas.height, "pdf", "PDF 已载入：已使用第一页生成图形", { commitHistory });
+            applyLoadedSource(pdfCanvas, pdfCanvas.width / pdfCanvas.height, "pdf", "PDF 已载入：已使用第一页生成图形", { commitHistory, sourceFilename: file.name });
             return { loaded: true, embeddedRecipe: false };
           }
 
@@ -14112,7 +14128,7 @@
         const type = processedVideoBlob.type || "video/webm";
         const a = document.createElement("a");
         a.href = processedVideoUrl;
-        a.download = `graphic-texture-${state.preset}-${qualityLabel(videoRenderSize())}-${state.videoFps}fps.${type.includes("mp4") ? "mp4" : "webm"}`;
+        a.download = createExportFilename(sourceFilenames.get(state.source), `${state.preset}-${qualityLabel(videoRenderSize())}-${state.videoFps}fps`, type.includes("mp4") ? "mp4" : "webm");
         a.click();
         return true;
       }
@@ -14464,7 +14480,7 @@
           return;
         }
         if (window.innerWidth <= 640 && state.sourceType === "image" && mobileImageOutput.blob && mobileImageOutput.source === state.source && mobileImageOutput.signature === mobileImageOutputSignature()) {
-          await presentMobileOutput(mobileImageOutput.blob, mobileImageOutput.filename, "图片");
+          await presentMobileOutput(mobileImageOutput.blob, createExportFilename(sourceFilenames.get(state.source), mobileImageOutput.filename), "图片");
           return;
         }
         if (isVideoSource()) {
@@ -14477,6 +14493,7 @@
         const outputLabel = outputSize === 4096 ? "4K" : outputSize === 2048 ? "2K" : `${outputSize}px`;
         const exportRecipe = currentRecipeCode();
         const exportPreset = state.preset;
+        const exportFilename = createExportFilename(sourceFilenames.get(state.source), `${exportPreset}-${textureQuality}-${outputLabel}`);
         let outputMode = "legacy-scaling";
         setImageExportBusy(true);
         setInputStatus(`正在输出 ${textureQuality} 质感 · ${outputLabel} PNG...`);
@@ -14499,7 +14516,7 @@
             }, "image/png");
           });
           const outputBlob = await embedRecipeInPng(pngBlob, exportRecipe);
-          const filename = `graphic-texture-chain-${exportPreset}-${textureQuality}-${outputLabel}.png`;
+          const filename = exportFilename;
           // Local QA only; not the future output-size UI. Allows inspecting native pixels without downloading.
           if (["127.0.0.1", "localhost"].includes(location.hostname) && new URLSearchParams(location.search).has("output-preview")) {
             document.getElementById("outputQaPreview")?.remove();

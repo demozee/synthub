@@ -5,6 +5,29 @@ const assert = require('node:assert/strict');
 const html = fs.readFileSync(path.join(__dirname, 'graphic-texture-demo.html'), 'utf8');
 const renderer = fs.readFileSync(path.join(__dirname, 'image-output-renderer.js'), 'utf8');
 new Function(renderer);
+const filenameContext = vm.createContext({
+  Math: Object.assign(Object.create(Math), { random: () => 0.25 }),
+});
+const filenameStart = html.indexOf('      const sourceFilenames = new WeakMap();');
+const filenameEnd = html.indexOf('      const mobileImageOutput =', filenameStart);
+assert(filenameStart >= 0 && filenameEnd > filenameStart);
+vm.runInContext(html.slice(filenameStart, filenameEnd), filenameContext);
+const nameFor = (name, suffix = 'penTrace-H-4K', extension = 'png') =>
+  vm.runInContext(`createExportFilename(${JSON.stringify(name)}, ${JSON.stringify(suffix)}, ${JSON.stringify(extension)})`, filenameContext);
+assert.match(nameFor('我的银杏.v2.JPG'), /^我的银杏\.v2_penTrace-H-4K_[a-z0-9]{5}\.png$/);
+assert.match(nameFor('C:\\photos\\image.jpg'), /^image_penTrace/);
+assert.match(nameFor(''), /^graphic-texture_penTrace/);
+assert.match(nameFor('photo'), /^photo_penTrace/);
+assert(!/[<>:"/\\|?*\u0000-\u001f]/.test(nameFor('a:b?c*<>.png')));
+assert(nameFor('图'.repeat(400) + '.png').length < 150);
+assert(nameFor('clip.mov', 'thermalMap-L-24fps', 'mp4').endsWith('.mp4'));
+assert.equal(new Set(Array.from({ length: 1000 }, () => nameFor('same.png'))).size, 1000,
+  'Rapid exports remain unique even with identical random values');
+assert(html.includes('sourceFilename: file.name'), 'Successful imports retain original filenames');
+assert(html.includes('createExportFilename(sourceFilenames.get(state.source), mobileImageOutput.filename)'),
+  'Cached mobile image bytes get a fresh filename for every save');
+assert(html.indexOf('const exportFilename = createExportFilename(') < html.indexOf('let outputMode = "legacy-scaling"'),
+  'Async desktop exports freeze the filename with their preset before rendering');
 const a = html.indexOf('      function fixedImageOutputSize()');
 const b = html.indexOf('      function interactiveRenderSize()', a);
 const state = { imageOutputSize:2048, imageResolution:720, imageExporting:false, size:1000, sourceAspect:.75, nodes:{color:{bg:'#f7f6f2'}} };
@@ -94,4 +117,4 @@ assert(html.includes('querySelectorAll("button[data-image-output-size]")'),'Outp
 const selectionHandler=html.slice(html.lastIndexOf('      document.querySelectorAll("button[data-image-output-size]").forEach((button) => {'),html.indexOf('      const randomizeButton ='));
 assert(selectionHandler.includes('setImageOutputSize(')&&selectionHandler.includes('setImageOutputMenuOpen(false)'));
 assert(!selectionHandler.includes('exportOutput(')&&!selectionHandler.includes('setImageExportBusy('),'Selecting a resolution is never an export or busy state');
-console.log('PASS: 2K/4K dimensions, independent style state, frozen size, native redraw, menu states and mobile/video compatibility');
+console.log('PASS: unique source-based filenames, cached mobile saves, 2K/4K dimensions, independent style state, frozen size, native redraw, menu states and mobile/video compatibility');

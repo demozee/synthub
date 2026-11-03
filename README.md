@@ -1,6 +1,6 @@
 # Synths Lab Graphic Texture
 
-Version: `V2.7`
+Version: `V2.8`
 
 A browser-based graphic texture generator for turning images, video frames, and SVG assets into print-inspired visual styles such as thermal-map compositions, halftone graphics, pen-trace outlines, rough ink, distressed grain, and fabric-like texture.
 
@@ -32,6 +32,12 @@ http://localhost:4178/tools/graphic-texture-demo.html
 ```
 
 ## Version Notes
+
+### V2.8 - Short Unique Export Filenames
+
+- Retains the uploaded source filename and adds effect/quality information plus a short unique suffix.
+- Generates a fresh filename for every export, including cached mobile-browser images, without a long date/time suffix.
+- Keeps effects, UI, output sizes, and Xiaohongshu native album saving unchanged.
 
 ### V2.7 - Thermal Material Refinement
 
