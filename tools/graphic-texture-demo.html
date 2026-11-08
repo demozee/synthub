@@ -5949,7 +5949,7 @@
 
         .app {
           width: calc(100vw / var(--desktop-ui-scale));
-          height: calc(100vh / var(--desktop-ui-scale));
+          height: calc(var(--desktop-viewport-height, 100vh) / var(--desktop-ui-scale));
           zoom: var(--desktop-ui-scale);
         }
 
@@ -7767,6 +7767,7 @@
     <link rel="stylesheet" href="../assets/entry-copy.css" />
     <link rel="stylesheet" href="../assets/canvas-theme.css" />
     <script src="../assets/canvas-theme.js"></script>
+    <script src="../assets/editor-viewport.js"></script>
   </head>
   <body>
     <main class="app">
@@ -14610,6 +14611,11 @@
         scheduleMobileScrollSync();
       });
       window.visualViewport?.addEventListener("resize", scheduleMobileVisualViewportSync, { passive: true });
+      window.addEventListener("editorviewportchange", () => {
+        if (window.innerWidth <= 640) return;
+        syncResultFit();
+        positionParamFlyout();
+      });
       window.visualViewport?.addEventListener("scroll", scheduleMobileVisualViewportSync, { passive: true });
       window.addEventListener("orientationchange", scheduleMobileVisualViewportSync, { passive: true });
       window.addEventListener("scroll", scheduleMobileScrollSync, { passive: true });
